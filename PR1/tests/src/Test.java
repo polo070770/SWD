@@ -19,6 +19,7 @@ public class Test {
 		int inputInt;
 		Catalog catalog = new Catalog();
 		
+		// ya esta probado
 		/*System.out.println("Insertemos fichas ex: 00 -> (0|0), 12 -> (1|2), 321(2|3) (99) para terminar:");
 		System.out.println("Ficha a insertar:");
 		
