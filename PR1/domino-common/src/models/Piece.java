@@ -76,10 +76,8 @@ public class Piece {
 		this();
 		this.left = definition.charAt(0);
 		this.right = definition.charAt(1);
-		this.reverse = false;
-		if (definition.length() == 3 && definition.charAt(2) == '1'){
-			this.reverse = true;
-		}
+		this.reverse = (definition.length() == 3 && definition.charAt(2) == '1');
+
 	}
 	/**
 	 * Return the left side of a piece, if piece is reversed we return the right side
@@ -117,23 +115,24 @@ public class Piece {
 	 */
 	public boolean isEqual (Piece anotherPiece) {
 		return this.left == anotherPiece.left && 
-				this.right == anotherPiece.right && 
-				this.reverse == anotherPiece.reverse;
+				this.right == anotherPiece.right;
 	}
 
 	/**
 	 * Returns if current piece matches to another
-	 * @param piece The piece fixed on the floor
+	 * @param piece The piece to try to match with the current one
 	 * @param side specifies the side of the piece that we want try to match. Must be char L or R
 	 * @return
 	 */
 	public boolean matches (Piece piece, char side) {
+		// hacemos un upper case de side
+		side = Character.toUpperCase(side);
+
 		// probamos si encaja por el lado izquierdo
-		if (side == LEFT || side =='l'){ // probamos por si acaso l
-			return this.getRight() == piece.getLeft();
-			
-		}else if(side == RIGHT || side =='r'){ // probamos por si acaso r
+		if ( side == LEFT ){
 			return this.getLeft() == piece.getRight();
+		}else if( side == RIGHT ){ 
+			return this.getRight() == piece.getLeft();
 		}
 		
 		return false;
