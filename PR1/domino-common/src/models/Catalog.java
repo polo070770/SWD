@@ -13,7 +13,7 @@ public class Catalog {
 	protected Deque<Piece> pieces;
 
 	/**
-	 * Creates an instance of a Catalog with and empty linkedlist.
+	 * Creates an instance of a Catalog with and empty linkedlist
 	 */
 	public Catalog() {
 		this.pieces = new LinkedList<Piece>();
