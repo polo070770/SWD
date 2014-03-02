@@ -21,14 +21,12 @@ public class Catalog {
 
 	public Catalog (Piece piece) {
 		this();
-		
 		this.pieces.add(piece);
 		
 	}
 
 	public Catalog (Catalog anotherCatalog) {
 		this();
-	
 		for(Piece piece : anotherCatalog.pieces) {
 		    this.pieces.addLast(new Piece(piece));
 		}
