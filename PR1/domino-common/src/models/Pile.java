@@ -30,7 +30,6 @@ public class Pile extends Catalog {
 		        break;
 		        }
 		 } 
-		
 	}
 	
 	/**
@@ -46,10 +45,12 @@ public class Pile extends Catalog {
 	 * @return
 	 */
 	public Piece getRandomOne () {
-		int randomNumber = rand.nextInt((this.pieces.size() - 0) + 1) + 0;
-		Piece piece;
+		int randomNumber = rand.nextInt(this.pieces.size());
+		Piece piece = null;
+		System.out.println("random: " + randomNumber);
+		System.out.println("size: " + this.pieces.size());
 		// recorremos el listado de piezas
-		for(Iterator<Piece> it = this.pieces.iterator(); it.hasNext(); ) {
+		for(Iterator<Piece> it = this.pieces.iterator(); it.hasNext(); randomNumber--) {
 			// si el numero ha llegado a 0 es la pieza que buscamos
 			if (randomNumber == 0){
 				//generamos una pieza igual
@@ -57,12 +58,11 @@ public class Pile extends Catalog {
 				//removemos el contenido del iterador eliminando asi la pieza de la pila
 				it.remove(); 
 				// salimos
-		        return piece;
+		        break;
 			}
 			it.next();
-			randomNumber--;
 		}
-		return null;
+		return piece;
 	}
 	
 	/**
@@ -80,9 +80,7 @@ public class Pile extends Catalog {
 		Piece[] pieces = new Piece[number];
 		
 		// buscamos piezas al azar una a una
-		for(int i = 0; i < number; i++ ){
-			pieces[i] = getRandomOne();
-		}
+		while(number > 0) pieces[--number] = getRandomOne();
 		
 		return pieces;
 	}
