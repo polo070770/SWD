@@ -3,6 +3,7 @@ import java.util.Scanner;
 import models.Catalog;
 import models.Piece;
 import models.Pile;
+import models.PlayedPile;
 
 
 public class Test {
@@ -34,7 +35,7 @@ public class Test {
 			char right = catalogDesc.charAt(i+1);
 			catalog.addPiece(new Piece(left, right));
 		}
-		System.out.println("Catalogo actual : ");
+		System.out.println("Catalogo actual ("+ catalog.getLength() +")");
 		System.out.println(catalog.getRepresentation());
 		
 		// creamos la pila de fichas enla mesa
@@ -54,12 +55,27 @@ public class Test {
 			System.out.println(e.toString());
 		}
 		
+		System.out.println("Cuantas piezas quieres en la mesa? [int] : ");
+		inputInt = (int)sc.nextInt();
+
+		// Creamos una mano con x fichas
+		PlayedPile floor = new PlayedPile();
+		try{
+			floor.addPieces(remainingPile.getAmount(inputInt));
+		}catch(Exception e){
+			System.out.println(e.toString());
+		}
+		
+		
 		System.out.println("Catalogo actual : ");
 		System.out.println(catalog.getRepresentation());
 		
 
-		System.out.println("Fichas en la mesa : ");
+		System.out.println("Fichas restantes : ");
 		System.out.println(remainingPile.getRepresentation());
+		
+		System.out.println("Fichas jugadas : ");
+		System.out.println(floor.getRepresentation());
 		
 		System.out.println("Mano : ");
 		System.out.println(hand.getRepresentation());
@@ -69,21 +85,50 @@ public class Test {
 			input = sc.nextLine();
 		}
 		
-		System.out.println("Selecciona una ficha de la mano: ");
-		input = sc.nextLine();
-
-		Piece nueva = new Piece(input);
-		while( !(catalog.hasPiece(nueva) && hand.hasPiece(nueva)) ){
-			System.out.println("Selecciona una ficha valida de la mano: ");
+		while( hand.getLength() > 0){
+			System.out.println("Selecciona una ficha de la mano para jugar: ");
 			input = sc.nextLine();
-			nueva = new Piece(input);
+			System.out.println("Quieres darle la vuelta a la ficha (0 no, 1 si): ");
+			input += sc.nextLine();
+			Piece nueva = new Piece(input);
+	
+			while( !(catalog.hasPiece(nueva) && hand.hasPiece(nueva)) ){
+				System.out.println("Selecciona una ficha valida de la mano para jugar: ");
+				input = sc.nextLine();
+				System.out.println("Quieres darle la vuelta a la ficha (0 no, 1 si): ");
+				input += sc.nextLine();
+				nueva = new Piece(input);
+			}
+			
+			System.out.println("Juegas por la izquierda o por la derecha: (l o r) ");
+			while(!(input = sc.nextLine()).matches("[l|r|L|R]")){
+				System.out.println("Introduce un lado valido... (l o r) ");
+			}
+			
+			System.out.println("Has seleccionado " + nueva.getRepresentation());
+			
+			if(floor.matchSide(nueva, input)){
+				floor.pushSide(nueva, input);
+				hand.deletePiece(nueva);
+				System.out.println("Jugada valida");
+			}else {
+				System.out.println("Jugada no valida");
+			}
+			
+			
+			
+
+			System.out.println("\nFichas restantes : ");
+			System.out.println(remainingPile.getRepresentation());
+			
+			System.out.println("\nFichas jugadas : ");
+			System.out.println(floor.getRepresentation());
+			
+			
+			System.out.println("\nTu mano queda asi");
+			System.out.println(hand.getRepresentation());
 		}
-		
-		System.out.println("Has seleccionado " + nueva.getRepresentation());
-		System.out.println("Tu mano queda asi");
-		hand.deletePiece(nueva);
-		System.out.println(hand.getRepresentation());
-		
+		System.out.println("\nFIN");
 	}
 
 }
