@@ -35,10 +35,11 @@ public class Test {
 			char right = catalogDesc.charAt(i+1);
 			catalog.addPiece(new Piece(left, right));
 		}
+		
 		System.out.println("Catalogo actual ("+ catalog.getLength() +")");
 		System.out.println(catalog.getRepresentation());
 		
-		// creamos la pila de fichas enla mesa
+		// creamos la pila de fichas restantes en la mesa
 		Pile remainingPile = new Pile(catalog);
 		System.out.println("Fichas en la mesa : ");
 		System.out.println(remainingPile.getRepresentation());
@@ -58,10 +59,10 @@ public class Test {
 		System.out.println("Cuantas piezas quieres en la mesa? [int] : ");
 		inputInt = (int)sc.nextInt();
 
-		// Creamos una mano con x fichas
-		PlayedPile floor = new PlayedPile();
+		// Creamos el tablero y ponemos fichas jugadas
+		PlayedPile table = new PlayedPile();
 		try{
-			floor.addPieces(remainingPile.getAmount(inputInt));
+			table.addPieces(remainingPile.getAmount(inputInt));
 		}catch(Exception e){
 			System.out.println(e.toString());
 		}
@@ -75,7 +76,7 @@ public class Test {
 		System.out.println(remainingPile.getRepresentation());
 		
 		System.out.println("Fichas jugadas : ");
-		System.out.println(floor.getRepresentation());
+		System.out.println(table.getRepresentation());
 		
 		System.out.println("Mano : ");
 		System.out.println(hand.getRepresentation());
@@ -86,6 +87,7 @@ public class Test {
 		}
 		
 		while( hand.getLength() > 0){
+			
 			System.out.println("Selecciona una ficha de la mano para jugar: ");
 			input = sc.nextLine();
 			System.out.println("Quieres darle la vuelta a la ficha (0 no, 1 si): ");
@@ -107,27 +109,25 @@ public class Test {
 			
 			System.out.println("Has seleccionado " + nueva.getRepresentation());
 			
-			if(floor.matchSide(nueva, input)){
-				floor.pushSide(nueva, input);
+			if(table.matchSide(nueva, input)){
+				table.pushSide(nueva, input);
 				hand.deletePiece(nueva);
 				System.out.println("Jugada valida");
 			}else {
 				System.out.println("Jugada no valida");
 			}
-			
-			
-			
 
 			System.out.println("\nFichas restantes : ");
 			System.out.println(remainingPile.getRepresentation());
 			
 			System.out.println("\nFichas jugadas : ");
-			System.out.println(floor.getRepresentation());
+			System.out.println(table.getRepresentation());
 			
 			
 			System.out.println("\nTu mano queda asi");
 			System.out.println(hand.getRepresentation());
 		}
+		
 		System.out.println("\nFIN");
 	}
 

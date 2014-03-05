@@ -36,7 +36,7 @@ public class Piece {
 		this.reverse = reverse;
 		// Siempre guardamos la posicion original de la pieza
 		// el reverse nos indica que a la hora de jugarla se opta 
-		// por ponerla al revÃ©s
+		// por ponerla al revés
 		if(this.reverse){
 			this.left = right;
 			this.right = left;
@@ -129,9 +129,9 @@ public class Piece {
 		side = Character.toUpperCase(side);
 
 		// probamos si encaja por el lado izquierdo
-		if ( side == LEFT ){
+		if ( side == this.LEFT ){
 			return this.getLeft() == piece.getRight();
-		}else if( side == RIGHT ){ 
+		}else if( side == this.RIGHT ){ 
 			return this.getRight() == piece.getLeft();
 		}
 		
