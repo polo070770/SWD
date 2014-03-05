@@ -9,7 +9,8 @@ import models.PlayedPile;
 public class Test {
 
 	private static Scanner sc;
-	private static String catalogDesc = "00010203040506111213141516222324252633343536444556555666";
+	private static String catalogDesc = "0001020304050611121314151622232425263334" +
+			"3536444546555666";
 
 	/**
 	 * @param args
@@ -29,7 +30,7 @@ public class Test {
 			System.out.println("Ficha a insertar:");
 			catalog.addPiece(new Piece(input));
 		}*/
-		
+
 		for(int i = 0; i < catalogDesc.length(); i += 2){
 			char left = catalogDesc.charAt(i);
 			char right = catalogDesc.charAt(i+1);
