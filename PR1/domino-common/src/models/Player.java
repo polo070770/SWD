@@ -8,7 +8,7 @@ public abstract class Player {
 		this.hand = hand;
 	}
 
-	public Player (Catalog catalog){
+	public Player(Catalog catalog){
 		this.hand = new Pile(catalog);
 	}
 	
