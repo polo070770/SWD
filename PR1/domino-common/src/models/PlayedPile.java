@@ -70,4 +70,13 @@ public class PlayedPile extends Catalog {
 		return matchSide(piece, side.charAt(0));
 		
 	}
+	
+	/** 
+	 * Returns if the specified movement matches with the pieces on the pile
+	 * @param movement
+	 * @return
+	 */
+	public boolean matchSide(Move movement){
+		return matchSide(movement.getPiece(), movement.getSide());
+	}
 }

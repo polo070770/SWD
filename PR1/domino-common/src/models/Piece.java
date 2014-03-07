@@ -137,6 +137,14 @@ public class Piece {
 		
 		return false;
 	}
+	
+	/**
+	 * Returns if the current piece is reversed
+	 * @return
+	 */
+	public boolean reversed(){
+		return this.reverse;
+	}
 
 	/**
 	 * Return the string representation of the piece
@@ -148,5 +156,5 @@ public class Piece {
 		
 		
 	}
-
+	
 }
