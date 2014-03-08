@@ -109,5 +109,21 @@ public class Catalog {
 		}
 		return response;
 	}
+	
+	/** 
+	 * Returns an array which is a copy of deque elements
+	 * @return
+	 */
+	public Piece[] getPieces(){
+		return (Piece[]) this.pieces.toArray();
 		
+	}
+	
+	/**
+	 * Returns a copy of itself
+	 * @return
+	 */
+	public Catalog getCatalog(){
+		return new Catalog(this);
+	}
 }

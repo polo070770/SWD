@@ -16,7 +16,7 @@ public abstract class Player {
 
 	public abstract Piece nextMove();
 
-	public void takePiece(Piece piece) {
+	public void setPiece(Piece piece) {
 		this.hand.addPiece(piece);
 	}
 }

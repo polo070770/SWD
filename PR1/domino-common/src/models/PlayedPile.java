@@ -76,7 +76,16 @@ public class PlayedPile extends Catalog {
 	 * @param movement
 	 * @return
 	 */
-	public boolean matchSide(Move movement){
+	public boolean matchMovement(Movement movement){
 		return matchSide(movement.getPiece(), movement.getSide());
+	}
+	
+	/**
+	 * Returns a copy of the current playedPile
+	 * @return
+	 */
+	public PlayedPile getPlayedPile(){
+		return new PlayedPile(this.getCatalog());
+		
 	}
 }

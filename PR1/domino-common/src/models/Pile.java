@@ -84,6 +84,15 @@ public class Pile extends Catalog {
 		
 		return pieces;
 	}
+	
+	
+	/**
+	 * Returns a copy of the current pile
+	 * @return
+	 */
+	public Pile getPile(){
+		return new Pile(this.getCatalog());
+	}
 }
 
 /**

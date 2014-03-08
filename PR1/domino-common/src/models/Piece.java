@@ -36,7 +36,7 @@ public class Piece {
 		this.reverse = reverse;
 		// Siempre guardamos la posicion original de la pieza
 		// el reverse nos indica que a la hora de jugarla se opta 
-		// por ponerla al revés
+		// por ponerla al revï¿½s
 		if(this.reverse){
 			this.left = right;
 			this.right = left;
@@ -151,8 +151,7 @@ public class Piece {
 	 * @return
 	 */
 	public String getRepresentation () {
-		String response = "[";
-		return response + this.getLeft() + "|" + this.getRight() + "]";
+		return "[" + this.getLeft() + "|" + this.getRight() + "]";
 		
 		
 	}
