@@ -115,7 +115,7 @@ public class Catalog {
 	 * @return
 	 */
 	public Piece[] getPieces(){
-		return (Piece[]) this.pieces.toArray();
+		return this.pieces.toArray(new Piece[this.pieces.size()]);
 		
 	}
 	

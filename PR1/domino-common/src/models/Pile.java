@@ -3,6 +3,8 @@ package models;
 import java.util.Iterator;
 import java.util.Random;
 
+import models.exceptions.PileException;
+
 
 public class Pile extends Catalog {
 	Random rand = new Random();
@@ -44,7 +46,7 @@ public class Pile extends Catalog {
 	 * Returns a random piece and removes it from the pile
 	 * @return
 	 */
-	public Piece getRandomOne () {
+	public Piece getRandomOne () throws PileException{
 		int randomNumber = rand.nextInt(this.pieces.size());
 		Piece piece = null;
 		//System.out.println("random: " + randomNumber);
@@ -71,17 +73,20 @@ public class Pile extends Catalog {
 	 * @return
 	 * @throws PileException
 	 */
-	public Piece[] getAmount(int number) throws PileException{
+	public Piece[] getAmount(int number) {
 		// controlamos las posibles excepciones
-		if (number > this.pieces.size()) throw new PileException("Pile is smaller than number specified");
-		if (number < 0) throw new PileException("Number specified is below 0");
-
-		//array de salida
-		Piece[] pieces = new Piece[number];
-		
-		// buscamos piezas al azar una a una
-		while(number > 0) pieces[--number] = getRandomOne();
-		
+		Piece[] pieces = null;
+		try{
+			//array de salida
+			pieces = new Piece[number];
+			
+			// buscamos piezas al azar una a una
+			while(number > 0) pieces[--number] = getRandomOne();
+			
+			return pieces;
+		}catch(PileException e){
+			System.out.println(e.getMessage());
+		}
 		return pieces;
 	}
 	
@@ -94,17 +99,4 @@ public class Pile extends Catalog {
 		return new Pile(this.getCatalog());
 	}
 }
-
-/**
- * Exception handler for the pile
- * @author swd
- *
- */
-class PileException extends Exception {
-	private static final long serialVersionUID = 1L;
-	public PileException() { super(); }
-	  public PileException(String message) { super(message); }
-	  public PileException(String message, Throwable cause) { super(message, cause); }
-	  public PileException(Throwable cause) { super(cause); }
-	}
 

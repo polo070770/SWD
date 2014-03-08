@@ -62,6 +62,7 @@ public class Piece {
 	public Piece (char left, char right) {
 		this(left, right, false);
 	}
+
 	/**
 	 * Creates a new piece from a string definition.
 	 * Length must be 2 or 3 
@@ -144,6 +145,22 @@ public class Piece {
 		return this.reverse;
 	}
 
+	/**
+	 * Returns if the current piece has equal sides
+	 */
+	public boolean hasEqualSides(){
+		return this.left == this.right;
+	}
+	
+	/**
+	 * Return the higher side value
+	 */
+	public int highSideValue(){
+		int left = Character.getNumericValue(this.left);
+		int right = Character.getNumericValue(this.right);
+		return left > right ? left : right;
+	}
+	
 	/**
 	 * Return the string representation of the piece
 	 * @return

@@ -1,20 +1,21 @@
 package controllers;
 
+import controllers.abstracts.Player;
 import models.Catalog;
 import models.Movement;
 import models.Piece;
 import models.PlayedPile;
-import models.Player;
 import models.Side;
+
+
 
 public class Domino {
 	
-	private final String CATALOG = "0001020304050611121314151622232425263334" +
-			"3536444546555666";
-
+	private final String CATALOG = "66554433221100656463546253615243605142504132403130212010";
+	
 	protected Side LEFT = Side.LEFT;
 	protected Side RIGHT = Side.RIGHT;
-	
+	protected final int HANDSIZE = 7;
 	
 	private Catalog catalog;
 	protected PlayedPile playedPile;
@@ -56,7 +57,7 @@ public class Domino {
 	 * @return
 	 */
 	public boolean isValidSide(char side){
-		return Side.isSide(side);
+		return Side.validSide(side);
 	}
 	
 	/**
@@ -75,4 +76,20 @@ public class Domino {
 				&& playedPile.matchMovement(movement);
 	}
 
+	/**
+	 * Returns a copy of the private catalog
+	 * @return
+	 */
+	public Catalog getCatalog(){
+		return this.catalog.getCatalog();
+	}
+	
+	public String getCatalogRepresentation(){
+		return this.catalog.getRepresentation();
+	}
+	
+	
+
+	
+	
 }

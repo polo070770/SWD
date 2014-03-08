@@ -105,7 +105,7 @@ public class Test {
 			}
 			
 			System.out.println("Juegas por la izquierda o por la derecha: (l o r) ");
-			while(!Side.isSide(input = sc.nextLine())){
+			while(!Side.validSide(input = sc.nextLine())){
 				System.out.println("Introduce un lado valido... (l o r) ");
 			}
 			

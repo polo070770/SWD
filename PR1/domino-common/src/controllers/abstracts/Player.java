@@ -1,4 +1,8 @@
-package models;
+package controllers.abstracts;
+
+import models.Catalog;
+import models.Piece;
+import models.Pile;
 
 public abstract class Player {
 	private Pile hand;
@@ -19,4 +23,11 @@ public abstract class Player {
 	public void setPiece(Piece piece) {
 		this.hand.addPiece(piece);
 	}
+	public boolean hasPiece(Piece piece){
+		return this.hand.hasPiece(piece);
+	}
+	public String handRepresentation(){
+		return hand.getRepresentation();
+	}
+
 }
