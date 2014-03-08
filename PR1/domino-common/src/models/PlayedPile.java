@@ -1,8 +1,8 @@
 package models;
 
 public class PlayedPile extends Catalog {
-	static final char RIGHTSIDE = 'R';
-	static final char LEFTSIDE = 'L';
+	private Side RIGHTSIDE = Side.RIGHT;
+	private Side LEFTSIDE = Side.LEFT;
 	
 	public PlayedPile() {
 		super();
@@ -26,15 +26,11 @@ public class PlayedPile extends Catalog {
 		
 	}
 	
-	public void pushSide(Piece piece, char side){
-		side = Character.toUpperCase(side);
+	public void pushSide(Piece piece, Side side){
 		if(side == LEFTSIDE)pushLeft(piece);
 		else pushRight(piece); 
 	}
 	
-	public void pushSide(Piece piece, String side){
-		pushSide(piece, side.charAt(0));
-	}
 	/**
 	 * Returns if the specified piece matches with the pieces on the right side of the pile
 	 * @param piece
@@ -56,21 +52,13 @@ public class PlayedPile extends Catalog {
 	 * @param piece
 	 * @return
 	 */
-	public boolean matchSide(Piece piece, char side){
-		side = Character.toUpperCase(side);
+	public boolean matchSide(Piece piece, Side side){
+		//side = Character.toUpperCase(side);
 		return (side == LEFTSIDE) ? matchLeft(piece) : matchRight(piece);
 		
 	}
-	/**
-	 * Returns if the specified piece matches with the pieces on the specified side of the pile
-	 * @param piece
-	 * @return
-	 */
-	public boolean matchSide(Piece piece, String side){
-		return matchSide(piece, side.charAt(0));
-		
-	}
 	
+
 	/** 
 	 * Returns if the specified movement matches with the pieces on the pile
 	 * @param movement

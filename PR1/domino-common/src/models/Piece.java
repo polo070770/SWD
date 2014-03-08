@@ -6,10 +6,8 @@ package models;
  *
  */
 public class Piece {
-	private final char LEFT = 'L';
-	private final char RIGHT = 'R';
-
-	
+	private Side LEFT = Side.LEFT;
+	private Side RIGHT = Side.RIGHT;
 	private char left;
 	private char right;
 	private boolean reverse;
@@ -124,14 +122,14 @@ public class Piece {
 	 * @param side specifies the side of the piece that we want try to match. Must be char L or R
 	 * @return
 	 */
-	public boolean matches (Piece piece, char side) {
+	public boolean matches (Piece piece, Side side) {
 		// hacemos un upper case de side
-		side = Character.toUpperCase(side);
+		//side = Character.toUpperCase(side);
 
 		// probamos si encaja por el lado izquierdo
-		if ( side == this.LEFT ){
+		if ( side == LEFT){
 			return this.getLeft() == piece.getRight();
-		}else if( side == this.RIGHT ){ 
+		}else if( side == RIGHT ){ 
 			return this.getRight() == piece.getLeft();
 		}
 		

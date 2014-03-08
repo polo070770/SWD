@@ -47,8 +47,8 @@ public class Pile extends Catalog {
 	public Piece getRandomOne () {
 		int randomNumber = rand.nextInt(this.pieces.size());
 		Piece piece = null;
-		System.out.println("random: " + randomNumber);
-		System.out.println("size: " + this.pieces.size());
+		//System.out.println("random: " + randomNumber);
+		//System.out.println("size: " + this.pieces.size());
 		// recorremos el listado de piezas
 		for(Iterator<Piece> it = this.pieces.iterator(); it.hasNext(); randomNumber--) {
 			// si el numero ha llegado a 0 es la pieza que buscamos

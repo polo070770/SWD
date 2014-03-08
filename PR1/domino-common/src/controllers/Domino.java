@@ -4,18 +4,21 @@ import models.Catalog;
 import models.Movement;
 import models.Piece;
 import models.PlayedPile;
+import models.Player;
+import models.Side;
 
 public class Domino {
 	
 	private final String CATALOG = "0001020304050611121314151622232425263334" +
 			"3536444546555666";
 
-	private final char LEFT = 'L';
-	private final char RIGHT = 'R';
+	protected Side LEFT = Side.LEFT;
+	protected Side RIGHT = Side.RIGHT;
 	
 	
 	private Catalog catalog;
-	private PlayedPile playedPile;
+	protected PlayedPile playedPile;
+	protected Player player;
 	
 	
 	public Domino(){
@@ -53,9 +56,7 @@ public class Domino {
 	 * @return
 	 */
 	public boolean isValidSide(char side){
-		side = Character.toUpperCase(side);
-		return side == LEFT || side == RIGHT;
-		
+		return Side.isSide(side);
 	}
 	
 	/**
@@ -70,7 +71,6 @@ public class Domino {
 	public boolean isValidMovement(Movement movement){
 		Piece movementPiece = movement.getPiece();
 		return isValidPiece(movementPiece)
-				&& isValidSide(movement.getSide())
 				&& !playedPile.hasPiece(movementPiece)
 				&& playedPile.matchMovement(movement);
 	}

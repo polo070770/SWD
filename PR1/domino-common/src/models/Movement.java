@@ -7,19 +7,19 @@ package models;
  *
  */
 public class Movement {
-	private final char LEFT = 'L';
-	private final char RIGHT = 'R';
+	private Side LEFT = Side.LEFT;
+	private Side RIGHT = Side.RIGHT;
 	
-	private char side;
+	private Side side;
 	private Piece piece;
 	
-	public Movement(Piece piece, char side){
+	public Movement(Piece piece, Side side){
 		this.piece = new Piece(piece);
-		this.side = Character.toUpperCase(side);;
+		this.side = side;
 	}
 	
 	
-	public char getSide(){
+	public Side getSide(){
 		return this.side;
 	}
 	
@@ -28,7 +28,7 @@ public class Movement {
 	}
 
 	public String getRepresentation(){
-		if(this.side == LEFT){
+		if(this.side == Side.LEFT){
 			return "<-----" + piece.getRepresentation();
 		}
 		return piece.getRepresentation() + "----->";
