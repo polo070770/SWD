@@ -4,6 +4,7 @@ import models.Catalog;
 import models.Piece;
 import models.Pile;
 import models.PlayedPile;
+import models.Side;
 
 
 public class Test {
@@ -104,14 +105,14 @@ public class Test {
 			}
 			
 			System.out.println("Juegas por la izquierda o por la derecha: (l o r) ");
-			while(!(input = sc.nextLine()).matches("[l|r|L|R]")){
+			while(!Side.isSide(input = sc.nextLine())){
 				System.out.println("Introduce un lado valido... (l o r) ");
 			}
 			
 			System.out.println("Has seleccionado " + nueva.getRepresentation());
 			
-			if(table.matchSide(nueva, input)){
-				table.pushSide(nueva, input);
+			if(table.matchSide(nueva, Side.fromString(input))){
+				table.pushSide(nueva, Side.fromString(input));
 				hand.deletePiece(nueva);
 				System.out.println("Jugada valida");
 			}else {
