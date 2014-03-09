@@ -14,20 +14,40 @@ public class Movement {
 	private Piece piece;
 	
 	public Movement(Piece piece, Side side){
-		this.piece = new Piece(piece);
+		this.piece = null;
+		
+		if(piece != null)this.piece = new Piece(piece);
+		
 		this.side = side;
 	}
 	
+	
+	public Movement(char[] chars) {
+		if(chars[0] == 'N'){
+			this.piece = null;
+			this.side = null;
+		}else{
+			this.piece = new Piece(chars[0], chars[1], chars[2]);
+			this.side = Side.fromChar(chars[3]);
+		}
+	}
+
+
+	public boolean isNT(){
+		return this.piece == null;
+	}
 	
 	public Side getSide(){
 		return this.side;
 	}
 	
 	public Piece getPiece(){
-		return new Piece(this.piece);
+		if(piece != null)return new Piece(this.piece);
+		return null;
 	}
 
 	public String getRepresentation(){
+		if(piece == null) return "NO PIECE";
 		if(this.side == Side.LEFT){
 			return "<-----" + piece.getRepresentation();
 		}

@@ -3,7 +3,9 @@ package controllers.net;
 import java.io.IOException;
 import java.net.Socket;
 
+import models.Movement;
 import net.DominoLayer;
+import net.DominoLayer.Size;
 
 public class Communication extends DominoLayer {
 
@@ -19,6 +21,23 @@ public class Communication extends DominoLayer {
 		// el mensaje de handhake o sincronizacion es un Hello
 		return writeId(Id.HELLO);
 	}
+	
+	public char[] readInitMovementChar(){
+		Id recievedId = readHeader();
+		char[] receivedChars;
+		if(recievedId == Id.INIT){
+			
+			receivedChars = this.recieveChars(Size.INIT.asInt());
+			
+			while (receivedChars.length == 0 && this.socketAlive()){
+				receivedChars = this.recieveChars(Size.INIT.asInt());
+			}
+			
+			return receivedChars;
+		}
+		return new char[0]; 
+	}
+	
 	
 
 }

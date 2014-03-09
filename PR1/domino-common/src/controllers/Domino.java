@@ -6,6 +6,7 @@ import models.Movement;
 import models.Piece;
 import models.PlayedPile;
 import models.Side;
+import net.DominoLayer.Id;
 
 
 
@@ -21,8 +22,8 @@ public class Domino {
 	protected PlayedPile playedPile;
 	protected Player player;
 	
-	
 	public Domino(){
+		this.playedPile = new PlayedPile();
 		catalog = new Catalog();
 		fillCatalog(); // llenamos el catalogo de fichas
 	};

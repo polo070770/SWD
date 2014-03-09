@@ -68,6 +68,23 @@ public class Pile extends Catalog {
 	}
 	
 	/**
+	 * Returns a random piece and removes it from the pile
+	 * @return
+	 */
+	public Piece getRandomPiece () {
+		Piece piece = null;
+		try{
+			piece = getRandomOne();
+		}catch(PileException e){
+			System.out.println(e.getMessage());
+		}
+		
+		return piece;
+	}
+	
+	
+	
+	/**
 	 * Returns random array with the specified value
 	 * @param number
 	 * @return

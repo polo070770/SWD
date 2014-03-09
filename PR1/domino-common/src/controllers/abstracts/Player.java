@@ -1,11 +1,13 @@
 package controllers.abstracts;
 
 import models.Catalog;
+import models.Movement;
 import models.Piece;
 import models.Pile;
+import models.PlayedPile;
 
 public abstract class Player {
-	private Pile hand;
+	protected Pile hand;
 
 	
 	public Player(Pile hand) {
@@ -15,10 +17,6 @@ public abstract class Player {
 	public Player(Catalog catalog){
 		this.hand = new Pile(catalog);
 	}
-	
-	public abstract boolean hasMove();
-
-	public abstract Piece nextMove();
 
 	public void setPiece(Piece piece) {
 		this.hand.addPiece(piece);
@@ -29,5 +27,16 @@ public abstract class Player {
 	public String handRepresentation(){
 		return hand.getRepresentation();
 	}
+
+	public Movement getFirstMovement(){
+		return null;
+	};
+	
+	
+	public abstract boolean hasMove(PlayedPile playedPile);
+	public abstract Movement nextMove(PlayedPile playedPile);
+	public abstract void removePiece(Piece p);
+	public abstract int handLength();
+	
 
 }

@@ -1,8 +1,11 @@
 package controllers;
 
 import models.Catalog;
+import models.Movement;
 import models.Piece;
 import models.Pile;
+import models.PlayedPile;
+import models.Side;
 import controllers.abstracts.Player;
 
 public class IA extends Player {
@@ -15,16 +18,34 @@ public class IA extends Player {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public boolean hasMove() {
-		// TODO Auto-generated method stub
+	public boolean hasMove(PlayedPile playedPile) {
+		for(Piece p : hand.getPieces()){
+			if(playedPile.matchLeft(p) || playedPile.matchRight(p)){
+				return true;
+			}
+		}
 		return false;
 	}
 
-	@Override
-	public Piece nextMove() {
-		// TODO Auto-generated method stub
+	public Movement nextMove(PlayedPile playedPile) {
+		for(Piece p : hand.getPieces()){
+			if(playedPile.matchLeft(p) || playedPile.matchRight(p)){
+				Side side = playedPile.matchLeft(p) ? Side.LEFT : Side.RIGHT;
+				Movement newMove = new Movement(p, side);
+				return newMove;
+			}
+		}
 		return null;
+	}
+	
+	public void removePiece(Piece p){
+		this.hand.deletePiece(p);
+		
+	}
+
+	@Override
+	public int handLength() {
+		return this.hand.getLength();
 	}
 
 }
