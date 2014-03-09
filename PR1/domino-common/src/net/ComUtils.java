@@ -8,6 +8,7 @@ public class ComUtils
 {
   /* Mida d'una cadena de caracters */
   private final int STRSIZE = 40;
+  private final int CHARSIZE = 1;
   /* Objectes per escriure i llegir dades */
   private DataInputStream dis;
   private DataOutputStream dos;
@@ -171,4 +172,57 @@ public class ComUtils
 		// Enviem l'string writeBytes de DataOutputStrem no envia el byte més alt dels chars.
 		dos.writeBytes(str);
 	}
+	
+	
+	/**
+	 * Envia un string como chars
+	 */
+	public void write_char(String txt) throws IOException{
+		write_char(txt.toCharArray());
+
+		
+	}
+	/**
+	 * envia un array de chars
+	 */
+	public void write_char(char[] chars) throws IOException{
+		for(char c : chars){
+			write_char(c);
+		}
+	}
+	
+	/**
+	 * Envia un char
+	 */
+	public void write_char(char c) throws IOException{ 
+	    byte charByte;
+	    charByte = (byte) c;
+	    dos.write(charByte);
+	    
+	  }
+	
+	/**
+	 * Llegeix un array de chars
+	 * 
+	 */
+	public char[] read_char(int size)  throws IOException{
+		char[] chars = new char[size];
+		
+		for(int i = 0; i < size; i++){
+			chars[i] = read_char();
+		}
+		return chars;
+		
+	}
+	
+	/**
+	 * Llegeix un char
+	 */
+	public char read_char() throws IOException{
+		char c;
+	 
+	    c = (char)read_bytes(CHARSIZE)[0];
+	 	 
+	    return c; 
+	  }
 }

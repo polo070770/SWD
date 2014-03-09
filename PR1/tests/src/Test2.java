@@ -15,7 +15,7 @@ public class Test2 {
 
 	}
 	public Test2(){
-		domino = new ServerDomino();
+		//domino = new ServerDomino();
 		test();
 	}
 	
@@ -24,6 +24,9 @@ public class Test2 {
 		Id id = Id.INIT;
 		int init = 20;
 		if( Id.validId(init)) System.out.println("id ok");
+		if(Id.HELLO.getVal() == 10){
+			System.out.println("HELLO ok");
+		}
 		if(Side.validSide('R') && Side.validSide("R")){
 			 System.out.println("side ok");
 		}

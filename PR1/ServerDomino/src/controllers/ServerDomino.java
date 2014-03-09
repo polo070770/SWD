@@ -2,22 +2,23 @@ package controllers;
 
 import models.Piece;
 import models.Pile;
-import models.exceptions.PileException;
-import net.DominoLayer.Id;
+
+
+import controllers.net.Communication;
 
 public class ServerDomino extends Domino {
 	
 	private Pile remainingPile;
 	private Pile clientHand;
+	private Communication comm;
 	
-	public ServerDomino(){
+	
+	public ServerDomino(Communication comm){
 		super(); // create super resources
+		this.comm = comm;
 		createDominoResources(); //creamos los recursos del juego
-		
-		testServerDomino();
-		
 
-		
+
 	}
 	
 	/**
@@ -66,4 +67,13 @@ public class ServerDomino extends Domino {
 		else System.out.println("Empieza server");
 		
 	}
+	
+
+	
+	
+
+
+
+
+
 }
