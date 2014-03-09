@@ -2,13 +2,15 @@ package net;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 
 public class DominoLayer {
 
 	
 	private ComUtils comm;
-	private Socket socket;
+	protected Socket socket;
 
 	
 	public DominoLayer(Socket socket) throws IOException {
@@ -17,16 +19,47 @@ public class DominoLayer {
 		
 	};
 	
-	public void closeConnection(){
+	
+	/**
+	 * Function that closes the current conection
+	 * @return
+	 */
+	public boolean closeConnection(){
+		boolean closed = false;
+		
 		try{
 			this.socket.close();
+			closed = true;
 		}catch(IOException e){
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return closed;
 		}catch(Exception e){
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return closed;
 		}
+		return closed;
 	}
 
+	
+	/**
+	 * Returns if socket is alive or not
+	 * @return
+	 */
+	public boolean socketAlive(){
+		try {
+			boolean alive = this.socket.getKeepAlive();
+			if (alive){
+				System.out.println(this.socket.getInetAddress() + ":" + this.socket.getPort() + " ALIVE");
+				return true;
+			}else{
+				return false;
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
 	
 	
 	
@@ -35,14 +68,20 @@ public class DominoLayer {
 	 * @return
 	 */
 	
-	public int readId(){
+	@SuppressWarnings("finally")
+	public Id readId(){
 		
 		try{
-			return this.comm.read_int32();
+			return Id.fromInt(this.comm.read_int32());
+		}catch(SocketTimeoutException e){
+			System.out.println(this.socket.getInetAddress() + ":" + this.socket.getPort() + " TIMEOUT");
+			return Id.TIMEOUT;
 		}catch(IOException e){
 			System.out.println(e.getMessage());
 		}
-		return 0;
+
+		return Id.UNKNOWN;
+		
 	}
 	
 	/**
@@ -60,9 +99,11 @@ public class DominoLayer {
 		}
 	}
 	
-	
+
 	
 	public enum Id{
+		UNKNOWN(-2),
+		TIMEOUT(-1),
 		HELLO(10), 
 		INIT(20),
 		MOVE(11),
@@ -75,6 +116,12 @@ public class DominoLayer {
 		private Id(int id){this.id = id;}
 		public int getVal(){ return id;}
 		
+		public static Id fromInt(int num){
+			for(Id id : Id.values()){
+				if (id.getVal() ==  num) return id;
+			}
+			return UNKNOWN;
+		}
 		public static boolean validId(int otherId){
 			
 			for(Id id : Id.values()){

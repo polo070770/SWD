@@ -15,8 +15,8 @@ public class Communication extends DominoLayer {
 	 * Returns true if the first client message is equal to HELLO
 	 * @return
 	 */
-	public boolean testServer(){
-		
+	public boolean requestHandShake(){
+		// el mensaje de handhake o sincronizacion es un Hello
 		return writeId(Id.HELLO);
 	}
 	

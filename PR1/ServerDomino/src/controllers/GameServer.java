@@ -37,10 +37,13 @@ public class GameServer  implements Runnable{
 		if (connected){
 			// aqui hacemos la prueba de si el cliente habla nuestro protocolo, sino
 			// nada
-			Boolean validClient = comm.testClient();
-			if(validClient){
-				System.out.println("Valid client, starting Game");
-				comm.sendInit();
+			Boolean validHandShake = comm.waitClientHandshake();
+			
+			if(validHandShake){
+				System.out.println("Correct handshaking, starting Game");
+				
+				comm.sendInit(); // only test
+				// una vez hemos recibido el mensaje inicial del cliente, y siendo este valid, iniciamos el juego
 				ServerDomino game = new ServerDomino(comm);
 				
 			}else{

@@ -2,6 +2,7 @@ package controllers.net;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 import net.DominoLayer;
 
@@ -15,8 +16,18 @@ public class Communication extends DominoLayer {
 	 * Returns true if the first client message is equal to HELLO
 	 * @return
 	 */
-	public boolean testClient(){
-		return Id.HELLO.getVal() == readId();
+	public boolean waitClientHandshake(){
+
+		while(true){
+			Id id = readId();
+			if (id == Id.UNKNOWN){
+				return false;
+			}else if(id == Id.TIMEOUT){
+				boolean socketAlive = this.socketAlive();
+				if(!socketAlive)return false;
+			}
+		}
+		
 	}
 	
 	public boolean sendInit(){

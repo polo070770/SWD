@@ -35,13 +35,17 @@ public class MainClient {
 		}
 		
 		try{
+			
 			host = InetAddress.getByName(url);
 			socket = new Socket(host, port);
+			socket.setKeepAlive(true);
+			
 			GameClient gameClient = new GameClient(socket);
+			
 		}catch(UnknownHostException e){
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}catch(IOException e){
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}

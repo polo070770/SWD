@@ -13,9 +13,21 @@ public class GameClient {
 		
 		try{
 			this.comm = new Communication(socket);
-			this.comm.testServer();
-			System.out.println("Connected to server!");
-			System.out.println("Received id " + comm.readId());
+			
+			//this.comm.readId(); // para probar timeouts
+			
+			boolean sincronized = this.comm.requestHandShake();
+			if (sincronized){
+				System.out.println("Connected to server!");
+				System.out.println("Received id " + comm.readId());
+			}else{
+				System.out.println("No handhake, closing connection");
+				if (this.comm.closeConnection()){
+					System.out.println("Connection closed");
+					System.out.println("BYE");
+				}
+			}
+			
 		}catch(Exception e){
 			System.out.println(e.toString());
 		}
