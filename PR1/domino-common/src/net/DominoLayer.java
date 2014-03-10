@@ -46,7 +46,7 @@ public class DominoLayer {
 	}
 	
 	public enum Size{
-		INIT(18),MOVEMENT(4), PIECE(3),INITPIECE(2);
+		INIT(18),MOVEMENT(4), PIECE(2),INITPIECE(2);
 		private int size;
 		private Size(int length){
 			this.size = length;
@@ -287,7 +287,8 @@ public class DominoLayer {
 		char[] chars = new char[Size.PIECE.asInt()];
 		chars[0] = piece.getLeft();
 		chars[1] = piece.getRight();
-		chars[2] = piece.reversed() ? '1' : '0';
+		// cuando se envia una ficha robada no se envia orden
+		//chars[2] = piece.reversed() ? '1' : '0';
 		
 		return chars;
 	}
