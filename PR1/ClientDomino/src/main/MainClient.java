@@ -9,45 +9,43 @@ import controllers.GameClient;
 
 public class MainClient {
 
-	
-	
 	private String url = "127.0.0.1";
 	private int port = 8080;
 	InetAddress host;
-	
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
 		MainClient mainClient = new MainClient(args);
-		
+
 	}
-	
-	public MainClient(String[] args){
+
+	public MainClient(String[] args) {
 		Socket socket;
-		
-		if(args.length > 2){
+
+		if (args.length > 2) {
 			// capturamos la url
 			url = args[1].split(":")[0];
 			// capturamos el puerto
 			port = Integer.parseInt(args[1].split(":")[1]);
 		}
-		
-		try{
-			
+
+		try {
+
 			host = InetAddress.getByName(url);
 			socket = new Socket(host, port);
 			socket.setKeepAlive(true);
-			
+
 			GameClient gameClient = new GameClient(socket);
-			
-		}catch(UnknownHostException e){
+
+		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }
