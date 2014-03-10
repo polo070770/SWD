@@ -49,9 +49,9 @@ public class Movement {
 	public String getRepresentation(){
 		if(piece == null) return "NO PIECE";
 		if(this.side == Side.LEFT){
-			return "<-----" + piece.getRepresentation();
+			return "<--" + piece.getRepresentation();
 		}
-		return piece.getRepresentation() + "----->";
+		return piece.getRepresentation() + "-->";
 				
 	}
 
