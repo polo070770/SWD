@@ -13,15 +13,14 @@ public class IA extends Player {
 	public IA(Catalog catalog) {
 		super(catalog);
 	}
-
 	public IA(Pile hand) {
 		super(hand);
 		// TODO Auto-generated constructor stub
 	}
 
 	public boolean hasMove(PlayedPile playedPile) {
-		for (Piece p : hand.getPieces()) {
-			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
+		for(Piece p : hand.getPieces()){
+			if(playedPile.matchLeft(p) || playedPile.matchRight(p)){
 				return true;
 			}
 		}
@@ -29,8 +28,8 @@ public class IA extends Player {
 	}
 
 	public Movement nextMove(PlayedPile playedPile) {
-		for (Piece p : hand.getPieces()) {
-			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
+		for(Piece p : hand.getPieces()){
+			if(playedPile.matchLeft(p) || playedPile.matchRight(p)){
 				Side side = playedPile.matchLeft(p) ? Side.LEFT : Side.RIGHT;
 				Movement newMove = new Movement(p, side);
 				return newMove;
@@ -38,10 +37,10 @@ public class IA extends Player {
 		}
 		return null;
 	}
-
-	public void removePiece(Piece p) {
+	
+	public void removePiece(Piece p){
 		this.hand.deletePiece(p);
-
+		
 	}
 
 	@Override

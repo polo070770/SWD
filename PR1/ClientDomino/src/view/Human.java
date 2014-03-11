@@ -1,7 +1,5 @@
 package view;
-
 import java.util.Scanner;
-import java.lang.StringBuffer;
 
 import models.Catalog;
 import models.Movement;
@@ -10,70 +8,29 @@ import models.Pile;
 import models.PlayedPile;
 import models.Side;
 import controllers.abstracts.Player;
+import java.util.Scanner;
 
 public class Human extends Player {
-
+	
 	private Scanner sc;
 	private Catalog catalog;
-
 	public Human(Pile hand, Catalog catalog) {
-		super(hand);
-		this.catalog = catalog;
-		sc = new Scanner(System.in);
+			super(hand);
+			this.catalog = catalog;
+			sc = new Scanner(System.in);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public boolean hasMove(PlayedPile playedPile) {
 		// TODO Auto-generated method stub
-
 		return false;
 	}
 
 	@Override
 	public Movement nextMove(PlayedPile playedPile) {
-		
-		String input;
-		System.out.println("Estas son tus fichas");
-		System.out.println(hand.getRepresentation());
-		
-		System.out.println("Es tu turno!");
-		
-		System.out
-				.println("Selecciona una ficha de la mano para jugar ex( 03 ): ");
-		input = sc.nextLine();
-		
-		Piece nueva = new Piece(input.charAt(0), input.charAt(1));
-		
-		while (!(catalog.hasPiece(nueva) && hand.hasPiece(nueva))) {
-			System.out
-					.println("Selecciona una ficha valida de la mano para jugar: ");
-			input = sc.nextLine();
-			nueva = new Piece(input.charAt(0), input.charAt(1));
-		}
-		
-		System.out.println("Quieres girar la ficha? (y)");
-		if(sc.nextLine().equalsIgnoreCase("y")){
-			//input = new StringBuffer(input).reverse().toString();
-			nueva.setReverse(true);
-		}
-		
-		System.out.println("En que lado de la mesa quieres poner la ficha?? ");
-		System.out.println("-Lado izquierda->L\n-Lado derecho->R");
-		input = sc.nextLine();
-		
-		while (!(input.equalsIgnoreCase("L") ||input.equalsIgnoreCase("R"))) {
-			System.out.println("Selecciona el lado de la mesa donde quieres poner la ficha. ");
-			System.out.println("-Lado izquierda->L\n-Lado derecho->R");
-			input = sc.nextLine();
-		}
-		
-		Movement movement = new Movement(nueva, Side.LEFT);
-		
-		if (input.equalsIgnoreCase("R"))
-			 movement = new Movement(nueva, Side.RIGHT);
-		
-		return movement;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -87,33 +44,30 @@ public class Human extends Player {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-	public Movement getFirstMovement() {
+	
+	public Movement getFirstMovement(){
 		String input;
 		System.out.println("Estas son tus fichas");
 		System.out.println(hand.getRepresentation());
-
+		
 		System.out.println("Segun las reglas, empiezas tu.");
-		System.out
-				.println("Selecciona una ficha de la mano para jugar ex( 03 ): ");
+		System.out.println("Selecciona una ficha de la mano para jugar ex( 03 ): ");
 		input = sc.nextLine();
 		input += "0"; // la primera tirada no se puede girar
 		Piece nueva = new Piece(input);
-
-		while (!(catalog.hasPiece(nueva) && hand.hasPiece(nueva))) {
-			System.out
-					.println("Selecciona una ficha valida de la mano para jugar: ");
+		
+		while( !(catalog.hasPiece(nueva) && hand.hasPiece(nueva)) ){
+			System.out.println("Selecciona una ficha valida de la mano para jugar: ");
 			input = sc.nextLine();
 			input += "0";// la primera tirada no se puede girar
 			nueva = new Piece(input);
 		}
 		
-		// Quitamos la fiicha a ser jugada de la mano del jugador
-		this.hand.deletePiece(nueva);
-		
-		Movement nextMovement = new Movement(nueva, null);
+		Movement nextMovement = new Movement(nueva, null );
 		return nextMovement;
-
+		
+		
+		
 	}
 
 }
