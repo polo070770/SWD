@@ -137,11 +137,10 @@ public class ServerDomino extends Domino {
 					makeNoMovement();
 				}
 			}
-		} else { // cliente puede tirar
-			this.STATE = State.CLIENTMOVE; // el estado pasa a ser que el
-											// cliente si ha podido tirar
-			if (this.isValidMovement(rivalMove)) {// comprobamos si es una
-													// accion valida del cliente
+		}else{ //cliente puede tirar
+			this.STATE = State.CLIENTMOVE; // el estado pasa a ser que el cliente si ha podido tirar
+			if(this.clientHand.hasPiece(rivalMove.getPiece()) && this.isValidMovement(rivalMove)){// comprobamos si es una accion valida del cliente
+				this.clientHand.deletePiece(rivalMove.getPiece());
 				this.playedPile.addPiece(rivalMove.getPiece());
 
 				// si el servidor puede tirar

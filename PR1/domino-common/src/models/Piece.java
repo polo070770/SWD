@@ -129,9 +129,11 @@ public class Piece {
 	 * @param anotherPiece
 	 * @return
 	 */
-	public boolean isEqual(Piece anotherPiece) {
-		return this.left == anotherPiece.left
-				&& this.right == anotherPiece.right;
+	public boolean isEqual (Piece anotherPiece) {
+		return (this.left == anotherPiece.left && 
+				this.right == anotherPiece.right) || 
+				(this.left == anotherPiece.right &&  /* El cliente podria representarlas al reves que yo*/
+				this.right == anotherPiece.left);
 	}
 
 	/**

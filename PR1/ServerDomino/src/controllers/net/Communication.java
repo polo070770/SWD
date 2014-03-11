@@ -84,6 +84,7 @@ public class Communication extends DominoLayer {
 			sendChar(chars);
 			sendInt(hand);
 			sendInt(remaining);
+			
 		}
 	}
 
