@@ -9,6 +9,11 @@ import models.Pile;
 import controllers.abstracts.Player;
 import controllers.net.Communication;
 
+/**
+ * clase principal del juego
+ * @author swd
+ *
+ */
 public class ServerDomino extends Domino {
 	public enum Stater{
 		CLIENTNP, SERVERNP, CLIENTMOVE, ERRORSUBMIT, ENDGAME, WAITING, PLAYING;
