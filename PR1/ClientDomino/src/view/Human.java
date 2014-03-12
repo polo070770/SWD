@@ -50,7 +50,7 @@ public class Human extends Player {
 			nueva = new Piece(input.charAt(0), input.charAt(1));
 		}
 
-		System.out.println("Quieres girar la ficha? (y)");
+		System.out.println("Quieres girar la ficha? (y/n)");
 		if (sc.nextLine().equalsIgnoreCase("y")) {
 			// input = new StringBuffer(input).reverse().toString();
 			nueva.setReverse(true);
