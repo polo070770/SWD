@@ -12,9 +12,10 @@ import net.DominoLayer.Size;
 public class Communication extends DominoLayer {
 	
 
-	
+	private String socket_desc;
 	public Communication(Socket socket) throws IOException {
 		super(socket);
+		this.socket_desc = socket.getInetAddress() + ":" + socket.getPort();
 	}
 
 	/**
@@ -101,6 +102,27 @@ public class Communication extends DominoLayer {
 		if(sendHeader(Id.PIECE)){
 			sendChar(chars);
 		}
+	}
+	
+	public void sendErrorToClient(int errNumber, String errDescription){
+		char[] chars = translateErrorDescription(errDescription);
+		if(sendHeader(Id.ERROR)){
+			sendInt(errNumber);
+			sendChar(chars);
+		}
+		
+	}
+	
+	public void sendEndGameToClient(int clientHand, int serverHand){
+		if(sendHeader(Id.ENDGAME)){
+			sendInt(clientHand);
+			sendInt(serverHand);
+		}
+	}
+	
+	
+	public String getScocketDescription(){
+		return this.socket_desc;
 	}
 
 }

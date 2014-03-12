@@ -53,7 +53,9 @@ public class ServerDomino extends Domino {
 	private Action ACTION = Action.INIT;
 	
 	/** CURRENT GLOBALS **/
+	
 	private String currentErrDescription;
+	private int currentErrDescriptionNumber;
 	
 	/** CURRENT CLIENT GLOBALS **/
 	private Movement currentClientMove;
@@ -142,7 +144,8 @@ public class ServerDomino extends Domino {
 				this.currentClientHandLength = this.comm.seeClientHandLength();
 				
 				// comprobamos si dice que le quedan 0 fichas
-				if(this.currentClientHandLength == 0 && this.clientHand.getLength() > 0){
+				if(this.currentClientHandLength == 0 && this.clientHand.getLength() > 1){
+					this.currentErrDescriptionNumber = 1;
 					this.currentErrDescription = "Numero de fichas pendientes no valido, aun te quedan " + this.clientHand.getLength();
 					ACTION = Action.CLIENTERROR;	
 				// comprobamos si es un nt
@@ -156,7 +159,7 @@ public class ServerDomino extends Domino {
 				
 				
 			case READERROR:	
-				 //TODO por ahora
+				 //TODO por ahora el servidor tira
 				ACTION = Action.SERVERMOVE;
 				break;
 				
@@ -172,6 +175,7 @@ public class ServerDomino extends Domino {
 					ACTION = Action.SERVERMOVE;
 				}else{
 					// especificamos el error
+					this.currentErrDescriptionNumber = 2;
 					this.currentErrDescription = "Jugada " + this.currentClientMove.getRepresentation() + " no valida ";
 					ACTION = Action.CLIENTERROR;	
 				}
@@ -288,16 +292,22 @@ public class ServerDomino extends Domino {
 	}
 	
 	
+	/**
+	 * funcion que devuelve un error al cliente
+	 */
 	private void sendErrorToClient(){
+		System.out.println(this.comm.getScocketDescription() + " ERROR");
+		this.comm.sendErrorToClient(this.currentErrDescriptionNumber, this.currentErrDescription);
 		/*
 		 * Informamos la cliente de que ha producido un error
 		 */
+		
 		//TODO
 		
 	}
 	
 	private void sendEndGameToClient() {
-		// TODO 
+		this.comm.sendEndGameToClient(this.clientHand.getLength(), this.player.handLength());;
 		
 	}
 	

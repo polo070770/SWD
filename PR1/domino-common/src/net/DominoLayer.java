@@ -46,7 +46,7 @@ public class DominoLayer {
 	}
 
 	public enum Size {
-		INIT(18), MOVEMENT(4), PIECE(3), INITPIECE(2);
+		INIT(18), MOVEMENT(4), PIECE(3), INITPIECE(2), ERRORLENGTHDESC(3);
 		private int size;
 
 		private Size(int length) {
@@ -291,6 +291,21 @@ public class DominoLayer {
 		chars[1] = piece.getRight();
 		chars[2] = piece.reversed() ? '1' : '0';
 
+		return chars;
+	}
+	/**
+	 * Funcion que recibe un estring de error y devuelve un array de chars conteniendo
+	 * la longitud del string en los tres primeros chars y el error parseado a chars
+	 * @param errDescrtpion
+	 * @return
+	 */
+	protected char[] translateErrorDescription(String errDescription){
+		char [] chars;
+		String errLength = "00" + errDescription.length();
+		//parseamos el error a tres digitos
+		errLength = errLength.substring(errLength.length() - Size.ERRORLENGTHDESC.asInt() - 1 , errLength.length() -1);
+	
+		chars = (errLength + errDescription).toCharArray();
 		return chars;
 	}
 
