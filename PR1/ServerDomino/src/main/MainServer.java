@@ -9,9 +9,9 @@ import controllers.GameServer;
 
 public class MainServer {
 
-	private final int TIMEOUT = 5000;
+	private final int TIMEOUT = 10000;
 	
-	private int port = 8080;
+	private int port = 1234;
 	private boolean serverActive = true;
 	
 	
@@ -30,7 +30,7 @@ public class MainServer {
 				
 		// capturamos el puerto
 		if(args.length > 1){
-			port = Integer.parseInt(args[0]);
+			port = Integer.parseInt(args[1]);
 		}
 		
 

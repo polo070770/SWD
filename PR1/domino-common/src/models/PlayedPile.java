@@ -37,7 +37,7 @@ public class PlayedPile extends Catalog {
 	 * @return
 	 */
 	public boolean matchRight(Piece piece){
-		return this.pieces.peekLast().matches(piece, RIGHTSIDE);
+		return this.pieces.peekLast() == null ? true : this.pieces.peekLast().matches(piece, RIGHTSIDE);
 	}
 	/**
 	 * Returns if the specified piece matches with the pieces on the left side of the pile
@@ -45,7 +45,7 @@ public class PlayedPile extends Catalog {
 	 * @return
 	 */
 	public boolean matchLeft(Piece piece){
-		return this.pieces.peekFirst().matches(piece, LEFTSIDE);
+		return this.pieces.peekFirst() == null ? true : this.pieces.peekFirst().matches(piece, LEFTSIDE);
 	}
 	/**
 	 * Returns if the specified piece matches with the pieces on the specified side of the pile
