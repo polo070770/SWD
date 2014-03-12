@@ -79,11 +79,6 @@ public class ClientDomino extends Domino {
 
 		while (this.STATE == State.PLAYING) {
 			switch (this.ACTION) {
-			case CLIENTMOVE:
-				break;
-			case WAITING:
-				this.comm.readNextMovementChar();
-				break;
 			}
 		}
 
