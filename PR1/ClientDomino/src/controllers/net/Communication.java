@@ -3,7 +3,9 @@ package controllers.net;
 import java.io.IOException;
 import java.net.Socket;
 
+import models.Movement;
 import net.DominoLayer;
+import net.DominoLayer.Id;
 
 public class Communication extends DominoLayer {
 
@@ -57,6 +59,14 @@ public class Communication extends DominoLayer {
 
 		return new char[0];
 
+	}
+	
+	public void sendClientMovement(Movement serverMovement, int hand){
+		char[] chars = translateMovement(serverMovement);
+		if(sendHeader(Id.MOVE)){
+			sendChar(chars);
+			sendInt(hand);
+		}
 	}
 
 }
