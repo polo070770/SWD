@@ -72,6 +72,8 @@ public class Human extends Player {
 		if (input.equalsIgnoreCase("R"))
 			movement = new Movement(nueva, Side.RIGHT);
 
+		hand.deletePiece(nueva);
+		
 		return movement;
 	}
 
@@ -83,8 +85,8 @@ public class Human extends Player {
 
 	@Override
 	public int handLength() {
-		// TODO Auto-generated method stub
-		return 0;
+
+			return this.hand.getLength();
 	}
 
 	public Movement getFirstMovement() {
@@ -107,7 +109,7 @@ public class Human extends Player {
 			nueva = new Piece(input);
 		}
 
-		Movement nextMovement = new Movement(nueva, null);
+		Movement nextMovement = new Movement(nueva, Side.RIGHT);
 		
 		hand.deletePiece(nueva);
 		

@@ -15,7 +15,7 @@ public class MainClient {
 	InetAddress host;
 
 	/**
-	 * @param args
+	 * @param args|0
 	 */
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")

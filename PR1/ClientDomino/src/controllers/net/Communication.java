@@ -60,10 +60,19 @@ public class Communication extends DominoLayer {
 		return new char[0];
 
 	}
-	
-	public void sendClientMovement(Movement serverMovement, int hand){
+
+	public char[] readMovementChar() {
+
+		char[] receivedChars;
+		receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
+
+		return receivedChars;
+
+	}
+
+	public void sendClientMovement(Movement serverMovement, int hand) {
 		char[] chars = translateMovement(serverMovement);
-		if(sendHeader(Id.MOVE)){
+		if (sendHeader(Id.MOVE)) {
 			sendChar(chars);
 			sendInt(hand);
 		}
