@@ -30,7 +30,7 @@ public class MainServer {
 				
 		// capturamos el puerto
 		if(args.length > 1){
-			port = Integer.parseInt(args[0]);
+			port = Integer.parseInt(args[1]);
 		}
 		
 
