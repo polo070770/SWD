@@ -187,7 +187,7 @@ public class ServerDomino extends Domino {
 				if(this.playedPile.getLength() == 0 && this.clientHand.hasPiece(this.currentClientMove.getPiece())){
 					this.clientHand.deletePiece(this.currentClientMove.getPiece());
 					//la insertamos en el lado correspondiente de la pila de fichas jugadas
-					this.playedPile.pushSide(this.currentClientMove.getPiece(), Side.RIGHT);
+					this.playedPile.pushSide(this.currentClientMove.getPiece(), Side.LEFT);
 					ACTION = Action.SERVERMOVE;
 				}else if(this.clientHand.hasPiece(this.currentClientMove.getPiece()) && this.isValidMovement(this.currentClientMove)){
 					// si es una ficha que esta en la mano del cliente y es un movimiento valido
