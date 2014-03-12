@@ -108,6 +108,9 @@ public class Human extends Player {
 		}
 
 		Movement nextMovement = new Movement(nueva, null);
+		
+		hand.deletePiece(nueva);
+		
 		return nextMovement;
 
 	}

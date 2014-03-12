@@ -20,8 +20,8 @@ public class ClientDomino extends Domino {
 	private State STATE = State.PLAYING;
 	private Id ACTION = Id.INIT;
 
-	private Movement firstMovement;
-	private Movement humanMovement;
+	private Movement humanReply;
+	private Movement serverReply;
 
 	public ClientDomino(Communication comm) {
 		super(); // create super resources
@@ -29,22 +29,16 @@ public class ClientDomino extends Domino {
 		createClientResources();
 	}
 
-	private void initGame() {
-
-		this.comm.re
-		
-	}
-
 	private void createClientResources() {
 		Pile hand = new Pile();
-		// if(this.comm.readHeader() == Id.INIT){
+
 		char[] resources = this.comm.readInitMovementChar();
 
 		// creamos los recursos del cliente a partir de los datos recibidos
 		int i;
 
 		for (i = 0; i < this.HANDSIZE * 2; i += 2) {
-			// fichas de inicio recibidias para el cliente
+			// fichas de inicio recibidas para el cliente
 			hand.addPiece(new Piece(resources[i], resources[i + 1]));
 		}
 
@@ -59,29 +53,43 @@ public class ClientDomino extends Domino {
 		movementChars[2] = resources[i++];
 		movementChars[3] = resources[i++];
 
-		firstMovement = new Movement(movementChars);
+		serverReply = new Movement(movementChars);
 		// comprobamos la jugada del servidor
-		if (firstMovement.isNT()) {
-			// es un NT-> servidor no puede tirar, empieza el jugador
-			humanMovement = this.player.getFirstMovement();
-			System.out.println(humanMovement.getRepresentation());
-			
-			
-		} else {
-			// el servidor ha empezado a jugar primero, toca jugar al jugador
-			System.out.println(firstMovement.getRepresentation());
+		if (serverReply.isNT()) {
+			// es un NT-> servidor no puede tirar, empieza human
+			humanReply = this.player.getFirstMovement();
+			System.out.println(humanReply.getRepresentation());
 
-			this.startingPiece = firstMovement.getPiece();
+		} else {
+			// el servidor ha empezado a jugar primero, toca jugar a human
+			System.out.println(serverReply.getRepresentation());
+
+			this.startingPiece = serverReply.getPiece();
 			this.playedPile.addPiece(startingPiece);
-			
-			this.player.nextMove(playedPile);
 
 		}
 
+		this.STATE = State.PLAYING;
 		
 		closeGame();
 
 	}
+	
+	public void initGame() {
+
+		while (this.STATE == State.PLAYING) {
+			switch (this.ACTION) {
+			case CLIENTMOVE:
+				break;
+			case WAITING:
+				this.comm.readNextMovementChar();
+				break;
+			}
+		}
+
+	}
+
+	
 
 	private void closeGame() {
 		this.comm.closeConnection();

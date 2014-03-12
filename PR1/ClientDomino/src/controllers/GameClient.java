@@ -23,6 +23,7 @@ public class GameClient {
 				System.out.println("Connected to server!");
 				// iniciamos juego
 				ClientDomino game = new ClientDomino(comm);
+				game.initGame();
 
 			} else {
 				System.out.println("No handhake, closing connection");
