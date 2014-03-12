@@ -8,6 +8,7 @@ import models.Movement;
 import models.Piece;
 import net.DominoLayer;
 import net.DominoLayer.Size;
+import models.DomError;
 
 public class Communication extends DominoLayer {
 	
@@ -42,14 +43,14 @@ public class Communication extends DominoLayer {
 	}
 	
 	public boolean sendInit(){
-		return writeId(Id.INIT);
+		return writeId(Id.INITSERVER);
 	}
 	
 	
 	
 	public void sendInitMovement(Piece[] clientPieces, Movement serverMovement){
 		
-		char[] initMovement = new char[Size.INIT.asInt()];
+		char[] initMovement = new char[Size.INITSERVER.asInt()];
 		
 		int counter = 0;
 		// Construimos la parte de piezas del cliente
@@ -62,25 +63,25 @@ public class Communication extends DominoLayer {
 			initMovement[counter++] = serverCharMovement;
 		}
 		
-		if(sendHeader(Id.INIT)){
+		if(sendHeader(Id.INITSERVER)){
 			sendChar(initMovement);
 		}
 		
 		
 	}
 	
-	
+	/// SERVER see from client functions
+	/**
+	 * 
+	 * @return
+	 */
 	public Movement seeClientMovement(){
 		char[] receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
-		
-		while (receivedChars.length == 0 && this.socketAlive()){
-			receivedChars = this.recieveChars(Size.INIT.asInt());
-		}
-		
 		return new Movement(receivedChars);
 		
-		
 	}
+	
+	
 	
 	public int seeClientHandLength(){
 		return this.readInt();
@@ -99,18 +100,13 @@ public class Communication extends DominoLayer {
 	public void sendPieceToClient(Piece piece){
 		char[] chars = translatePiece(piece);
 		
-		if(sendHeader(Id.PIECE)){
+		if(sendHeader(Id.MOVESERVER)){
 			sendChar(chars);
 		}
 	}
 	
-	public void sendErrorToClient(int errNumber, String errDescription){
-		char[] chars = translateErrorDescription(errDescription);
-		if(sendHeader(Id.ERROR)){
-			sendInt(errNumber);
-			sendChar(chars);
-		}
-		
+	public void sendErrorToClient(DomError err){
+		this.sendError(err);
 	}
 	
 	public void sendEndGameToClient(int clientHand, int serverHand){
@@ -119,7 +115,6 @@ public class Communication extends DominoLayer {
 			sendInt(serverHand);
 		}
 	}
-	
 	
 	public String getScocketDescription(){
 		return this.socket_desc;

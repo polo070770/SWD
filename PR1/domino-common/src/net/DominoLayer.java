@@ -7,13 +7,22 @@ import java.net.SocketTimeoutException;
 
 import models.Movement;
 import models.Piece;
+import models.DomError;
 
 public class DominoLayer {
 
 	public enum Id {
 
-		UNKNOWN(-2), TIMEOUT(-1), HELLO(10), INIT(20), MOVE(11), MOVESERVER(21), PIECE(21), ENDGAME(
-				22), ERROR(99);
+		UNKNOWN(-2), 
+		TIMEOUT(-1), 
+		HELLO(10), 
+		INIT(20), 
+		INITSERVER(20),
+		MOVE(11), 
+		MOVESERVER(21),
+		/*, PIECE(21) no se hace distincion*/
+		ENDGAME(22), 
+		ERROR(99);
 
 		public static Id fromInt(int num) {
 			for (Id id : Id.values()) {
@@ -46,7 +55,12 @@ public class DominoLayer {
 	}
 
 	public enum Size {
-		INIT(18), MOVEMENT(4), PIECE(3), INITPIECE(2), ERRORLENGTHDESC(3);
+		INIT(18), 
+		INITSERVER(18),
+		MOVEMENT(4), 
+		PIECE(4), 
+		INITPIECE(2), 
+		ERRORLENGTHDESC(3);
 		private int size;
 
 		private Size(int length) {
@@ -58,7 +72,7 @@ public class DominoLayer {
 		}
 
 	}
-
+	protected final boolean LOG = true;
 	private ComUtils comm;
 	protected Socket socket;
 
@@ -101,8 +115,10 @@ public class DominoLayer {
 		try {
 			return Id.fromInt(this.comm.read_int32());
 		} catch (SocketTimeoutException e) {
+			if(LOG){
 			System.out.println(this.socket.getInetAddress() + ":"
 					+ this.socket.getPort() + " TIMEOUT");
+			}
 			return Id.TIMEOUT;
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -118,8 +134,10 @@ public class DominoLayer {
 		try {
 			return this.comm.read_int32();
 		} catch (SocketTimeoutException e) {
+			if(LOG){
 			System.out.println(this.socket.getInetAddress() + ":"
 					+ this.socket.getPort() + " TIMEOUT");
+			}
 		} catch (SocketException e) {
 			e.printStackTrace();
 
@@ -285,11 +303,14 @@ public class DominoLayer {
 		return translateMovement(move, false);
 	}
 
+	
+	
 	protected char[] translatePiece(Piece piece) {
 		char[] chars = new char[Size.PIECE.asInt()];
 		chars[0] = piece.getLeft();
 		chars[1] = piece.getRight();
 		chars[2] = piece.reversed() ? '1' : '0';
+		chars[3] = '0'; //padding
 
 		return chars;
 	}
@@ -309,4 +330,23 @@ public class DominoLayer {
 		return chars;
 	}
 
+	
+	public DomError seeError(){
+		int errNum = this.readInt();
+		char[] errorLengthDesc = this.recieveChars(Size.ERRORLENGTHDESC.asInt());  
+		char[] errorDesc = this.recieveChars(Integer.parseInt(String.valueOf(errorLengthDesc)));  
+		return new DomError(errNum, errorDesc);
+		
+	}
+	
+	public void sendError(DomError err){
+		
+		char[] chars = translateErrorDescription(err.getDesc());
+		if(sendHeader(Id.ERROR)){
+			sendInt(err.getErrNum());
+			sendChar(chars);
+		}
+		
+	}
+	
 }

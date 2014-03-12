@@ -1,6 +1,7 @@
 package controllers;
 
 import net.DominoLayer.Id;
+import models.DomError;
 import models.Movement;
 import models.Piece;
 import models.Pile;
@@ -44,7 +45,9 @@ public class ServerDomino extends Domino {
 		SERVERNT,
 		SENDNT;
 	}
-
+	
+	private final boolean INFO = true;
+	protected final boolean LOG = true;
 	private Pile remainingPile;
 	private Pile clientHand;
 	private Communication comm;
@@ -57,6 +60,8 @@ public class ServerDomino extends Domino {
 	
 	private String currentErrDescription;
 	private int currentErrDescriptionNumber;
+	
+	private DomError currentError;
 	
 	/** CURRENT CLIENT GLOBALS **/
 	private Movement currentClientMove;
@@ -127,16 +132,16 @@ public class ServerDomino extends Domino {
 			case INIT:
 				// comprobamos quien tiene la primera pieza y entregamos las fichas y el sigiuiente movimiento
 				if(this.clientHand.hasPiece(this.startingPiece)){
-					System.out.println(this.comm.getScocketDescription() + " empieza client");
+					if(INFO)System.out.println(this.comm.getScocketDescription() + " empieza client");
 					// Enviamos un movement con ficha null
 					this.comm.sendInitMovement(clientHand.getPieces(), new Movement(null,null));
 				}else{
-					System.out.println(this.comm.getScocketDescription() + " empieza server ");
+					if(INFO)System.out.println(this.comm.getScocketDescription() + " empieza server ");
 					//empieza el servidor, enviamos el primer movimiento, con las piezas del cliente
 					this.comm.sendInitMovement(clientHand.getPieces(), new Movement(this.startingPiece,null));
 					//quitamos la ficha inicial de la mano del servidor
 					this.player.removePiece(this.startingPiece);
-					this.playedPile.pushSide(this.startingPiece, Side.RIGHT);
+					this.playedPile.pushSide(this.startingPiece, Side.LEFT);
 				}
 				ACTION = Action.WAITNEXT;
 				break;
@@ -144,14 +149,16 @@ public class ServerDomino extends Domino {
 			/// READ CASES	
 			case READMOVE:
 				///COMMUNICATION
+				
 				this.currentClientMove = this.comm.seeClientMovement();
 				this.currentClientHandLength = this.comm.seeClientHandLength();
-				System.out.println(this.comm.getScocketDescription() + " : " +this.currentClientMove.getRepresentation());
-				System.out.println(this.comm.getScocketDescription() + " : " + this.currentClientHandLength + " fichas");
+				if(INFO){
+					System.out.println(this.comm.getScocketDescription() + " : " +this.currentClientMove.getRepresentation());
+					System.out.println(this.comm.getScocketDescription() + " : " + this.currentClientHandLength + " fichas");
+				}
 				// comprobamos si dice que le quedan 0 fichas
 				if(this.currentClientHandLength == 0 && this.clientHand.getLength() > 1){
-					this.currentErrDescriptionNumber = 1;
-					this.currentErrDescription = "Numero de fichas pendientes no valido, aun te quedan " + this.clientHand.getLength();
+					this.currentError = new DomError(1, "Numero de fichas pendientes no valido, aun te quedan " + this.clientHand.getLength());
 					ACTION = Action.CLIENTERROR;	
 				// comprobamos si es un nt
 				}else if(this.currentClientMove.isNT()){
@@ -170,9 +177,11 @@ public class ServerDomino extends Domino {
 				
 			//// ACTION DEFINE CASES	
 			case CLIENTMOVE:
-				System.out.println(this.comm.getScocketDescription() + " hace movimiento ");
-				// si es el primer movimiento
-				System.out.println("Longitude de played pile :" + this.playedPile.getLength());
+				if(INFO){
+					System.out.println(this.comm.getScocketDescription() + " hace movimiento ");
+					// si es el primer movimiento
+					System.out.println("Longitude de played pile :" + this.playedPile.getLength());
+				}
 				
 
 				if(this.playedPile.getLength() == 0 && this.clientHand.hasPiece(this.currentClientMove.getPiece())){
@@ -189,8 +198,7 @@ public class ServerDomino extends Domino {
 					ACTION = Action.SERVERMOVE;
 				}else{
 					// especificamos el error
-					this.currentErrDescriptionNumber = 2;
-					this.currentErrDescription = "Jugada " + this.currentClientMove.getRepresentation() + " no valida ";
+					this.currentError = new DomError(2, "Jugada " + this.currentClientMove.getRepresentation() + " no valida ");
 					ACTION = Action.CLIENTERROR;	
 				}
 				
@@ -217,7 +225,10 @@ public class ServerDomino extends Domino {
 				break;
 				
 			case SERVERMOVE:
-
+				if(INFO){
+					System.out.println("Estado tablero: " + this.playedPile.getRepresentation());
+					System.out.println("Fichas servidor: " + this.player.handRepresentation());
+				}
 				if(this.player.hasMove(this.playedPile)){// si el servidor puede tirar
 					this.currentServerMove = this.player.nextMove(this.playedPile);
 					ACTION = Action.SENDMOVE;
@@ -247,6 +258,7 @@ public class ServerDomino extends Domino {
 			
 			/////// SEND CASES
 			case SENDMOVE:
+				if(INFO)System.out.println("Servidor juega con " + this.currentServerMove.getRepresentation() + " que solicitaba ficha");
 				sendMovement(this.currentServerMove);
 				// el servidor ha ganado
 				if(this.player.handLength() == 0){
@@ -267,6 +279,7 @@ public class ServerDomino extends Domino {
 				break;
 				
 			case SENDPIECE:
+				if(INFO)System.out.println("Servidor envia " + this.currentClientSentPiece.getRepresentation() + " que solicitaba ficha");
 				this.currentClientSentPiece = this.remainingPile.getRandomPiece(); //extraemos una pieza de la pila de pendientes
 				this.clientHand.addPiece(this.currentClientSentPiece);
 				sendPieceToClient();
@@ -310,9 +323,11 @@ public class ServerDomino extends Domino {
 	 * funcion que devuelve un error al cliente
 	 */
 	private void sendErrorToClient(){
-		System.out.println(this.comm.getScocketDescription() + " ERROR");
-		System.out.println(this.currentErrDescription);
-		this.comm.sendErrorToClient(this.currentErrDescriptionNumber, this.currentErrDescription);
+		if(INFO){
+			System.out.println(this.comm.getScocketDescription() + " ERROR");
+			System.out.println(this.currentError.getRepresentation());
+		}
+		this.comm.sendErrorToClient(this.currentError);
 		/*
 		 * Informamos la cliente de que ha producido un error
 		 */

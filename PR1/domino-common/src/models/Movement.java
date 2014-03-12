@@ -17,7 +17,6 @@ public class Movement {
 		this.piece = null;
 		
 		if(piece != null)this.piece = new Piece(piece);
-		
 		this.side = side;
 	}
 	
