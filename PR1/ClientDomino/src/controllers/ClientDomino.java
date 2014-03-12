@@ -71,8 +71,9 @@ public class ClientDomino extends Domino {
 
 			case WAITNEXT:
 				// recibimos la contestacion del servidor
-
+				System.out.println("esperando");
 				Id id = this.comm.readHeader();
+				System.out.println("Recibo id" + id.getVal());
 				ACTION = convertIdToAction(id);
 				break;
 
@@ -81,7 +82,9 @@ public class ClientDomino extends Domino {
 				if (serverReply.isNT()) {
 					// es un NT-> servidor no puede tirar, empieza human
 					humanReply = this.player.getFirstMovement();
+					this.playedPile.addPiece(humanReply.getPiece());
 					System.out.println(humanReply.getRepresentation());
+					this.comm.sendClientMovement(humanReply, this.player.handLength());
 					ACTION = Action.WAITNEXT;
 
 				} else {
@@ -98,11 +101,12 @@ public class ClientDomino extends Domino {
 				break;
 			case READMOVE:
 				// leemos la contestacion del servior
-				serverReply = new Movement(this.comm.readNextMovementChar());
+				serverReply = new Movement(this.comm.readMovementChar());
 				if (serverReply.isNT()) {
 					// si el servidor no puede tirar, el cliente tira
 					if (this.player.handLength() > 0) {
 						// tira si aun tiene fichas en la mano
+						this.playedPile.addPiece(serverReply.getPiece());
 						ACTION = Action.SENDMOVE;
 					} else {
 						// sino contestara con un no puedo tirar
@@ -110,8 +114,11 @@ public class ClientDomino extends Domino {
 					}
 				} else {
 					// el servidor ha tirado una ficha, nos toca contestar
-					System.out.println(serverReply.getRepresentation());
+					System.out.println("Server tira: " + serverReply.getRepresentation());
 					this.playedPile.addPiece(serverReply.getPiece());
+					
+					System.out.println("Tablero: " + playedPile.getRepresentation());
+					
 					ACTION = Action.SENDMOVE;
 
 				}
@@ -119,7 +126,9 @@ public class ClientDomino extends Domino {
 				
 			case SENDMOVE:
 				humanReply = this.player.nextMove(playedPile);
-				sendMovement(humanReply);
+				System.out.println("#fichas: " + this.player.handLength());
+				this.comm.sendClientMovement(humanReply, this.player.handLength());
+				this.playedPile.addPiece(humanReply.getPiece());
 				ACTION = Action.WAITNEXT;
 				
 				break;
@@ -154,6 +163,9 @@ public class ClientDomino extends Domino {
 		case MOVE: // el servidor hace move
 			return Action.READMOVE;
 
+		case UNKNOWN:
+			return  Action.WAITNEXT;
+		
 		default:
 			return Action.SENDENDGAME;
 		}
