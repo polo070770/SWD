@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -39,10 +40,14 @@ public class MainClient {
 			socket.setKeepAlive(true);
 
 			GameClient gameClient = new GameClient(socket);
-
+		} catch (ConnectException e) {
+			System.out.println("No hem pogut conectar al servidor");
+			e.printStackTrace();
 		} catch (UnknownHostException e) {
+			System.out.println("No hem pogut conectar al servidor");
 			e.printStackTrace();
 		} catch (IOException e) {
+			System.out.println("No hem pogut conectar al servidor");
 			e.printStackTrace();
 		}
 
