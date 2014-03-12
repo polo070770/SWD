@@ -31,6 +31,8 @@ public class ClientDomino extends Domino {
 
 	private void initGame() {
 
+		this.comm.re
+		
 	}
 
 	private void createClientResources() {
@@ -63,6 +65,8 @@ public class ClientDomino extends Domino {
 			// es un NT-> servidor no puede tirar, empieza el jugador
 			humanMovement = this.player.getFirstMovement();
 			System.out.println(humanMovement.getRepresentation());
+			
+			
 		} else {
 			// el servidor ha empezado a jugar primero, toca jugar al jugador
 			System.out.println(firstMovement.getRepresentation());
@@ -74,6 +78,7 @@ public class ClientDomino extends Domino {
 
 		}
 
+		
 		closeGame();
 
 	}

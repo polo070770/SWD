@@ -22,6 +22,7 @@ public class Communication extends DominoLayer {
 	}
 
 	public char[] readInitMovementChar() {
+
 		Id recievedId = readHeader();
 
 		if (recievedId == Id.INIT) {
@@ -36,5 +37,26 @@ public class Communication extends DominoLayer {
 		}
 		return new char[0];
 	}
-	
+
+	public char[] readNextMovementChar() {
+
+		Id recievedId = readHeader();
+
+		if (recievedId == Id.MOVE) {
+
+			char[] receivedChars;
+			receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
+
+			while (receivedChars.length == 0 && this.socketAlive()) {
+				receivedChars = this.recieveChars(Size.INIT.asInt());
+			}
+
+			return receivedChars;
+
+		}
+
+		return new char[0];
+
+	}
+
 }
