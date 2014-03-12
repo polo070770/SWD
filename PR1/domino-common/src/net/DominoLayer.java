@@ -12,7 +12,7 @@ public class DominoLayer {
 
 	public enum Id {
 
-		UNKNOWN(-2), TIMEOUT(-1), HELLO(10), INIT(20), MOVE(11), PIECE(21), ENDGAME(
+		UNKNOWN(-2), TIMEOUT(-1), HELLO(10), INIT(20), MOVE(11), MOVESERVER(21), PIECE(21), ENDGAME(
 				22), ERROR(99);
 
 		public static Id fromInt(int num) {

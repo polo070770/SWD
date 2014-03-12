@@ -10,8 +10,8 @@ import controllers.GameClient;
 
 public class MainClient {
 
-	private String url = "127.0.0.1";
-	private int port = 8080;
+	private String url = "161.116.52.61";
+	private int port = 1234;
 	InetAddress host;
 
 	/**

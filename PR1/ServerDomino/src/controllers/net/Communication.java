@@ -88,7 +88,7 @@ public class Communication extends DominoLayer {
 	
 	public void sendServerMovement(Movement serverMovement, int hand, int remaining){
 		char[] chars = translateMovement(serverMovement);
-		if(sendHeader(Id.MOVE)){
+		if(sendHeader(Id.MOVESERVER)){
 			sendChar(chars);
 			sendInt(hand);
 			sendInt(remaining);

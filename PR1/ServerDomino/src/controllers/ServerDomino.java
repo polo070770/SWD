@@ -6,6 +6,7 @@ import models.Piece;
 import models.Pile;
 
 
+import models.Side;
 import controllers.abstracts.Player;
 import controllers.net.Communication;
 
@@ -125,14 +126,17 @@ public class ServerDomino extends Domino {
 			/// INIT CASE
 			case INIT:
 				// comprobamos quien tiene la primera pieza y entregamos las fichas y el sigiuiente movimiento
-				if(this.player.hasPiece(this.startingPiece)){
+				if(this.clientHand.hasPiece(this.startingPiece)){
+					System.out.println(this.comm.getScocketDescription() + " empieza client");
+					// Enviamos un movement con ficha null
+					this.comm.sendInitMovement(clientHand.getPieces(), new Movement(null,null));
+				}else{
+					System.out.println(this.comm.getScocketDescription() + " empieza server ");
 					//empieza el servidor, enviamos el primer movimiento, con las piezas del cliente
 					this.comm.sendInitMovement(clientHand.getPieces(), new Movement(this.startingPiece,null));
 					//quitamos la ficha inicial de la mano del servidor
 					this.player.removePiece(this.startingPiece);
-				}else{
-					// Enviamos un movement con ficha null
-					this.comm.sendInitMovement(clientHand.getPieces(), new Movement(null,null));
+					this.playedPile.pushSide(this.startingPiece, Side.RIGHT);
 				}
 				ACTION = Action.WAITNEXT;
 				break;
@@ -142,7 +146,8 @@ public class ServerDomino extends Domino {
 				///COMMUNICATION
 				this.currentClientMove = this.comm.seeClientMovement();
 				this.currentClientHandLength = this.comm.seeClientHandLength();
-				
+				System.out.println(this.comm.getScocketDescription() + " : " +this.currentClientMove.getRepresentation());
+				System.out.println(this.comm.getScocketDescription() + " : " + this.currentClientHandLength + " fichas");
 				// comprobamos si dice que le quedan 0 fichas
 				if(this.currentClientHandLength == 0 && this.clientHand.getLength() > 1){
 					this.currentErrDescriptionNumber = 1;
@@ -165,9 +170,18 @@ public class ServerDomino extends Domino {
 				
 			//// ACTION DEFINE CASES	
 			case CLIENTMOVE:
-				// si es una ficha que esta en la mano del cliente y es un movimiento valido
-				if(this.clientHand.hasPiece(this.currentClientMove.getPiece()) && 
-						this.isValidMovement(this.currentClientMove)){
+				System.out.println(this.comm.getScocketDescription() + " hace movimiento ");
+				// si es el primer movimiento
+				System.out.println("Longitude de played pile :" + this.playedPile.getLength());
+				
+
+				if(this.playedPile.getLength() == 0 && this.clientHand.hasPiece(this.currentClientMove.getPiece())){
+					this.clientHand.deletePiece(this.currentClientMove.getPiece());
+					//la insertamos en el lado correspondiente de la pila de fichas jugadas
+					this.playedPile.pushSide(this.currentClientMove.getPiece(), Side.RIGHT);
+					ACTION = Action.SERVERMOVE;
+				}else if(this.clientHand.hasPiece(this.currentClientMove.getPiece()) && this.isValidMovement(this.currentClientMove)){
+					// si es una ficha que esta en la mano del cliente y es un movimiento valido
 					//eliminamos la ficha de la mano del cliente, 
 					this.clientHand.deletePiece(this.currentClientMove.getPiece());
 					//la insertamos en el lado correspondiente de la pila de fichas jugadas
@@ -297,6 +311,7 @@ public class ServerDomino extends Domino {
 	 */
 	private void sendErrorToClient(){
 		System.out.println(this.comm.getScocketDescription() + " ERROR");
+		System.out.println(this.currentErrDescription);
 		this.comm.sendErrorToClient(this.currentErrDescriptionNumber, this.currentErrDescription);
 		/*
 		 * Informamos la cliente de que ha producido un error

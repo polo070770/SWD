@@ -9,9 +9,9 @@ import controllers.GameServer;
 
 public class MainServer {
 
-	private final int TIMEOUT = 5000;
+	private final int TIMEOUT = 10000;
 	
-	private int port = 8080;
+	private int port = 1234;
 	private boolean serverActive = true;
 	
 	
