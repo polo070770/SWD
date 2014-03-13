@@ -20,8 +20,20 @@ public class IA extends Player {
 	}
 
 
+	/**
+	 * funcion que devuelve el siguiente movimiento a realizar
+	 */
 	public Movement nextMove(PlayedPile playedPile) {
 		for (Piece p : hand.getPieces()) {
+			// comprueba si la ficha encaja por la izquiera o por la derecha
+			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
+				// si encaja, comprueba por que lado y devuelve el movimiento
+				Side side = playedPile.matchLeft(p) ? Side.LEFT : Side.RIGHT;
+				Movement newMove = new Movement(p, side);
+				return newMove;
+			}
+			// sino, gira la pieza y vuelve a comprobar lo mismo
+			p.reverse();
 			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
 				Side side = playedPile.matchLeft(p) ? Side.LEFT : Side.RIGHT;
 				Movement newMove = new Movement(p, side);

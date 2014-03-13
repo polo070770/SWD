@@ -133,7 +133,7 @@ public class ServerDomino extends Domino {
 				} else {
 					if (INFO)
 						System.out.println(this.comm.getScocketDescription()
-								+ " empieza server ");
+								+ " empieza server con " + this.startingPiece.getRepresentation());
 					// empieza el servidor, enviamos el primer movimiento, con
 					// las piezas del cliente
 					this.comm.sendInitMovement(clientHand.getPieces(),
@@ -281,8 +281,7 @@ public class ServerDomino extends Domino {
 					// servidor no puede tirar
 					// damos fichas al server hasta que pueda tirar o no queden
 					// fichas
-					while (!this.player.hasMove(this.playedPile)
-							&& remainingPile.getLength() > 0) {
+					while ((!this.player.hasMove(this.playedPile)) && remainingPile.getLength() > 0) {
 						Piece p = this.remainingPile.getRandomPiece();
 						this.player.setPiece(p);
 						if(INFO){

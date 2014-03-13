@@ -201,5 +201,8 @@ public class Piece {
 	public void setReverse(boolean reverse) {
 		this.reverse = reverse;
 	}
-
+	
+	public void reverse(){
+		this.reverse = ! this.reverse;
+	}
 }

@@ -32,9 +32,19 @@ public abstract class Player {
 		return null;
 	};
 	
-	
+	/**
+	 * funcion que devuelve si hay una tirada posible
+	 * @param playedPile
+	 * @return
+	 */
 	public boolean hasMove(PlayedPile playedPile) {
 		for (Piece p : hand.getPieces()) {
+			// comprueba si la ficha actual encaja por la izquierda o por la derecha
+			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
+				return true;
+			}
+			// sino, gira la ficha actual y vuelve a probar lo mismo
+			p.reverse();
 			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
 				return true;
 			}

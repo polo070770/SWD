@@ -73,7 +73,7 @@ public class DominoLayer {
 		}
 
 	}
-	protected final boolean LOG = true;
+	protected final boolean LOG = false;
 	private ComUtils comm;
 	protected Socket socket;
 
