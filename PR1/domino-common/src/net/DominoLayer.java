@@ -355,7 +355,11 @@ public class DominoLayer {
 		return chars;
 	}
 
-	
+	/**
+	 * Funcion que lee un error en el formato del protocolo, lo parsea y lo devuelve como objeto topo
+	 * DomError
+	 * @return
+	 */
 	public DomError seeError(){
 		int errNum = this.readInt();
 		char[] errorLengthDesc = this.recieveChars(Size.ERRORLENGTHDESC.asInt());  
@@ -364,6 +368,10 @@ public class DominoLayer {
 		
 	}
 	
+	/**
+	 * Funcion que recibe un error, lo parsea segun el protocolo y lo envia
+	 * @param err
+	 */
 	public void sendError(DomError err){
 		
 		char[] chars = translateErrorDescription(err.getDesc());
