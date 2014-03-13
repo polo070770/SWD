@@ -36,6 +36,10 @@ public class Movement {
 		return this.piece == null;
 	}
 	
+	public boolean isNewPiece(){
+		return this.side == Side.PADDING;
+	}
+	
 	public Side getSide(){
 		return this.side;
 	}

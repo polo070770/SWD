@@ -134,9 +134,21 @@ public class ClientDomino extends Domino {
 						ACTION = Action.SENDNT;
 					}
 
+				} else if (currentServerMove.isNewPiece()) {
+					// el servidor nos ha enviado una ficha nueva
+					System.out.println("\n- Ficha recibida: "
+							+ currentServerMove.getRepresentation());
+
+					this.player.addPieceHand(currentServerMove.getPiece());
+
+					System.out.println("- Estado tablero: "
+							+ playedPile.getRepresentation());
+
+					ACTION = Action.SENDMOVE;
+
 				} else {
 					// el servidor ha tirado una ficha, nos toca contestar
-					System.out.println("- Ficha server: "
+					System.out.println("\n- Ficha server: "
 							+ currentServerMove.getRepresentation());
 
 					// aniadimos ficha del servidor en el tablero
@@ -157,30 +169,36 @@ public class ClientDomino extends Domino {
 				// construimos nuevo movimiento
 				currentClientMove = this.player.nextMove(playedPile);
 
-				System.out.println("#fichas: " + this.player.handLength());
+				// analizamos si el movimiento del cliente es un no puedo tirar
+				if (this.currentClientMove.isNT()) {
 
-				// enviamos movimiento al servidor
-				sendMovement(currentClientMove);
+					// si el cliente no puede tirar pasamos al esado enviar NT
+					ACTION = Action.SENDNT;
 
-				// aniadimos pieza en el tablero
-				this.playedPile.pushSide(currentClientMove.getPiece(),
-						currentClientMove.getSide());
-
-				if (this.player.handLength() == 0) {
-					// Cliente gana juego
-					ACTION = Action.SENDENDGAME;
 				} else {
-					// Continuamos jugando
-					STATE = State.PLAYING;
-					ACTION = Action.WAITNEXT;
-				}
 
+					System.out.println("#fichas: " + this.player.handLength());
+
+					// enviamos movimiento al servidor
+					sendMovement(currentClientMove);
+
+					// aniadimos pieza en el tablero
+					this.playedPile.pushSide(currentClientMove.getPiece(),
+							currentClientMove.getSide());
+
+					if (this.player.handLength() == 0) {
+						// Cliente gana juego
+						ACTION = Action.SENDENDGAME;
+					} else {
+						// Continuamos jugando
+						STATE = State.PLAYING;
+						ACTION = Action.WAITNEXT;
+					}
+
+				}
 				break;
 			case SENDNT:
 				STATE = State.CLIENTNP;
-				// construimos movimiento nulo
-				currentClientMove = new Movement(null, null);
-
 				// enviamos jugada con los datos necesarios
 				this.comm.sendClientMovement(currentClientMove,
 						this.player.handLength());
@@ -188,6 +206,7 @@ public class ClientDomino extends Domino {
 				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
 				break;
+
 			}
 		}
 
@@ -211,10 +230,7 @@ public class ClientDomino extends Domino {
 						// error IO
 			return Action.WAITNEXT;
 
-		case MOVE: // el servidor hace move
-			return Action.READMOVE;
-
-		case MOVESERVER:
+		case MOVESERVER:// el servidor hace move
 			return Action.READMOVE;
 
 		case UNKNOWN:

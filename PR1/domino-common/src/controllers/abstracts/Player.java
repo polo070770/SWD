@@ -9,37 +9,40 @@ import models.PlayedPile;
 public abstract class Player {
 	protected Pile hand;
 
-	
 	public Player(Pile hand) {
 		this.hand = hand;
 	}
 
-	public Player(Catalog catalog){
+	public Player(Catalog catalog) {
 		this.hand = new Pile(catalog);
 	}
 
-	public void setPiece(Piece piece) {
+	public void addPieceHand(Piece piece) {
 		this.hand.addPiece(piece);
 	}
-	public boolean hasPiece(Piece piece){
+
+	public boolean hasPiece(Piece piece) {
 		return this.hand.hasPiece(piece);
 	}
-	public String handRepresentation(){
+
+	public String handRepresentation() {
 		return hand.getRepresentation();
 	}
 
-	public Movement getFirstMovement(){
+	public Movement getFirstMovement() {
 		return null;
 	};
-	
+
 	/**
 	 * funcion que devuelve si hay una tirada posible
+	 * 
 	 * @param playedPile
 	 * @return
 	 */
 	public boolean hasMove(PlayedPile playedPile) {
 		for (Piece p : hand.getPieces()) {
-			// comprueba si la ficha actual encaja por la izquierda o por la derecha
+			// comprueba si la ficha actual encaja por la izquierda o por la
+			// derecha
 			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
 				return true;
 			}
@@ -57,13 +60,10 @@ public abstract class Player {
 
 	}
 
-
 	public int handLength() {
 		return this.hand.getLength();
 	}
-	
+
 	public abstract Movement nextMove(PlayedPile playedPile);
-	
-	
 
 }

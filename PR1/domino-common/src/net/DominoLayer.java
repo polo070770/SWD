@@ -13,16 +13,10 @@ public class DominoLayer {
 
 	public enum Id {
 
-		UNKNOWN(-2), 
-		TIMEOUT(-1), 
-		HELLO(10), 
-		INIT(20), 
-		INITSERVER(20),
-		MOVE(11), 
-		MOVESERVER(21),
-		/*, PIECE(21) no se hace distincion*/
-		ENDGAME(22), 
-		ERROR(99);
+		UNKNOWN(-2), TIMEOUT(-1), HELLO(10), INIT(20), INITSERVER(20), MOVE(11), MOVESERVER(
+				21),
+		/* , PIECE(21) no se hace distincion */
+		ENDGAME(22), ERROR(99);
 
 		public static Id fromInt(int num) {
 			for (Id id : Id.values()) {
@@ -49,6 +43,7 @@ public class DominoLayer {
 		public int getVal() {
 			return id;
 		}
+
 		public int asInt() {
 			return id;
 		}
@@ -56,12 +51,8 @@ public class DominoLayer {
 	}
 
 	public enum Size {
-		INIT(18), 
-		INITSERVER(18),
-		MOVEMENT(4), 
-		PIECE(4), 
-		INITPIECE(2), 
-		ERRORLENGTHDESC(3);
+		INIT(18), INITSERVER(18), MOVEMENT(4), PIECE(4), INITPIECE(2), ERRORLENGTHDESC(
+				3);
 		private int size;
 
 		private Size(int length) {
@@ -73,6 +64,7 @@ public class DominoLayer {
 		}
 
 	}
+
 	protected final boolean LOG = false;
 	private ComUtils comm;
 	protected Socket socket;
@@ -105,21 +97,21 @@ public class DominoLayer {
 	}
 
 	/**
-	 * Funcion que lee un id y controla las excepsiones timeout, socket exception etc...
-	 * Devuelve un objeto de tipo id, par recibir valores enteros, utilizar la funcion readInt
+	 * Funcion que lee un id y controla las excepsiones timeout, socket
+	 * exception etc... Devuelve un objeto de tipo id, par recibir valores
+	 * enteros, utilizar la funcion readInt
 	 * 
 	 * @return
 	 */
-
 
 	@SuppressWarnings("finally")
 	private Id readId() {
 		try {
 			return Id.fromInt(this.comm.read_int32());
 		} catch (SocketTimeoutException e) {
-			if(LOG){
-			System.out.println(this.socket.getInetAddress() + ":"
-					+ this.socket.getPort() + " TIMEOUT");
+			if (LOG) {
+				System.out.println(this.socket.getInetAddress() + ":"
+						+ this.socket.getPort() + " TIMEOUT");
 			}
 			return Id.TIMEOUT;
 		} catch (SocketException e) {
@@ -133,25 +125,27 @@ public class DominoLayer {
 	}
 
 	/**
-	 * Funcion que lee un entero y controla las excepsiones timeout, socket exception etc...
-	 * Devuelve un objeto de tipo id, par recibir valores enteros, utilizar la funcion readInt
+	 * Funcion que lee un entero y controla las excepsiones timeout, socket
+	 * exception etc... Devuelve un objeto de tipo id, par recibir valores
+	 * enteros, utilizar la funcion readInt
 	 * 
 	 * @return
 	 */
-	
+
 	protected int readInt() {
 		try {
 			return this.comm.read_int32();
 		} catch (SocketTimeoutException e) {
-			if(LOG){
-			System.out.println(this.socket.getInetAddress() + ":"
-					+ this.socket.getPort() + " TIMEOUT");
+			if (LOG) {
+				System.out.println(this.socket.getInetAddress() + ":"
+						+ this.socket.getPort() + " TIMEOUT");
 			}
-			
-		if(this.socketAlive()){
-			// mientras el socket este abierto, seguimos llamando la funcion a si misma
-			return this.readInt();
-		}
+
+			if (this.socketAlive()) {
+				// mientras el socket este abierto, seguimos llamando la funcion
+				// a si misma
+				return this.readInt();
+			}
 		} catch (SocketException e) {
 			e.printStackTrace();
 
@@ -162,26 +156,24 @@ public class DominoLayer {
 		return 0;
 	}
 
-	
 	/**
-	 * Funcion que lee una cabecera y devuelve un Id, hace uso de la funcion readId
-	 * y se mantiene a la espera si hay timeouts mientras la conexion del socket esta abierta
-	 * So el socket ser cierra, devuelve un ENDGAME
+	 * Funcion que lee una cabecera y devuelve un Id, hace uso de la funcion
+	 * readId y se mantiene a la espera si hay timeouts mientras la conexion del
+	 * socket esta abierta So el socket ser cierra, devuelve un ENDGAME
+	 * 
 	 * @return
 	 */
 	public Id readHeader() {
 		Id id;
-		while ((id = readId()) == Id.TIMEOUT && socketAlive());
+		while ((id = readId()) == Id.TIMEOUT && socketAlive())
+			;
 		if (!socketAlive())
 			return Id.ENDGAME;
 
 		return id;
 
 	}
-	
-	
-	
-	
+
 	/**
 	 * Returns if socket is alive or not
 	 * 
@@ -232,8 +224,6 @@ public class DominoLayer {
 			return false;
 		}
 	}
-
-
 
 	public void sendInt(int value) {
 		try {
@@ -328,58 +318,64 @@ public class DominoLayer {
 		return translateMovement(move, false);
 	}
 
-	
-	
 	protected char[] translatePiece(Piece piece) {
 		char[] chars = new char[Size.PIECE.asInt()];
 		chars[0] = piece.getLeft();
 		chars[1] = piece.getRight();
-		chars[2] = piece.reversed() ? '1' : '0';
-		chars[3] = '0'; //padding
+		chars[2] = piece.reversed() ? '1' : '0'; // padding
+		chars[3] = '0'; // padding
 
 		return chars;
 	}
+
 	/**
-	 * Funcion que recibe un estring de error y devuelve un array de chars conteniendo
-	 * la longitud del string en los tres primeros chars y el error parseado a chars
+	 * Funcion que recibe un estring de error y devuelve un array de chars
+	 * conteniendo la longitud del string en los tres primeros chars y el error
+	 * parseado a chars
+	 * 
 	 * @param errDescrtpion
 	 * @return
 	 */
-	protected char[] translateErrorDescription(String errDescription){
-		char [] chars;
+	protected char[] translateErrorDescription(String errDescription) {
+		char[] chars;
 		String errLength = "00" + errDescription.length();
-		//parseamos el error a tres digitos
-		errLength = errLength.substring(errLength.length() - Size.ERRORLENGTHDESC.asInt() - 1 , errLength.length() -1);
-	
+		// parseamos el error a tres digitos
+		errLength = errLength.substring(errLength.length()
+				- Size.ERRORLENGTHDESC.asInt() - 1, errLength.length() - 1);
+
 		chars = (errLength + errDescription).toCharArray();
 		return chars;
 	}
 
 	/**
-	 * Funcion que lee un error en el formato del protocolo, lo parsea y lo devuelve como objeto topo
-	 * DomError
+	 * Funcion que lee un error en el formato del protocolo, lo parsea y lo
+	 * devuelve como objeto topo DomError
+	 * 
 	 * @return
 	 */
-	public DomError seeError(){
+	public DomError seeError() {
 		int errNum = this.readInt();
-		char[] errorLengthDesc = this.recieveChars(Size.ERRORLENGTHDESC.asInt());  
-		char[] errorDesc = this.recieveChars(Integer.parseInt(String.valueOf(errorLengthDesc)));  
+		char[] errorLengthDesc = this
+				.recieveChars(Size.ERRORLENGTHDESC.asInt());
+		char[] errorDesc = this.recieveChars(Integer.parseInt(String
+				.valueOf(errorLengthDesc)));
 		return new DomError(errNum, errorDesc);
-		
+
 	}
-	
+
 	/**
 	 * Funcion que recibe un error, lo parsea segun el protocolo y lo envia
+	 * 
 	 * @param err
 	 */
-	public void sendError(DomError err){
-		
+	public void sendError(DomError err) {
+
 		char[] chars = translateErrorDescription(err.getDesc());
-		if(sendHeader(Id.ERROR)){
+		if (sendHeader(Id.ERROR)) {
 			sendInt(err.getErrNum());
 			sendChar(chars);
 		}
-		
+
 	}
-	
+
 }

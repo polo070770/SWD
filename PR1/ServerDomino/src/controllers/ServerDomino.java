@@ -133,7 +133,8 @@ public class ServerDomino extends Domino {
 				} else {
 					if (INFO)
 						System.out.println(this.comm.getScocketDescription()
-								+ " empieza server con " + this.startingPiece.getRepresentation());
+								+ " empieza server con "
+								+ this.startingPiece.getRepresentation());
 					// empieza el servidor, enviamos el primer movimiento, con
 					// las piezas del cliente
 					this.comm.sendInitMovement(clientHand.getPieces(),
@@ -281,12 +282,14 @@ public class ServerDomino extends Domino {
 					// servidor no puede tirar
 					// damos fichas al server hasta que pueda tirar o no queden
 					// fichas
-					while ((!this.player.hasMove(this.playedPile)) && remainingPile.getLength() > 0) {
+					while ((!this.player.hasMove(this.playedPile))
+							&& remainingPile.getLength() > 0) {
 						Piece p = this.remainingPile.getRandomPiece();
-						this.player.setPiece(p);
-						if(INFO){
-							System.out.println("Servidor roba " + p.getRepresentation());
-							
+						this.player.addPieceHand(p);
+						if (INFO) {
+							System.out.println("Servidor roba "
+									+ p.getRepresentation());
+
 						}
 					}
 
@@ -317,9 +320,10 @@ public class ServerDomino extends Domino {
 				if (INFO)
 					System.out.println("Servidor juega con "
 							+ this.currentServerMove.getRepresentation());
-				
-				//insertamos la ficha en la pila
-				this.playedPile.pushSide(this.currentServerMove.getPiece(), this.currentServerMove.getSide());
+
+				// insertamos la ficha en la pila
+				this.playedPile.pushSide(this.currentServerMove.getPiece(),
+						this.currentServerMove.getSide());
 				// Enviamos movimiento al cliente
 				sendMovement(this.currentServerMove);
 				if (this.player.handLength() == 0) {
@@ -343,21 +347,22 @@ public class ServerDomino extends Domino {
 				this.comm.sendServerMovement(this.currentServerMove,
 						this.player.handLength(),
 						this.remainingPile.getLength());
-				
+
 				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
 				break;
 
 			case SENDPIECE:
+				// Si el cliente no puede tirar, tenemos que darle ficha
+				this.currentClientSentPiece = this.remainingPile
+						.getRandomPiece(); // extraemos una pieza de la pila de
+											// pendientes
+
 				if (INFO)
 					System.out.println("Servidor envia "
 							+ this.currentClientSentPiece.getRepresentation()
 							+ " que solicitaba ficha");
 
-				// Si el cliente no puede tirar, tenemos que darle ficha
-				this.currentClientSentPiece = this.remainingPile
-						.getRandomPiece(); // extraemos una pieza de la pila de
-											// pendientes
 				this.clientHand.addPiece(this.currentClientSentPiece);
 				sendPieceToClient();
 				STATE = State.PLAYING; // Seguimos jugando

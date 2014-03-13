@@ -2,7 +2,8 @@ package models;
 
 public enum Side {
 		LEFT('L'),
-		RIGHT('R');
+		RIGHT('R'),
+		PADDING('P');
 		
 		private final char repr;
 		
@@ -20,7 +21,13 @@ public enum Side {
 		
 		public static Side fromChar(char side){
 			side = Character.toUpperCase(side);
-			return side == LEFT.asChar() ? LEFT : RIGHT;
+			if (side == LEFT.asChar()){
+				return LEFT;
+			}else if(side == RIGHT.asChar()){
+				return RIGHT;
+			}else{
+				return PADDING;
+			}
 		}
 		
 		public static Side fromString(String side){

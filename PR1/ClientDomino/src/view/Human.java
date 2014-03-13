@@ -22,7 +22,6 @@ public class Human extends Player {
 		// TODO Auto-generated constructor stub
 	}
 
-
 	public Movement getFirstMovement() {
 		String input;
 		System.out.println("- Fichas Cliente: ");
@@ -53,47 +52,52 @@ public class Human extends Player {
 	public Movement nextMove(PlayedPile playedPile) {
 
 		String input;
-		System.out.println("Estas son tus fichas");
+		System.out.println("- Estas son tus fichas");
 		System.out.println(hand.getRepresentation());
 
-		System.out.println("Es tu turno!");
+		System.out.println("- Es tu turno!");
 
 		System.out
-				.println("Selecciona una ficha de la mano para jugar ex( 03 ): ");
+				.println("- Selecciona una ficha de la mano para jugar ex( 03 )");
+		System.out.println("- O para pasar: \"NT\":");
 		input = sc.nextLine();
+		if (input.equalsIgnoreCase("NT")) {
+			return new Movement(null, null);
+		}
 
 		Piece nueva = new Piece(input.charAt(0), input.charAt(1));
 
 		while (!(catalog.hasPiece(nueva) && hand.hasPiece(nueva))) {
 			System.out
-					.println("Selecciona una ficha valida de la mano para jugar: ");
+					.println("- Selecciona una ficha valida de la mano para jugar: ");
 			input = sc.nextLine();
 			nueva = new Piece(input.charAt(0), input.charAt(1));
 		}
 
-		System.out.println("Quieres girar la ficha? (y/n)");
+		System.out.println("- Quieres girar la ficha? (y/n)");
 		if (sc.nextLine().equalsIgnoreCase("y")) {
 			// input = new StringBuffer(input).reverse().toString();
 			nueva.setReverse(true);
 		}
 
-		System.out.println("En que lado de la mesa quieres poner la ficha?? ");
-		System.out.println("-Lado izquierda->L\n-Lado derecho->R");
+		System.out
+				.println("- En que lado de la mesa quieres poner la ficha?? ");
+		System.out.println("- Lado izquierda->L\n- Lado derecho->R");
 		input = sc.nextLine();
 
 		while (!(input.equalsIgnoreCase("L") || input.equalsIgnoreCase("R"))) {
 			System.out
-					.println("Selecciona el lado de la mesa donde quieres poner la ficha. ");
-			System.out.println("-Lado izquierda->L\n-Lado derecho->R");
+					.println("- Selecciona el lado de la mesa donde quieres poner la ficha. ");
+			System.out.println("- Lado izquierda->L\n- Lado derecho->R");
 			input = sc.nextLine();
 		}
 
-		Movement movement = new Movement(nueva, Side.LEFT);
+		if (input.equalsIgnoreCase("R")) {
+			return new Movement(nueva, Side.RIGHT);
+		}
 
-		if (input.equalsIgnoreCase("R"))
-			movement = new Movement(nueva, Side.RIGHT);
+		return new Movement(nueva, Side.LEFT);
 
-		return movement;
 	}
 
 }
