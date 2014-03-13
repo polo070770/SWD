@@ -33,6 +33,7 @@ public class IA extends Player {
 				return newMove;
 			}
 			// sino, gira la pieza y vuelve a comprobar lo mismo
+			System.out.println("doy vuelta la ficha");
 			p.reverse();
 			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
 				Side side = playedPile.matchLeft(p) ? Side.LEFT : Side.RIGHT;

@@ -14,7 +14,7 @@ public class ClientDomino extends Domino {
 	}
 
 	public enum Action {
-		INIT, WAITNEXT, READERROR, SENDERROR, READMOVE, CLIENTMOVE, CLIENTERROR, SENDENDGAME, CLIENTNT, SENDPIECE, SENDMOVE, SERVERMOVE, SERVERNT, SENDNT;
+		INIT, WAITNEXT, READERROR, SENDERROR, READMOVE, CLIENTMOVE, CLIENTERROR, SENDENDGAME, CLIENTNT, SENDPIECE, SENDMOVE, SERVERMOVE, SERVERNT, SENDNT, ENDGAME;
 	}
 
 	private Pile remainingPile;
@@ -150,6 +150,8 @@ public class ClientDomino extends Domino {
 					// el servidor ha tirado una ficha, nos toca contestar
 					System.out.println("\n- Ficha server: "
 							+ currentServerMove.getRepresentation());
+					
+					System.out.println(currentServerMove.getPiece().reversed());
 
 					// aniadimos ficha del servidor en el tablero
 					this.playedPile.pushSide(currentServerMove.getPiece(),
@@ -206,9 +208,15 @@ public class ClientDomino extends Domino {
 				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
 				break;
+				
+			case ENDGAME:
+				closeGame();
+				break;
 
 			}
 		}
+		
+		
 
 	}
 
@@ -228,7 +236,7 @@ public class ClientDomino extends Domino {
 
 		case ENDGAME: // la dominolayer nos puede indicar endgame debido a algun
 						// error IO
-			return Action.WAITNEXT;
+			return Action.ENDGAME;
 
 		case MOVESERVER:// el servidor hace move
 			return Action.READMOVE;

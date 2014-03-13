@@ -58,7 +58,8 @@ public class Piece {
 	 */
 	public Piece(char left, char right, char reverse) {
 		// calling to previous constructor
-		this(left, right, reverse == '1');
+		this(left, right, (reverse == '1'));
+		System.out.println(reverse + " " + (reverse == '1'));
 	}
 
 	/**
@@ -194,15 +195,21 @@ public class Piece {
 	 * @return
 	 */
 	public String getRepresentation() {
+		// if (reversed()) {
+		// return "[" + this.getRight() + "|" + this.getLeft() + "]";
+		// } else {
 		return "[" + this.getLeft() + "|" + this.getRight() + "]";
-
+		// }
 	}
 
 	public void setReverse(boolean reverse) {
 		this.reverse = reverse;
 	}
-	
-	public void reverse(){
-		this.reverse = ! this.reverse;
+
+	public void reverse() {
+		//char tmp = this.left;
+		//this.left = this.right;
+		//this.right = tmp;
+		this.reverse = !this.reverse;
 	}
 }
