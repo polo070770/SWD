@@ -283,8 +283,12 @@ public class ServerDomino extends Domino {
 					// fichas
 					while (!this.player.hasMove(this.playedPile)
 							&& remainingPile.getLength() > 0) {
-						this.player.setPiece(this.remainingPile
-								.getRandomPiece());
+						Piece p = this.remainingPile.getRandomPiece();
+						this.player.setPiece(p);
+						if(INFO){
+							System.out.println("Servidor roba " + p.getRepresentation());
+							
+						}
 					}
 
 					if (this.player.hasMove(this.playedPile)) {
@@ -313,12 +317,12 @@ public class ServerDomino extends Domino {
 			case SENDMOVE:
 				if (INFO)
 					System.out.println("Servidor juega con "
-							+ this.currentServerMove.getRepresentation()
-							+ " que solicitaba ficha");
-
+							+ this.currentServerMove.getRepresentation());
+				
+				//insertamos la ficha en la pila
+				this.playedPile.pushSide(this.currentServerMove.getPiece(), this.currentServerMove.getSide());
 				// Enviamos movimiento al cliente
 				sendMovement(this.currentServerMove);
-
 				if (this.player.handLength() == 0) {
 					// Si ya no le quedan mas fichas al servidor, entonces
 					// servidor gana
@@ -355,7 +359,6 @@ public class ServerDomino extends Domino {
 				this.currentClientSentPiece = this.remainingPile
 						.getRandomPiece(); // extraemos una pieza de la pila de
 											// pendientes
-
 				this.clientHand.addPiece(this.currentClientSentPiece);
 				sendPieceToClient();
 				STATE = State.PLAYING; // Seguimos jugando
@@ -420,7 +423,7 @@ public class ServerDomino extends Domino {
 	 * @param move
 	 */
 	private void sendMovement(Movement move) {
-		// la eliminamos
+		// la eliminamos de la mano del serverr
 		this.player.removePiece(move.getPiece());
 		// enviamos la jugada con los datos necesarios
 		this.comm.sendServerMovement(move, this.player.handLength(),

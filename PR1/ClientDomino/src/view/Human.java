@@ -22,25 +22,6 @@ public class Human extends Player {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public boolean hasMove(PlayedPile playedPile) {
-		for (Piece p : hand.getPieces()) {
-			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public void removePiece(Piece p) {
-		this.hand.deletePiece(p);
-	}
-
-	@Override
-	public int handLength() {
-		return this.hand.getLength();
-	}
 
 	public Movement getFirstMovement() {
 		String input;

@@ -19,14 +19,6 @@ public class IA extends Player {
 		// TODO Auto-generated constructor stub
 	}
 
-	public boolean hasMove(PlayedPile playedPile) {
-		for (Piece p : hand.getPieces()) {
-			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public Movement nextMove(PlayedPile playedPile) {
 		for (Piece p : hand.getPieces()) {
@@ -39,14 +31,6 @@ public class IA extends Player {
 		return null;
 	}
 
-	public void removePiece(Piece p) {
-		this.hand.deletePiece(p);
 
-	}
-
-	@Override
-	public int handLength() {
-		return this.hand.getLength();
-	}
 
 }

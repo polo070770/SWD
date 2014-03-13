@@ -33,10 +33,27 @@ public abstract class Player {
 	};
 	
 	
-	public abstract boolean hasMove(PlayedPile playedPile);
+	public boolean hasMove(PlayedPile playedPile) {
+		for (Piece p : hand.getPieces()) {
+			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void removePiece(Piece p) {
+		this.hand.deletePiece(p);
+
+	}
+
+
+	public int handLength() {
+		return this.hand.getLength();
+	}
+	
 	public abstract Movement nextMove(PlayedPile playedPile);
-	public abstract void removePiece(Piece p);
-	public abstract int handLength();
+	
 	
 
 }
