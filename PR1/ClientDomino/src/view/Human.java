@@ -24,8 +24,48 @@ public class Human extends Player {
 
 	@Override
 	public boolean hasMove(PlayedPile playedPile) {
-		// TODO Auto-generated method stub
+		for (Piece p : hand.getPieces()) {
+			if (playedPile.matchLeft(p) || playedPile.matchRight(p)) {
+				return true;
+			}
+		}
 		return false;
+	}
+
+	@Override
+	public void removePiece(Piece p) {
+		this.hand.deletePiece(p);
+	}
+
+	@Override
+	public int handLength() {
+		return this.hand.getLength();
+	}
+
+	public Movement getFirstMovement() {
+		String input;
+		System.out.println("- Fichas Cliente: ");
+		System.out.println(hand.getRepresentation());
+
+		System.out.println("- Segun las reglas, empiezas tu.");
+		System.out
+				.println("- Selecciona una ficha de la mano para jugar ex( 03 ): ");
+		input = sc.nextLine();
+		input += "0"; // la primera tirada no se puede girar
+		Piece nueva = new Piece(input);
+
+		while (!(catalog.hasPiece(nueva) && hand.hasPiece(nueva))) {
+			System.out
+					.println("- Selecciona una ficha valida de la mano para jugar: ");
+			input = sc.nextLine();
+			input += "0";// la primera tirada no se puede girar
+			nueva = new Piece(input);
+		}
+
+		Movement nextMovement = new Movement(nueva, Side.RIGHT);
+
+		return nextMovement;
+
 	}
 
 	@Override
@@ -72,49 +112,7 @@ public class Human extends Player {
 		if (input.equalsIgnoreCase("R"))
 			movement = new Movement(nueva, Side.RIGHT);
 
-		hand.deletePiece(nueva);
-		
 		return movement;
-	}
-
-	@Override
-	public void removePiece(Piece p) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public int handLength() {
-
-			return this.hand.getLength();
-	}
-
-	public Movement getFirstMovement() {
-		String input;
-		System.out.println("Estas son tus fichas");
-		System.out.println(hand.getRepresentation());
-
-		System.out.println("Segun las reglas, empiezas tu.");
-		System.out
-				.println("Selecciona una ficha de la mano para jugar ex( 03 ): ");
-		input = sc.nextLine();
-		input += "0"; // la primera tirada no se puede girar
-		Piece nueva = new Piece(input);
-
-		while (!(catalog.hasPiece(nueva) && hand.hasPiece(nueva))) {
-			System.out
-					.println("Selecciona una ficha valida de la mano para jugar: ");
-			input = sc.nextLine();
-			input += "0";// la primera tirada no se puede girar
-			nueva = new Piece(input);
-		}
-
-		Movement nextMovement = new Movement(nueva, Side.RIGHT);
-		
-		hand.deletePiece(nueva);
-		
-		return nextMovement;
-
 	}
 
 }

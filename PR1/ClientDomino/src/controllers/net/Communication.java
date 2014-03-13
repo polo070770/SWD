@@ -5,7 +5,6 @@ import java.net.Socket;
 
 import models.Movement;
 import net.DominoLayer;
-import net.DominoLayer.Id;
 
 public class Communication extends DominoLayer {
 
@@ -37,6 +36,11 @@ public class Communication extends DominoLayer {
 
 			return receivedChars;
 		}
+
+		System.out.println("Retornant error, identificador rebut"
+				+ recievedId.getVal() + "no es igual a INIT: "
+				+ Id.INIT.getVal());
+
 		return new char[0];
 	}
 
@@ -57,6 +61,10 @@ public class Communication extends DominoLayer {
 
 		}
 
+		System.out.println("Retornant error, identificador rebut"
+				+ recievedId.getVal() + "no es igual a MOVE: "
+				+ Id.MOVE.getVal());
+
 		return new char[0];
 
 	}
@@ -76,6 +84,11 @@ public class Communication extends DominoLayer {
 			sendChar(chars);
 			sendInt(hand);
 		}
+	}
+
+	public Movement seeServerMovement() {
+		char[] receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
+		return new Movement(receivedChars);
 	}
 
 }

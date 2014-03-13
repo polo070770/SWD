@@ -3,6 +3,7 @@ package controllers;
 import models.Movement;
 import models.Piece;
 import models.Pile;
+import models.Side;
 import net.DominoLayer.Id;
 import view.Human;
 import controllers.net.Communication;
@@ -18,18 +19,21 @@ public class ClientDomino extends Domino {
 
 	private Pile remainingPile;
 	private Pile clientHand;
+
 	private Communication comm;
 	private Piece startingPiece;
 
-	private State STATE = State.PLAYING;
-	private Action ACTION = Action.INIT;
+	private State STATE;
+	private Action ACTION;
 
-	private Movement humanReply;
-	private Movement serverReply;
+	private Movement currentClientMove;
+	private Movement currentServerMove;
 
 	public ClientDomino(Communication comm) {
 		super(); // create super resources
 		this.comm = comm;
+		STATE = State.PLAYING; // estamos en el estado de jugar
+		ACTION = Action.INIT; // la accion que toca es la de inicio de partida
 		createClientResources();
 	}
 
@@ -40,7 +44,6 @@ public class ClientDomino extends Domino {
 
 		// creamos los recursos del cliente a partir de los datos recibidos
 		int i;
-
 		for (i = 0; i < this.HANDSIZE * 2; i += 2) {
 			// fichas de inicio recibidas para el cliente
 			hand.addPiece(new Piece(resources[i], resources[i + 1]));
@@ -48,19 +51,16 @@ public class ClientDomino extends Domino {
 
 		this.player = new Human(hand, this.getCatalog());
 
-		/*
-		 * 4 ultimos bytes que indican quien juega
-		 */
+		// 4 ultimos bytes que indican quien juega
 		char[] movementChars = new char[4];
 		movementChars[0] = resources[i++];
 		movementChars[1] = resources[i++];
 		movementChars[2] = resources[i++];
 		movementChars[3] = resources[i++];
 
-		serverReply = new Movement(movementChars);
-		
+		currentServerMove = new Movement(movementChars);
+
 		initGame();
-		closeGame();
 
 	}
 
@@ -71,70 +71,121 @@ public class ClientDomino extends Domino {
 
 			case WAITNEXT:
 				// recibimos la contestacion del servidor
-				System.out.println("esperando");
+				System.out.println("Esperando respuesta del servidor...");
 				Id id = this.comm.readHeader();
-				System.out.println("Recibo id" + id.getVal());
+				System.out.println("Recibo id: " + id.name() + ":"
+						+ id.getVal());
 				ACTION = convertIdToAction(id);
 				break;
 
 			case INIT:
-				// analizamos la respuesta del servidor
-				if (serverReply.isNT()) {
-					// es un NT-> servidor no puede tirar, empieza human
-					humanReply = this.player.getFirstMovement();
-					this.playedPile.addPiece(humanReply.getPiece());
-					System.out.println(humanReply.getRepresentation());
-					this.comm.sendClientMovement(humanReply, this.player.handLength());
+				// analizamos la primera respuesta del servidor
+				if (currentServerMove.isNT()) {
+					// es un NT-> servidor no puede tirar, empieza cliente
+					currentClientMove = this.player.getFirstMovement();
+
+					System.out.println("- Ficha cliente: "
+							+ currentClientMove.getRepresentation());
+
+					// aniadimos al tablero la pieza jugada por el servidor
+					this.playedPile.pushSide(currentClientMove.getPiece(),
+							currentClientMove.getSide());
+					System.out.println("- Estado tablero: "
+							+ this.playedPile.getRepresentation());
+
+					// enviamos movimiento al Server
+					sendMovement(currentClientMove);
+
+					// Esperamos respuesta del servidor
 					ACTION = Action.WAITNEXT;
 
 				} else {
 					// el servidor ha empezado a jugar primero, toca jugar a
-					// human
-					System.out.println(serverReply.getRepresentation());
+					// cliente
+					System.out.println("- Ficha server: "
+							+ currentServerMove.getRepresentation());
 
-					this.startingPiece = serverReply.getPiece();
-					this.playedPile.addPiece(startingPiece);
+					this.startingPiece = currentServerMove.getPiece();
+					this.playedPile.pushSide(this.startingPiece, Side.LEFT);
+
+					System.out.println("- Estado tablero: "
+							+ playedPile.getRepresentation());
+
 					ACTION = Action.SENDMOVE;
 
 				}
 
 				break;
 			case READMOVE:
-				// leemos la contestacion del servior
-				serverReply = new Movement(this.comm.readMovementChar());
-				if (serverReply.isNT()) {
+
+				// leemos la respuesta del servior
+				currentServerMove = this.comm.seeServerMovement();
+
+				if (currentServerMove.isNT()) {
+
+					STATE = State.SERVERNP;
+
 					// si el servidor no puede tirar, el cliente tira
 					if (this.player.handLength() > 0) {
 						// tira si aun tiene fichas en la mano
-						this.playedPile.addPiece(serverReply.getPiece());
 						ACTION = Action.SENDMOVE;
 					} else {
 						// sino contestara con un no puedo tirar
 						ACTION = Action.SENDNT;
 					}
+
 				} else {
 					// el servidor ha tirado una ficha, nos toca contestar
-					System.out.println("Server tira: " + serverReply.getRepresentation());
-					this.playedPile.addPiece(serverReply.getPiece());
-					
-					System.out.println("Tablero: " + playedPile.getRepresentation());
-					
+					System.out.println("- Ficha server: "
+							+ currentServerMove.getRepresentation());
+
+					// aniadimos ficha del servidor en el tablero
+					this.playedPile.pushSide(currentServerMove.getPiece(),
+							currentServerMove.getSide());
+
+					System.out.println("- Estado tablero: "
+							+ playedPile.getRepresentation());
+
+					// Contestamos al servidor con un movimiento
 					ACTION = Action.SENDMOVE;
 
 				}
 				break;
-				
+
 			case SENDMOVE:
-				humanReply = this.player.nextMove(playedPile);
+
+				// construimos nuevo movimiento
+				currentClientMove = this.player.nextMove(playedPile);
+
 				System.out.println("#fichas: " + this.player.handLength());
-				this.comm.sendClientMovement(humanReply, this.player.handLength());
-				this.playedPile.addPiece(humanReply.getPiece());
-				ACTION = Action.WAITNEXT;
-				
+
+				// enviamos movimiento al servidor
+				sendMovement(currentClientMove);
+
+				// aniadimos pieza en el tablero
+				this.playedPile.pushSide(currentClientMove.getPiece(),
+						currentClientMove.getSide());
+
+				if (this.player.handLength() == 0) {
+					// Cliente gana juego
+					ACTION = Action.SENDENDGAME;
+				} else {
+					// Continuamos jugando
+					STATE = State.PLAYING;
+					ACTION = Action.WAITNEXT;
+				}
+
 				break;
 			case SENDNT:
-				humanReply = new Movement(null, null);
-				this.comm.sendClientMovement(humanReply, this.player.handLength());
+				STATE = State.CLIENTNP;
+				// construimos movimiento nulo
+				currentClientMove = new Movement(null, null);
+
+				// enviamos jugada con los datos necesarios
+				this.comm.sendClientMovement(currentClientMove,
+						this.player.handLength());
+
+				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
 				break;
 			}
@@ -163,9 +214,12 @@ public class ClientDomino extends Domino {
 		case MOVE: // el servidor hace move
 			return Action.READMOVE;
 
+		case MOVESERVER:
+			return Action.READMOVE;
+
 		case UNKNOWN:
-			return  Action.WAITNEXT;
-		
+			return Action.WAITNEXT;
+
 		default:
 			return Action.SENDENDGAME;
 		}
@@ -173,16 +227,16 @@ public class ClientDomino extends Domino {
 
 	/**
 	 * Funcion que elimina la ficha de la pila del servidor y la envia cliente
+	 * 
 	 * @param move
 	 */
-	private void sendMovement(Movement move){
-		//la eliminamos
+	private void sendMovement(Movement move) {
+		// la eliminamos
 		this.player.removePiece(move.getPiece());
-		//enviamos la jugada con los datos necesarios
+		// enviamos la jugada con los datos necesarios
 		this.comm.sendClientMovement(move, this.player.handLength());
 	}
-	
-	
+
 	private void closeGame() {
 		this.comm.closeConnection();
 		this.STATE = State.ENDGAME;

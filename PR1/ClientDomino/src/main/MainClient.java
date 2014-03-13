@@ -15,7 +15,8 @@ public class MainClient {
 	InetAddress host;
 
 	/**
-	 * @param args|0
+	 * @param args
+	 *            |0
 	 */
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
@@ -39,7 +40,8 @@ public class MainClient {
 			socket = new Socket(host, port);
 			socket.setKeepAlive(true);
 
-			GameClient gameClient = new GameClient(socket);
+			new GameClient(socket);
+
 		} catch (ConnectException e) {
 			System.out.println("No hem pogut conectar al servidor");
 			e.printStackTrace();
