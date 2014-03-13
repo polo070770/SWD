@@ -33,12 +33,10 @@ public class DominoLayer {
 		}
 
 		public static boolean validId(int otherId) {
-
 			for (Id id : Id.values()) {
 				if (id.getVal() == otherId)
 					return true;
 			}
-
 			return false;
 		}
 
@@ -49,6 +47,9 @@ public class DominoLayer {
 		}
 
 		public int getVal() {
+			return id;
+		}
+		public int asInt() {
 			return id;
 		}
 
@@ -104,14 +105,15 @@ public class DominoLayer {
 	}
 
 	/**
-	 * Funcion que lee un id
+	 * Funcion que lee un id y controla las excepsiones timeout, socket exception etc...
+	 * Devuelve un objeto de tipo id, par recibir valores enteros, utilizar la funcion readInt
 	 * 
 	 * @return
 	 */
 
+
 	@SuppressWarnings("finally")
 	private Id readId() {
-
 		try {
 			return Id.fromInt(this.comm.read_int32());
 		} catch (SocketTimeoutException e) {
@@ -130,6 +132,13 @@ public class DominoLayer {
 
 	}
 
+	/**
+	 * Funcion que lee un entero y controla las excepsiones timeout, socket exception etc...
+	 * Devuelve un objeto de tipo id, par recibir valores enteros, utilizar la funcion readInt
+	 * 
+	 * @return
+	 */
+	
 	protected int readInt() {
 		try {
 			return this.comm.read_int32();
@@ -138,6 +147,11 @@ public class DominoLayer {
 			System.out.println(this.socket.getInetAddress() + ":"
 					+ this.socket.getPort() + " TIMEOUT");
 			}
+			
+		if(this.socketAlive()){
+			// mientras el socket este abierto, seguimos llamando la funcion a si misma
+			return this.readInt();
+		}
 		} catch (SocketException e) {
 			e.printStackTrace();
 
@@ -148,6 +162,26 @@ public class DominoLayer {
 		return 0;
 	}
 
+	
+	/**
+	 * Funcion que lee una cabecera y devuelve un Id, hace uso de la funcion readId
+	 * y se mantiene a la espera si hay timeouts mientras la conexion del socket esta abierta
+	 * So el socket ser cierra, devuelve un ENDGAME
+	 * @return
+	 */
+	public Id readHeader() {
+		Id id;
+		while ((id = readId()) == Id.TIMEOUT && socketAlive());
+		if (!socketAlive())
+			return Id.ENDGAME;
+
+		return id;
+
+	}
+	
+	
+	
+	
 	/**
 	 * Returns if socket is alive or not
 	 * 
@@ -199,16 +233,7 @@ public class DominoLayer {
 		}
 	}
 
-	public Id readHeader() {
-		Id id;
-		while ((id = readId()) == Id.TIMEOUT && socketAlive())
-			;
-		if (!socketAlive())
-			return Id.ENDGAME;
 
-		return id;
-
-	}
 
 	public void sendInt(int value) {
 		try {
