@@ -340,6 +340,8 @@ public class ServerDomino extends Domino {
 				this.comm.sendServerMovement(this.currentServerMove,
 						this.player.handLength(),
 						this.remainingPile.getLength());
+				
+				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
 				break;
 
