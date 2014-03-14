@@ -85,6 +85,14 @@ public class Communication extends DominoLayer {
 			sendInt(hand);
 		}
 	}
+	
+	public void sendClientNTMovement(Movement serverMovement, int hand) {
+		char[] chars = translateMovement(serverMovement);
+		if (sendHeader(Id.MOVESERVER)) {
+			sendChar(chars);
+			sendInt(hand);
+		}
+	}
 
 	public Movement seeServerMovement() {
 		char[] receivedChars = this.recieveChars(Size.MOVEMENT.asInt());

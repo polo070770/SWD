@@ -344,10 +344,13 @@ public class ServerDomino extends Domino {
 				this.currentServerMove = new Movement(null, null);
 
 				// enviamos la jugada con los datos necesarios
-				this.comm.sendServerMovement(this.currentServerMove,
+				this.sendMovement(this.currentServerMove);
+				
+				/* deprecated
+				 * this.comm.sendServerMovement(this.currentServerMove)
 						this.player.handLength(),
 						this.remainingPile.getLength());
-
+				*/
 				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
 				break;
@@ -364,7 +367,8 @@ public class ServerDomino extends Domino {
 							+ " que solicitaba ficha");
 
 				this.clientHand.addPiece(this.currentClientSentPiece);
-				sendPieceToClient();
+				this.sendMovement(new Movement(this.currentClientSentPiece, null));
+				//sendPieceToClient();
 				STATE = State.PLAYING; // Seguimos jugando
 				ACTION = Action.WAITNEXT; // Esperamos contestacion del cliente
 				break;
@@ -428,7 +432,10 @@ public class ServerDomino extends Domino {
 	 */
 	private void sendMovement(Movement move) {
 		// la eliminamos de la mano del serverr
-		this.player.removePiece(move.getPiece());
+		//si no es un NT
+		if( STATE != State.SERVERNT && STATE != State.CLIENTNT){
+			this.player.removePiece(move.getPiece());
+		}
 		// enviamos la jugada con los datos necesarios
 		this.comm.sendServerMovement(move, this.player.handLength(),
 				this.remainingPile.getLength());

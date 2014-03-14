@@ -150,7 +150,7 @@ public class ClientDomino extends Domino {
 					// el servidor ha tirado una ficha, nos toca contestar
 					System.out.println("\n- Ficha server: "
 							+ currentServerMove.getRepresentation());
-					
+
 					System.out.println(currentServerMove.getPiece().reversed());
 
 					// aniadimos ficha del servidor en el tablero
@@ -208,15 +208,13 @@ public class ClientDomino extends Domino {
 				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
 				break;
-				
+
 			case ENDGAME:
 				closeGame();
 				break;
 
 			}
 		}
-		
-		
 
 	}
 

@@ -68,6 +68,9 @@ public class Domino {
 	 */
 	public boolean isValidMovement(Movement movement) {
 		Piece movementPiece = movement.getPiece();
+		//System.out.println(isValidPiece(movementPiece));
+		//System.out.println(!playedPile.hasPiece(movementPiece));
+		//System.out.println(playedPile.matchMovement(movement));
 		return isValidPiece(movementPiece)
 				&& !playedPile.hasPiece(movementPiece)
 				&& playedPile.matchMovement(movement);

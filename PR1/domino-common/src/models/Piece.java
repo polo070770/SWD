@@ -36,17 +36,18 @@ public class Piece {
 	 * @param reverse
 	 */
 	public Piece(char left, char right, boolean reverse) {
-		this.reverse = reverse;
+
 		// Siempre guardamos la posicion original de la pieza
 		// el reverse nos indica que a la hora de jugarla se opta
 		// por ponerla al rev�s
-		if (this.reverse) {
-			this.left = right;
-			this.right = left;
-		} else {
-			this.left = left;
-			this.right = right;
-		}
+		// if (this.reverse) {
+		this.left = left;
+		this.right = right;
+		this.reverse = reverse;
+		// } else {
+		// this.left = left;
+		// this.right = right;
+		// }
 	}
 
 	/**
@@ -93,8 +94,8 @@ public class Piece {
 	 * @return
 	 */
 	public char getLeft() {
-		if (this.reverse)
-			return this.right;
+		// if (this.reverse)
+		// return this.right;
 		return this.left;
 
 	}
@@ -106,8 +107,8 @@ public class Piece {
 	 * @return
 	 */
 	public char getRight() {
-		if (this.reverse)
-			return this.left;
+		// if (this.reverse)
+		// return this.left;
 		return this.right;
 	}
 
@@ -156,9 +157,15 @@ public class Piece {
 
 		// probamos si encaja por el lado izquierdo
 		if (side == LEFT) {
-			return this.getLeft() == piece.getRight();
+			if (!piece.reversed())
+				return this.getLeft() == piece.getRight();
+			else
+				return this.getLeft() == piece.getLeft();
 		} else if (side == RIGHT) {
+			if (!piece.reversed())
 			return this.getRight() == piece.getLeft();
+			else
+				return this.getRight() == piece.getRight();
 		}
 
 		return false;
@@ -195,11 +202,11 @@ public class Piece {
 	 * @return
 	 */
 	public String getRepresentation() {
-		// if (reversed()) {
-		// return "[" + this.getRight() + "|" + this.getLeft() + "]";
-		// } else {
-		return "[" + this.getLeft() + "|" + this.getRight() + "]";
-		// }
+		if (reversed()) {
+			return "[" + this.getRight() + "|" + this.getLeft() + "]";
+		} else {
+			return "[" + this.getLeft() + "|" + this.getRight() + "]";
+		}
 	}
 
 	public void setReverse(boolean reverse) {
@@ -207,9 +214,9 @@ public class Piece {
 	}
 
 	public void reverse() {
-		//char tmp = this.left;
-		//this.left = this.right;
-		//this.right = tmp;
+		// char tmp = this.left;
+		// this.left = this.right;
+		// this.right = tmp;
 		this.reverse = !this.reverse;
 	}
 }
