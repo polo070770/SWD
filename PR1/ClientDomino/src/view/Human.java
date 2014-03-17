@@ -22,6 +22,9 @@ public class Human extends Player {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Funcion que retorna el primer movimiento
+	 */
 	public Movement getFirstMovement() {
 		String input;
 		System.out.println("- Fichas Cliente: ");
@@ -48,6 +51,9 @@ public class Human extends Player {
 
 	}
 
+	/**
+	 * Funcion que retorna el siguiente movimiento hecho por el jugador
+	 */
 	@Override
 	public Movement nextMove(PlayedPile playedPile) {
 

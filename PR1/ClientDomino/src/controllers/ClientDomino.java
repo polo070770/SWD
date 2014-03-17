@@ -11,15 +11,12 @@ import controllers.net.Communication;
 
 public class ClientDomino extends Domino {
 	public enum State {
-		CLIENTNP, SERVERNP, CLIENTMOVE, ERRORSUBMIT, ENDGAME, WAITING, PLAYING;
+		ENDGAME, PLAYING;
 	}
 
 	public enum Action {
-		INIT, WAITNEXT, READERROR, SENDERROR, READMOVE, CLIENTMOVE, CLIENTERROR, SENDENDGAME, CLIENTNT, SENDPIECE, SENDMOVE, SERVERMOVE, SERVERNT, SENDNT, ENDGAME;
+		INIT, WAITNEXT, READERROR, READMOVE, SENDENDGAME, SENDMOVE, SENDNT, ENDGAME;
 	}
-
-	private Pile remainingPile;
-	private Pile clientHand;
 
 	private Communication comm;
 	private Piece startingPiece;
@@ -33,8 +30,10 @@ public class ClientDomino extends Domino {
 	public ClientDomino(Communication comm) {
 		super(); // create super resources
 		this.comm = comm;
+
 		STATE = State.PLAYING; // estamos en el estado de jugar
 		ACTION = Action.INIT; // la accion que toca es la de inicio de partida
+
 		createClientResources();
 	}
 
@@ -68,7 +67,7 @@ public class ClientDomino extends Domino {
 	public void initGame() {
 
 		while (this.STATE != State.ENDGAME) {
-			switch (this.ACTION) {
+			switch (ACTION) {
 
 			case WAITNEXT:
 				// recibimos la contestacion del servidor
@@ -117,14 +116,13 @@ public class ClientDomino extends Domino {
 				}
 
 				break;
+
 			case READMOVE:
 
 				// leemos la respuesta del servior
 				currentServerMove = this.comm.seeServerMovement();
 
 				if (currentServerMove.isNT()) {
-
-					STATE = State.SERVERNP;
 
 					// si el servidor no puede tirar, el cliente tira
 					if (this.player.handLength() > 0) {
@@ -165,6 +163,7 @@ public class ClientDomino extends Domino {
 					ACTION = Action.SENDMOVE;
 
 				}
+
 				break;
 
 			case SENDMOVE:
@@ -175,7 +174,7 @@ public class ClientDomino extends Domino {
 				// analizamos si el movimiento del cliente es un no puedo tirar
 				if (this.currentClientMove.isNT()) {
 
-					// si el cliente no puede tirar pasamos al esado enviar NT
+					// si el cliente no puede tirar pasamos al estado enviar NT
 					ACTION = Action.SENDNT;
 
 				} else {
@@ -199,26 +198,35 @@ public class ClientDomino extends Domino {
 					}
 
 				}
+
 				break;
+
 			case SENDNT:
-				STATE = State.CLIENTNP;
+
 				// enviamos jugada con los datos necesarios
-				this.comm.sendClientMovement(currentClientMove,
-						this.player.handLength());
+				sendMovement(currentClientMove);
 
 				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
+
 				break;
 
 			case READERROR:
 				DomError error = this.comm.seeError();
 				System.out.println("Error rebut!!\n" + error.getDesc() + "\n");
-				System.out.println("Desconectant del servidor, torna a començar!");
+				System.out
+						.println("Desconectant del servidor, torna a començar!");
 				closeGame();
+
+				break;
+
+			case SENDENDGAME:
+				// TODO
 				break;
 
 			case ENDGAME:
 				closeGame();
+
 				break;
 
 			}
@@ -227,8 +235,9 @@ public class ClientDomino extends Domino {
 	}
 
 	/**
+	 * Funcion que devuelve una accion a realizar a partir de una id
+	 * 
 	 * @param id
-	 *            Funcion que devuelve una accion a realizar a partir de una id
 	 * @return
 	 */
 	private Action convertIdToAction(Id id) {
@@ -244,10 +253,11 @@ public class ClientDomino extends Domino {
 						// error IO
 			return Action.ENDGAME;
 
-		case MOVESERVER:// el servidor hace move
+		case MOVESERVER: // el servidor hace move
 			return Action.READMOVE;
 
-		case UNKNOWN:
+		case UNKNOWN: // id con cabecera desconocida, esperamos a cabecera
+						// valida
 			return Action.WAITNEXT;
 
 		default:
@@ -262,14 +272,18 @@ public class ClientDomino extends Domino {
 	 */
 	private void sendMovement(Movement move) {
 		// la eliminamos
-		this.player.removePiece(move.getPiece());
+		if (move.getPiece() != null)
+			this.player.removePiece(move.getPiece());
 		// enviamos la jugada con los datos necesarios
 		this.comm.sendClientMovement(move, this.player.handLength());
 	}
 
+	/**
+	 * Funcion que cierra la conexion con el servidor y hace terminar el juego
+	 */
 	private void closeGame() {
-		this.comm.closeConnection();
 		this.STATE = State.ENDGAME;
+		this.comm.closeConnection();
 
 	}
 }

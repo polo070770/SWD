@@ -5,9 +5,9 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import models.DomError;
 import models.Movement;
 import models.Piece;
-import models.DomError;
 
 public class DominoLayer {
 

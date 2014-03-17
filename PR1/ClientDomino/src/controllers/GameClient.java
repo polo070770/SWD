@@ -13,10 +13,7 @@ public class GameClient {
 		try {
 			this.comm = new Communication(socket);
 
-			// this.comm.readId(); // para probar timeouts
-
-			// Enviamos el primer mensaje, para que el servidor entienda que
-			// hablamos el mismo idioma
+			// Enviamos el primer mensaje de peticion de juego
 			boolean sincronized = this.comm.requestHandShake();
 
 			if (sincronized) {

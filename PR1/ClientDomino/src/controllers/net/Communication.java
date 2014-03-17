@@ -3,7 +3,6 @@ package controllers.net;
 import java.io.IOException;
 import java.net.Socket;
 
-import models.DomError;
 import models.Movement;
 import net.DominoLayer;
 
@@ -23,6 +22,11 @@ public class Communication extends DominoLayer {
 		return writeId(Id.HELLO);
 	}
 
+	/**
+	 * Returns the player chips and who starts the game
+	 * 
+	 * @return
+	 */
 	public char[] readInitMovementChar() {
 
 		Id recievedId = readHeader();
@@ -45,67 +49,29 @@ public class Communication extends DominoLayer {
 		return new char[0];
 	}
 
-	public char[] readNextMovementChar() {
-
-		Id recievedId = readHeader();
-
-		if (recievedId == Id.MOVE) {
-
-			char[] receivedChars;
-			receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
-
-			while (receivedChars.length == 0 && this.socketAlive()) {
-				receivedChars = this.recieveChars(Size.INIT.asInt());
-			}
-
-			return receivedChars;
-
-		}
-
-		System.out.println("Retornant error, identificador rebut"
-				+ recievedId.getVal() + "no es igual a MOVE: "
-				+ Id.MOVE.getVal());
-
-		return new char[0];
-
+	/**
+	 * Returns the server movement
+	 * 
+	 * @return
+	 */
+	public Movement seeServerMovement() {
+		char[] receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
+		return new Movement(receivedChars);
 	}
 
-	public char[] readMovementChar() {
-		char[] receivedChars;
-		receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
-		return receivedChars;
-	}
-	
-	public DomError readServerError(){
-		
-		char [] receivedChars;
-		int idError;
-		idError = this.readInt();
-		receivedChars = this.recieveChars(255);
-		
-		return new DomError((int)receivedChars[0], receivedChars.toString());
-		
-	}
-
-	public void sendClientMovement(Movement serverMovement, int hand) {
-		char[] chars = translateMovement(serverMovement);
+	/**
+	 * Sends a user movement, it can be: " i cant trow" too.
+	 * 
+	 * @param clientMovement
+	 * @param hand
+	 *            , number of user chips
+	 */
+	public void sendClientMovement(Movement clientMovement, int hand) {
+		char[] chars = translateMovement(clientMovement);
 		if (sendHeader(Id.MOVE)) {
 			sendChar(chars);
 			sendInt(hand);
 		}
-	}
-
-	public void sendClientNTMovement(Movement serverMovement, int hand) {
-		char[] chars = translateMovement(serverMovement);
-		if (sendHeader(Id.MOVESERVER)) {
-			sendChar(chars);
-			sendInt(hand);
-		}
-	}
-
-	public Movement seeServerMovement() {
-		char[] receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
-		return new Movement(receivedChars);
 	}
 
 }
