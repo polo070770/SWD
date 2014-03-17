@@ -9,7 +9,7 @@ import net.DominoLayer.Id;
 import controllers.net.Communication;
 
 /**
- * clase principal del juego
+ * Main Game Class
  * 
  * @author swd
  * 
@@ -31,7 +31,19 @@ public class ServerDomino extends Domino {
 	}
 
 	public enum Action {
-		INIT, WAITNEXT, READERROR, SENDERROR, READMOVE, CLIENTMOVE, CLIENTERROR, SENDENDGAME, CLIENTNT, SENDPIECE, SENDMOVE, SERVERMOVE, SERVERNT, SENDNT;
+		INIT, // Inicio de la partida
+		WAITNEXT, // Esperando respuesta del servidor
+		SENDERROR, // Enviar error al cliente
+		READMOVE, // Leer movimiento del cliente
+		CLIENTMOVE, // Analizamos movimiento del cliente
+		CLIENTERROR, // El cliente nos ha enviado un error
+		SENDENDGAME, // Enviamos fin de juego al cliente
+		CLIENTNT, // El cliente no ha podido tirar
+		SENDPIECE, // Dar ficha al cliente
+		SENDMOVE, // Enviar movimiento
+		SERVERMOVE, // Toca jugar al servidor
+		SERVERNT, // El servidor no puede lanzar ficha
+		SENDNT; // Envar un "no puedo tirar" al servidor
 	}
 
 	private final boolean INFO = true;
@@ -48,23 +60,24 @@ public class ServerDomino extends Domino {
 
 	/** CURRENT GLOBALS **/
 
-	private String currentErrDescription;
-	private int currentErrDescriptionNumber;
-
-	private DomError currentError;
+	private DomError currentError; // Error actual surgido
 
 	/** CURRENT CLIENT GLOBALS **/
-	private Movement currentClientMove;
-	private int currentClientHandLength;
-	private Piece currentClientSentPiece;
+	private Movement currentClientMove; // Movimiento actual del cliente
+	private int currentClientHandLength; // Longitud de la mano actual del
+											// cliente
+	private Piece currentClientSentPiece; // Pieza a enviar al cliente
+
 	/** CURRENT SERVER GLOBALS **/
-	private Movement currentServerMove;
+	private Movement currentServerMove; // Movimiento actual del servidor
 
 	public ServerDomino(Communication comm) {
 		super(); // create super resources
 		this.comm = comm;
+
 		STATE = State.PLAYING; // estamos en el estado de jugar
 		ACTION = Action.INIT; // la accion que toca es la de inicio de partida
+
 		createDominoResources(); // creamos los recursos del juego
 	}
 
@@ -101,43 +114,51 @@ public class ServerDomino extends Domino {
 				return p;
 			}
 		}
-		// Siempre empezara una ficha, pero bueno...
 		return null;
 	}
 
+	/**
+	 * Main Game function where the game is decided in terms of actions to take
+	 */
 	public void initGame() {
 
 		while (STATE != State.GAMEENDED) {
 
 			switch (ACTION) {
 
-			// WAIT CASE
 			case WAITNEXT:
 				// recibimos la operacion del cliente
-				// /COMMUNICATION
 				System.out.println("Esperando respuesta del cliente...");
+
 				Id id = this.comm.readHeader();
 				ACTION = convertIdToAction(id);
-				System.out.println("Recibo id: " + id.name() + ":"
-						+ id.getVal() + " y hago la accion; " + ACTION.name());
+
+				if (INFO)
+					System.out.println("Recibo id: " + id.name() + ":"
+							+ id.getVal() + " y hago la accion; "
+							+ ACTION.name());
+
 				break;
 
-			// / INIT CASE
 			case INIT:
 				// comprobamos quien tiene la primera pieza y entregamos las
 				// fichas y el siguiente movimiento
 				if (this.clientHand.hasPiece(this.startingPiece)) {
+
 					if (INFO)
 						System.out.println(this.comm.getScocketDescription()
 								+ " empieza client");
-					// empieza el cleinte, enviamos un movement con ficha null
+
+					// empieza el cliente, enviamos un movement con ficha null
 					this.comm.sendInitMovement(clientHand.getPieces(),
 							new Movement(null, null));
 				} else {
+
 					if (INFO)
 						System.out.println(this.comm.getScocketDescription()
 								+ " empieza server con "
 								+ this.startingPiece.getRepresentation());
+
 					// empieza el servidor, enviamos el primer movimiento, con
 					// las piezas del cliente
 					this.comm.sendInitMovement(clientHand.getPieces(),
@@ -147,13 +168,11 @@ public class ServerDomino extends Domino {
 					this.player.removePiece(this.startingPiece);
 					this.playedPile.pushSide(this.startingPiece, Side.LEFT);
 				}
+
 				ACTION = Action.WAITNEXT;
 				break;
 
-			// / READ CASES
 			case READMOVE:
-				// /COMMUNICATION
-
 				// Leemos la respuesta del cliente, ficha tirada y numero de
 				// fichas restantes en su mano
 				this.currentClientMove = this.comm.seeClientMovement();
@@ -187,13 +206,8 @@ public class ServerDomino extends Domino {
 
 				break;
 
-			case READERROR:
-				// TODO por ahora el servidor tira
-				ACTION = Action.SERVERMOVE;
-				break;
-
-			// // ACTION DEFINE CASES
 			case CLIENTMOVE:
+
 				if (INFO) {
 					System.out.println(this.comm.getScocketDescription()
 							+ " hace movimiento ");
@@ -394,42 +408,6 @@ public class ServerDomino extends Domino {
 		}// ENDWHILE
 	}
 
-	private void closeGame() {
-		this.comm.closeConnection();
-		this.STATE = State.GAMEENDED;
-	}
-
-	// //// SEND FUNCTIONS
-
-	private void sendPieceToClient() {
-		this.comm.sendPieceToClient(this.currentClientSentPiece);
-
-	}
-
-	/**
-	 * funcion que devuelve un error al cliente
-	 */
-	private void sendErrorToClient() {
-		if (INFO) {
-			System.out.println(this.comm.getScocketDescription() + " ERROR");
-			System.out.println(this.currentError.getRepresentation());
-		}
-		this.comm.sendErrorToClient(this.currentError);
-		/*
-		 * Informamos la cliente de que ha producido un error
-		 */
-
-		// TODO
-
-	}
-
-	private void sendEndGameToClient() {
-		this.comm.sendEndGameToClient(this.clientHand.getLength(),
-				this.player.handLength());
-		;
-
-	}
-
 	/**
 	 * Funcion que elimina la ficha de la pila del servidor y la envia cliente
 	 * 
@@ -446,21 +424,43 @@ public class ServerDomino extends Domino {
 				this.remainingPile.getLength());
 	}
 
-	// ///// CONVERTERS
+	/**
+	 * Funcion que devuelve un error al cliente
+	 */
+	private void sendErrorToClient() {
+		if (INFO) {
+			System.out.println(this.comm.getScocketDescription() + " ERROR");
+			System.out.println(this.currentError.getRepresentation());
+		}
+		this.comm.sendErrorToClient(this.currentError);
+		/*
+		 * Informamos la cliente de que ha producido un error
+		 */
+
+		// TODO
+
+	}
+
+	/**
+	 * Funcion que envia un finalizar el juego al cliente
+	 */
+	private void sendEndGameToClient() {
+		this.comm.sendEndGameToClient(this.clientHand.getLength(),
+				this.player.handLength());
+		;
+
+	}
 
 	/**
 	 * @param id
 	 *            Funcion que devuelve una accion a realizar a partir de una id
-	 * @return
+	 * @return Action
 	 */
 	private Action convertIdToAction(Id id) {
 		switch (id) { // parseamos la id recibida con su accion
 
 		case TIMEOUT:// si es timeout no pasa nada
 			return Action.WAITNEXT;
-
-		case ERROR: // si el cliente nos dice que es error, lo analizamos
-			return Action.READERROR;
 
 		case ENDGAME: // la dominolayer nos puede indicar endgame debido a algun
 						// error IO
@@ -469,29 +469,12 @@ public class ServerDomino extends Domino {
 		case MOVE: // el cliente hace move
 			return Action.READMOVE;
 
-		case HELLO:
-			System.err.println("Me ha enviado un hola");
+		case HELLO: // saludo del cliente, necesario para iniciar partida
 			return Action.READMOVE;
 
 		default:
 			return Action.SENDENDGAME;
 		}
-	}
-
-	private void testServerDomino() {
-
-		System.out.println("Catalog:\n" + getCatalogRepresentation());
-		System.out.println("Client Hand:\n" + clientHand.getRepresentation());
-		System.out.println("Server Hand:\n" + this.player.handRepresentation());
-		System.out.println("Floor:\n" + remainingPile.getRepresentation());
-		Piece startingPiece = getStartingPiece();
-		System.out.println("Starting piece: "
-				+ startingPiece.getRepresentation());
-		if (clientHand.hasPiece(startingPiece))
-			System.out.println("Empieza cliente");
-		else
-			System.out.println("Empieza server");
-
 	}
 
 }

@@ -41,10 +41,36 @@ public class Communication extends DominoLayer {
 
 	}
 
-	public boolean sendInit() {
-		return writeId(Id.INITSERVER);
+	// SERVER SEE FROM CLIENT FUNCTIONS
+
+	/**
+	 * Returns the client movement
+	 * 
+	 * @return
+	 */
+	public Movement seeClientMovement() {
+		char[] receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
+		return new Movement(receivedChars);
+
 	}
 
+	/**
+	 * Returns the client chips quantity
+	 * 
+	 * @return
+	 */
+	public int seeClientHandLength() {
+		return this.readInt();
+	}
+
+	// SERVER SEND FUNCTIONS
+
+	/**
+	 * Sends the initial movement to Client
+	 * 
+	 * @param clientPieces
+	 * @param serverMovement
+	 */
 	public void sendInitMovement(Piece[] clientPieces, Movement serverMovement) {
 
 		char[] initMovement = new char[Size.INITSERVER.asInt()];
@@ -66,18 +92,13 @@ public class Communication extends DominoLayer {
 
 	}
 
-	// / SERVER see from client functions
-
-	public Movement seeClientMovement() {
-		char[] receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
-		return new Movement(receivedChars);
-
-	}
-
-	public int seeClientHandLength() {
-		return this.readInt();
-	}
-
+	/**
+	 * Sends a movement to Client
+	 * 
+	 * @param serverMovement
+	 * @param hand
+	 * @param remaining
+	 */
 	public void sendServerMovement(Movement serverMovement, int hand,
 			int remaining) {
 		char[] chars = translateMovement(serverMovement);
@@ -89,6 +110,11 @@ public class Communication extends DominoLayer {
 		}
 	}
 
+	/**
+	 * Sends a Piece to Client
+	 * 
+	 * @param piece
+	 */
 	public void sendPieceToClient(Piece piece) {
 		char[] chars = translatePiece(piece);
 
@@ -97,10 +123,21 @@ public class Communication extends DominoLayer {
 		}
 	}
 
+	/**
+	 * Sends an Error to Client
+	 * 
+	 * @param err
+	 */
 	public void sendErrorToClient(DomError err) {
 		this.sendError(err);
 	}
 
+	/**
+	 * Sends Endgame to Client
+	 * 
+	 * @param clientHand
+	 * @param serverHand
+	 */
 	public void sendEndGameToClient(int clientHand, int serverHand) {
 		if (sendHeader(Id.ENDGAME)) {
 			sendInt(clientHand);
@@ -108,6 +145,11 @@ public class Communication extends DominoLayer {
 		}
 	}
 
+	/**
+	 * Gets the socket description
+	 * 
+	 * @return
+	 */
 	public String getScocketDescription() {
 		return this.socket_desc;
 	}

@@ -16,12 +16,10 @@ public class IA extends Player {
 
 	public IA(Pile hand) {
 		super(hand);
-		// TODO Auto-generated constructor stub
 	}
 
-
 	/**
-	 * funcion que devuelve el siguiente movimiento a realizar
+	 * Funcion que devuelve el siguiente movimiento a realizar
 	 */
 	public Movement nextMove(PlayedPile playedPile) {
 		for (Piece p : hand.getPieces()) {
@@ -43,7 +41,5 @@ public class IA extends Player {
 		}
 		return null;
 	}
-
-
 
 }
