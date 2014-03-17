@@ -15,9 +15,7 @@ import controllers.net.Communication;
  * 
  */
 public class ServerDomino extends Domino {
-	public enum Stater {
-		CLIENTNP, SERVERNP, CLIENTMOVE, ERRORSUBMIT, ENDGAME, WAITING, PLAYING;
-	}
+
 
 	public enum State { // estados que pueden darse en el juego
 		PLAYING, // jugando normal
