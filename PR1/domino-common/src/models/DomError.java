@@ -1,6 +1,48 @@
 package models;
 
+
+
 public class DomError {
+	
+	public enum Id {
+
+		SYNTAX(1), ILLEGALACTION(2), RESOURCES(3), INTERNAL(4), UNDEFINED(5), TIMEOUT(6);
+
+		public static Id fromInt(int num) {
+			for (Id id : Id.values()) {
+				if (id.getVal() == num)
+					return id;
+			}
+			return UNDEFINED;
+		}
+
+		public static boolean validId(int otherId) {
+			for (Id id : Id.values()) {
+				if (id.getVal() == otherId)
+					return true;
+			}
+			return false;
+		}
+
+		private int id;
+
+		private Id(int id) {
+			this.id = id;
+		}
+
+		public int getVal() {
+			return id;
+		}
+
+		public int asInt() {
+			return id;
+		}
+
+	}
+	
+	
+	
+	
 	private int errNum;
 	private String desc;
 

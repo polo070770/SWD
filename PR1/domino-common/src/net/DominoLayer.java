@@ -87,10 +87,14 @@ public class DominoLayer {
 			this.socket.close();
 			closed = true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return closed;
 		} catch (Exception e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return closed;
 		}
 		return closed;
@@ -115,10 +119,14 @@ public class DominoLayer {
 			}
 			return Id.TIMEOUT;
 		} catch (SocketException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return Id.ENDGAME;
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return Id.ENDGAME;
 		}
 
@@ -147,10 +155,14 @@ public class DominoLayer {
 				return this.readInt();
 			}
 		} catch (SocketException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 
 		}
 		return 0;
@@ -165,8 +177,7 @@ public class DominoLayer {
 	 */
 	public Id readHeader() {
 		Id id;
-		while ((id = readId()) == Id.TIMEOUT && socketAlive())
-			;
+		while ((id = readId()) == Id.TIMEOUT && socketAlive());
 		if (!socketAlive())
 			return Id.ENDGAME;
 
@@ -192,7 +203,9 @@ public class DominoLayer {
 				return false;
 			}
 		} catch (SocketException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return false;
 		}
 
@@ -209,7 +222,9 @@ public class DominoLayer {
 			this.comm.write_int32(id.getVal());
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return false;
 		}
 	}
@@ -220,7 +235,9 @@ public class DominoLayer {
 			this.comm.write_int32(id.getVal());
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return false;
 		}
 	}
@@ -230,7 +247,9 @@ public class DominoLayer {
 			this.comm.write_int32(value);
 		} catch (IOException e) {
 			System.out.println("Error sending integer");
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 		}
 	}
 
@@ -245,7 +264,9 @@ public class DominoLayer {
 			this.comm.write_char(chars);
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return false;
 		}
 	}
@@ -264,11 +285,15 @@ public class DominoLayer {
 			recieved = this.comm.read_char(size);
 			return recieved;
 		} catch (SocketTimeoutException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return new char[0];
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(LOG){
+				e.printStackTrace();
+				}
 			return new char[0];
 		}
 
@@ -338,13 +363,15 @@ public class DominoLayer {
 	 */
 	protected char[] translateErrorDescription(String errDescription) {
 		char[] chars;
-		String errLength = String.valueOf(errDescription.length());
-		// parseamos el error a tres digitos
-		if (errLength.length() < 3){
-			errLength = "0" + errLength;
-		}
-
+		String errLength = "00" + errDescription.length();
+		//parseamos el error a tres digitos
+		errLength = errLength.substring(errLength.length() - Size.ERRORLENGTHDESC.asInt() , errLength.length() );
+	
 		chars = (errLength + errDescription).toCharArray();
+
+		
+		
+		
 		return chars;
 	}
 

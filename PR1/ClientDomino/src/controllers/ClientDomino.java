@@ -213,11 +213,26 @@ public class ClientDomino extends Domino {
 
 			case READERROR:
 				DomError error = this.comm.seeError();
+				if (error.getErrNum() == DomError.Id.ILLEGALACTION.asInt()){
+					Piece piece = currentClientMove.getPiece();
+					System.out.println("la tengo? " + this.player.hasPiece(piece));
+					//si la tirada anterior era una pieza valida, y ya no esta en la mano del jugador, la insertamos
+					if((!this.player.hasPiece(piece)) && this.getCatalog().hasPiece(piece)){
+						this.player.addPieceHand(piece);
+					}
+					System.out.println("Error rebut!!\n" + error.getDesc() + "\n");
+					System.out.println("- Estado tablero: "
+							+ playedPile.getRepresentation());
+					//el cliente tiene la oportunidad de jugar
+					ACTION = Action.SENDMOVE;
+				}else{
+				
+				
 				System.out.println("Error rebut!!\n" + error.getDesc() + "\n");
 				System.out
-						.println("Desconectant del servidor, torna a començar!");
+						.println("Desconectant del servidor, torna a comenï¿½ar!");
 				closeGame();
-
+				}
 				break;
 
 			case SENDENDGAME:

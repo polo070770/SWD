@@ -191,7 +191,7 @@ public class ServerDomino extends Domino {
 						&& this.clientHand.getLength() > 1) {
 					// Primeramente comprobamos si dice que le quedan 0 fichas
 					// y nosotros tenemos constacia que tiene mas fichas
-					this.currentError = new DomError(1,
+					this.currentError = new DomError(DomError.Id.RESOURCES.asInt(),
 							"Numero de fichas pendientes no valido, aun te quedan "
 									+ this.clientHand.getLength());
 					ACTION = Action.CLIENTERROR;
@@ -248,7 +248,7 @@ public class ServerDomino extends Domino {
 
 				} else {
 					// especificamos el error
-					this.currentError = new DomError(2, "Jugada "
+					this.currentError = new DomError(DomError.Id.ILLEGALACTION.asInt(), "Jugada "
 							+ this.currentClientMove.getRepresentation()
 							+ " no valida ");
 					ACTION = Action.CLIENTERROR;
@@ -275,6 +275,7 @@ public class ServerDomino extends Domino {
 			case CLIENTERROR:
 				if (STATE == State.CLIENTERROR) {
 					// Si el cliente nos vuelve a enviar un error
+					System.out.println("Reiterative errors BYE");
 					ACTION = Action.SENDENDGAME;
 
 				} else {
