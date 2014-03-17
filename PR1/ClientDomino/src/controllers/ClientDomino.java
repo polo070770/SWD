@@ -1,5 +1,6 @@
 package controllers;
 
+import models.DomError;
 import models.Movement;
 import models.Piece;
 import models.Pile;
@@ -209,6 +210,10 @@ public class ClientDomino extends Domino {
 				ACTION = Action.WAITNEXT;
 				break;
 
+			case READERROR:
+				DomError error = this.comm.seeError();
+				break;
+
 			case ENDGAME:
 				closeGame();
 				break;
@@ -230,7 +235,7 @@ public class ClientDomino extends Domino {
 			return Action.WAITNEXT;
 
 		case ERROR: // si el servidor nos dice que es error esperamos
-			return Action.WAITNEXT;
+			return Action.READERROR;
 
 		case ENDGAME: // la dominolayer nos puede indicar endgame debido a algun
 						// error IO

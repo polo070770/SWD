@@ -3,6 +3,7 @@ package controllers.net;
 import java.io.IOException;
 import java.net.Socket;
 
+import models.DomError;
 import models.Movement;
 import net.DominoLayer;
 
@@ -70,12 +71,20 @@ public class Communication extends DominoLayer {
 	}
 
 	public char[] readMovementChar() {
-
 		char[] receivedChars;
 		receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
-
 		return receivedChars;
-
+	}
+	
+	public DomError readServerError(){
+		
+		char [] receivedChars;
+		int idError;
+		idError = this.readInt();
+		receivedChars = this.recieveChars(255);
+		
+		return new DomError((int)receivedChars[0], receivedChars.toString());
+		
 	}
 
 	public void sendClientMovement(Movement serverMovement, int hand) {
@@ -85,7 +94,7 @@ public class Communication extends DominoLayer {
 			sendInt(hand);
 		}
 	}
-	
+
 	public void sendClientNTMovement(Movement serverMovement, int hand) {
 		char[] chars = translateMovement(serverMovement);
 		if (sendHeader(Id.MOVESERVER)) {

@@ -355,10 +355,9 @@ public class DominoLayer {
 	 */
 	public DomError seeError() {
 		int errNum = this.readInt();
-		char[] errorLengthDesc = this
-				.recieveChars(Size.ERRORLENGTHDESC.asInt());
-		char[] errorDesc = this.recieveChars(Integer.parseInt(String
-				.valueOf(errorLengthDesc)));
+		// char[] errorLengthDesc = this
+		// .recieveChars(Size.ERRORLENGTHDESC.asInt());
+		char[] errorDesc = this.recieveChars(Size.ERRORLENGTHDESC.asInt());
 		return new DomError(errNum, errorDesc);
 
 	}

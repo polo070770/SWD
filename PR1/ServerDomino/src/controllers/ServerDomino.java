@@ -115,8 +115,11 @@ public class ServerDomino extends Domino {
 			case WAITNEXT:
 				// recibimos la operacion del cliente
 				// /COMMUNICATION
+				System.out.println("Esperando respuesta del cliente...");
 				Id id = this.comm.readHeader();
 				ACTION = convertIdToAction(id);
+				System.out.println("Recibo id: " + id.name() + ":"
+						+ id.getVal() + " y hago la accion; " + ACTION.name());
 				break;
 
 			// / INIT CASE
@@ -168,6 +171,7 @@ public class ServerDomino extends Domino {
 				if (this.currentClientHandLength == 0
 						&& this.clientHand.getLength() > 1) {
 					// Primeramente comprobamos si dice que le quedan 0 fichas
+					// y nosotros tenemos constacia que tiene mas fichas
 					this.currentError = new DomError(1,
 							"Numero de fichas pendientes no valido, aun te quedan "
 									+ this.clientHand.getLength());
@@ -345,12 +349,12 @@ public class ServerDomino extends Domino {
 
 				// enviamos la jugada con los datos necesarios
 				this.sendMovement(this.currentServerMove);
-				
-				/* deprecated
+
+				/*
+				 * deprecated
 				 * this.comm.sendServerMovement(this.currentServerMove)
-						this.player.handLength(),
-						this.remainingPile.getLength());
-				*/
+				 * this.player.handLength(), this.remainingPile.getLength());
+				 */
 				// esperamos respuesta del servidor
 				ACTION = Action.WAITNEXT;
 				break;
@@ -367,8 +371,9 @@ public class ServerDomino extends Domino {
 							+ " que solicitaba ficha");
 
 				this.clientHand.addPiece(this.currentClientSentPiece);
-				this.sendMovement(new Movement(this.currentClientSentPiece, null));
-				//sendPieceToClient();
+				this.sendMovement(new Movement(this.currentClientSentPiece,
+						null));
+				// sendPieceToClient();
 				STATE = State.PLAYING; // Seguimos jugando
 				ACTION = Action.WAITNEXT; // Esperamos contestacion del cliente
 				break;
@@ -432,8 +437,8 @@ public class ServerDomino extends Domino {
 	 */
 	private void sendMovement(Movement move) {
 		// la eliminamos de la mano del serverr
-		//si no es un NT
-		if( STATE != State.SERVERNT && STATE != State.CLIENTNT){
+		// si no es un NT
+		if (STATE != State.SERVERNT && STATE != State.CLIENTNT) {
 			this.player.removePiece(move.getPiece());
 		}
 		// enviamos la jugada con los datos necesarios
@@ -462,6 +467,10 @@ public class ServerDomino extends Domino {
 			return Action.SENDENDGAME;
 
 		case MOVE: // el cliente hace move
+			return Action.READMOVE;
+
+		case HELLO:
+			System.err.println("Me ha enviado un hola");
 			return Action.READMOVE;
 
 		default:
