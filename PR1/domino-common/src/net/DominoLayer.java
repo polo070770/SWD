@@ -338,10 +338,11 @@ public class DominoLayer {
 	 */
 	protected char[] translateErrorDescription(String errDescription) {
 		char[] chars;
-		String errLength = "00" + errDescription.length();
+		String errLength = String.valueOf(errDescription.length());
 		// parseamos el error a tres digitos
-		errLength = errLength.substring(errLength.length()
-				- Size.ERRORLENGTHDESC.asInt() - 1, errLength.length() - 1);
+		if (errLength.length() < 3){
+			errLength = "0" + errLength;
+		}
 
 		chars = (errLength + errDescription).toCharArray();
 		return chars;
@@ -355,9 +356,13 @@ public class DominoLayer {
 	 */
 	public DomError seeError() {
 		int errNum = this.readInt();
-		// char[] errorLengthDesc = this
-		// .recieveChars(Size.ERRORLENGTHDESC.asInt());
-		char[] errorDesc = this.recieveChars(Size.ERRORLENGTHDESC.asInt());
+
+		char[] errorLengthDesc = this
+				.recieveChars(Size.ERRORLENGTHDESC.asInt());
+
+		char[] errorDesc = this.recieveChars(Integer.valueOf(String
+				.valueOf(errorLengthDesc)));
+		
 		return new DomError(errNum, errorDesc);
 
 	}
@@ -369,10 +374,11 @@ public class DominoLayer {
 	 */
 	public void sendError(DomError err) {
 
-		char[] chars = translateErrorDescription(err.getDesc());
+		char[] chars_desc = translateErrorDescription(err.getDesc());
+
 		if (sendHeader(Id.ERROR)) {
 			sendInt(err.getErrNum());
-			sendChar(chars);
+			sendChar(chars_desc);
 		}
 
 	}

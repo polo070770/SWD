@@ -212,6 +212,9 @@ public class ClientDomino extends Domino {
 
 			case READERROR:
 				DomError error = this.comm.seeError();
+				System.out.println("Error rebut!!\n" + error.getDesc() + "\n");
+				System.out.println("Desconectant del servidor, torna a començar!");
+				closeGame();
 				break;
 
 			case ENDGAME:
