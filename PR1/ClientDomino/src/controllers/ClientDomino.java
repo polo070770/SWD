@@ -150,8 +150,6 @@ public class ClientDomino extends Domino {
 					System.out.println("\n- Ficha server: "
 							+ currentServerMove.getRepresentation());
 
-					System.out.println(currentServerMove.getPiece().reversed());
-
 					// aniadimos ficha del servidor en el tablero
 					this.playedPile.pushSide(currentServerMove.getPiece(),
 							currentServerMove.getSide());
@@ -187,6 +185,9 @@ public class ClientDomino extends Domino {
 					// aniadimos pieza en el tablero
 					this.playedPile.pushSide(currentClientMove.getPiece(),
 							currentClientMove.getSide());
+					
+					System.out.println("- Estado tablero: "
+							+ playedPile.getRepresentation());
 
 					if (this.player.handLength() == 0) {
 						// Cliente gana juego
