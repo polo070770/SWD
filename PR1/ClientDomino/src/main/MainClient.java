@@ -27,13 +27,14 @@ public class MainClient {
 	public MainClient(String[] args) {
 		Socket socket;
 		// capturamos la url
-		if (args.length > 1) {
+		if (args.length > 0) {
+			System.out.println("argumentos");
 			// capturamos la url
 			url = args[1].split(":")[0];
 			// capturamos el puerto
 			port = Integer.parseInt(args[1].split(":")[1]);
 		}
-
+		
 		try {
 
 			host = InetAddress.getByName(url);

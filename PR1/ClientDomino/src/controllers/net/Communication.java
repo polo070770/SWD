@@ -56,6 +56,8 @@ public class Communication extends DominoLayer {
 	 */
 	public Movement seeServerMovement() {
 		char[] receivedChars = this.recieveChars(Size.MOVEMENT.asInt());
+		int receivedInt = this.readInt();
+		int receivedInt2 = this.readInt();
 		return new Movement(receivedChars);
 	}
 

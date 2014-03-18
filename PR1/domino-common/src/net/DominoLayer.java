@@ -51,7 +51,7 @@ public class DominoLayer {
 	}
 
 	public enum Size {
-		INIT(18), INITSERVER(18), MOVEMENT(4), PIECE(4), INITPIECE(2), ERRORLENGTHDESC(
+		INIT(18), INITSERVER(18), MOVEMENT(4), MOVESERVER(8), PIECE(4), INITPIECE(2), ERRORLENGTHDESC(
 				3);
 		private int size;
 
@@ -177,7 +177,7 @@ public class DominoLayer {
 	 */
 	public Id readHeader() {
 		Id id = readId();
-		while ((id == Id.TIMEOUT && socketAlive()) || id == id.UNKNOWN) {
+		while ((id == Id.TIMEOUT && socketAlive()) || id == Id.UNKNOWN) {
 			id = readId();
 		}
 		if (!socketAlive())

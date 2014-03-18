@@ -73,8 +73,10 @@ public class ClientDomino extends Domino {
 				// recibimos la contestacion del servidor
 				System.out.println("Esperando respuesta del servidor...");
 				Id id = this.comm.readHeader();
+				
 				System.out.println("Recibo id-> " + id.name() + ":"
 						+ id.getVal());
+				
 				ACTION = convertIdToAction(id);
 				break;
 
