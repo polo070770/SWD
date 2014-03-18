@@ -27,8 +27,7 @@ public class MainClient {
 	public MainClient(String[] args) {
 		Socket socket;
 		// capturamos la url
-		if (args.length > 0) {
-			System.out.println("argumentos");
+		if (args.length > 1) {
 			// capturamos la url
 			url = args[1].split(":")[0];
 			// capturamos el puerto
