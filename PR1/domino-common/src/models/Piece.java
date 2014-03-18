@@ -156,17 +156,29 @@ public class Piece {
 		// side = Character.toUpperCase(side);
 
 		// probamos si encaja por el lado izquierdo
-		if (side == LEFT) {
-			if (!piece.reversed())
-				return this.getLeft() == piece.getRight();
-			else
-				return this.getLeft() == piece.getLeft();
-		} else if (side == RIGHT) {
-			if (!piece.reversed())
-			return this.getRight() == piece.getLeft();
-			else
-				return this.getRight() == piece.getRight();
+		char leftTable, rightTable;
+		char leftMovement, rightMovement;
+
+		if (this.reverse) {
+			leftTable = this.getRight();
+			rightTable = this.getLeft();
+		} else {
+			leftTable = this.getLeft();
+			rightTable = this.getRight();
 		}
+
+		if (piece.reversed()) {
+			leftMovement = piece.getRight();
+			rightMovement = piece.getLeft();
+		} else {
+			leftMovement = piece.getLeft();
+			rightMovement = piece.getRight();
+		}
+
+		if (side == LEFT)
+			return leftTable == rightMovement;
+		else if (side == RIGHT)
+			return rightTable == leftMovement;
 
 		return false;
 	}

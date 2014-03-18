@@ -73,7 +73,7 @@ public class ClientDomino extends Domino {
 				// recibimos la contestacion del servidor
 				System.out.println("Esperando respuesta del servidor...");
 				Id id = this.comm.readHeader();
-				System.out.println("Recibo id: " + id.name() + ":"
+				System.out.println("Recibo id-> " + id.name() + ":"
 						+ id.getVal());
 				ACTION = convertIdToAction(id);
 				break;
@@ -177,21 +177,19 @@ public class ClientDomino extends Domino {
 
 				} else {
 
-					System.out.println("#fichas: " + this.player.handLength());
-
 					// enviamos movimiento al servidor
 					sendMovement(currentClientMove);
 
 					// aniadimos pieza en el tablero
 					this.playedPile.pushSide(currentClientMove.getPiece(),
 							currentClientMove.getSide());
-					
+
 					System.out.println("- Estado tablero: "
 							+ playedPile.getRepresentation());
 
 					if (this.player.handLength() == 0) {
 						// Cliente gana juego
-						ACTION = Action.SENDENDGAME;
+						ACTION = Action.ENDGAME;
 					} else {
 						// Continuamos jugando
 						STATE = State.PLAYING;
@@ -214,25 +212,29 @@ public class ClientDomino extends Domino {
 
 			case READERROR:
 				DomError error = this.comm.seeError();
-				if (error.getErrNum() == DomError.Id.ILLEGALACTION.asInt()){
+				if (error.getErrNum() == DomError.Id.ILLEGALACTION.asInt()) {
 					Piece piece = currentClientMove.getPiece();
-					System.out.println("la tengo? " + this.player.hasPiece(piece));
-					//si la tirada anterior era una pieza valida, y ya no esta en la mano del jugador, la insertamos
-					if((!this.player.hasPiece(piece)) && this.getCatalog().hasPiece(piece)){
+					System.out.println("la tengo? "
+							+ this.player.hasPiece(piece));
+					// si la tirada anterior era una pieza valida, y ya no esta
+					// en la mano del jugador, la insertamos
+					if ((!this.player.hasPiece(piece))
+							&& this.getCatalog().hasPiece(piece)) {
 						this.player.addPieceHand(piece);
 					}
-					System.out.println("Error rebut!!\n" + error.getDesc() + "\n");
+					System.out.println("Error rebut!!\n" + error.getDesc()
+							+ "\n");
 					System.out.println("- Estado tablero: "
 							+ playedPile.getRepresentation());
-					//el cliente tiene la oportunidad de jugar
+					// el cliente tiene la oportunidad de jugar
 					ACTION = Action.SENDMOVE;
-				}else{
-				
-				
-				System.out.println("Error rebut!!\n" + error.getDesc() + "\n");
-				System.out
-						.println("Desconectant del servidor, torna a comen�ar!");
-				closeGame();
+				} else {
+
+					System.out.println("Error rebut!!\n" + error.getDesc()
+							+ "\n");
+					System.out
+							.println("Desconectant del servidor, torna a comen�ar!");
+					closeGame();
 				}
 				break;
 
@@ -241,6 +243,9 @@ public class ClientDomino extends Domino {
 				break;
 
 			case ENDGAME:
+				System.out
+						.println("La partida finalitza amb la seguent puntuacio:\n"
+								+ this.comm.seeScore());
 				closeGame();
 
 				break;

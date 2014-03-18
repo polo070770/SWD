@@ -29,6 +29,7 @@ public class PlayedPile extends Catalog {
 	public void pushSide(Piece piece, Side side){
 		if(side == LEFTSIDE && matchLeft(piece))pushLeft(piece);
 		else if(side == RIGHTSIDE && matchRight(piece))pushRight(piece);
+		else pushRight(piece);
 
 	}
 	

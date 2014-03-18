@@ -59,6 +59,12 @@ public class Communication extends DominoLayer {
 		return new Movement(receivedChars);
 	}
 
+	public String seeScore() {
+		int scoreClient = this.readInt();
+		int scoreServer = this.readInt();
+		return ("Client Score: " + scoreClient + "\nServer Score: " + scoreServer);
+	}
+
 	/**
 	 * Sends a user movement, it can be: " i cant trow" too.
 	 * 
