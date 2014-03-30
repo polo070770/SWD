@@ -76,7 +76,7 @@ public class ChatWindow {
 		
 		frame.setBounds(100, 100, 440, 304);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
-		frame.setTitle("Chat con " + title);
+		frame.setTitle(localName +" - Chat con " + title);
 		
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.SOUTH);
@@ -86,7 +86,8 @@ public class ChatWindow {
 		
 		textInput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				newMessage(textInput.getText(), localName, true);
+				if(textInput.getText().length() > 0)
+					newMessage(textInput.getText(), localName, true);
 			}
 		});
 		
@@ -97,7 +98,8 @@ public class ChatWindow {
 		JButton btnSend = new JButton("Send");
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				newMessage(textInput.getText(),localName, true);
+				if(textInput.getText().length() > 0)				
+					newMessage(textInput.getText(),localName, true);
 			}
 		});
 		panel.add(btnSend);
@@ -108,6 +110,8 @@ public class ChatWindow {
 		
 		textArea = new JTextArea();
 		textArea.setEditable(false);
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
 		frame.getContentPane().add(textArea, BorderLayout.CENTER);
 	}
 

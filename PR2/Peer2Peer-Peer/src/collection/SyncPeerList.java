@@ -45,7 +45,7 @@ public class SyncPeerList {
 	public void removePeer(String key){
 		// anadimos el peer en synchro mode
 		synchronized(list){
-			if (!list.containsKey(key))
+			if (list.containsKey(key))
 				list.remove(key);
 		}
 	}
