@@ -13,43 +13,43 @@ public class MainServer {
 	private final boolean DEBUG = true;
 	private String serverName;
 	private ChatServer server;
+
 	public static void main(String[] args) {
 		int port = 1099; // puerto por defecto
-		
-		if(args.length > 0){
+
+		if (args.length > 0) {
 			port = Integer.parseInt(args[0]);
 		}
-		
-		MainServer server = new MainServer(port);
+
+		new MainServer(port);
 	}
 
-	public MainServer(int port){
-		
+	public MainServer(int port) {
+
 		this.port = port;
-		
-		
-		try{
-			LocateRegistry.createRegistry(port);	// iniciamos el rmi
-			server = new ChatServer(this);	// iniciamos el servidor
+
+		try {
+			LocateRegistry.createRegistry(port); // iniciamos el rmi
+			server = new ChatServer(this); // iniciamos el servidor
 			String url = "rmi://localhost:" + port + "/";
 			serverName = url + "ChatServer";// registramos el servidor
 			Naming.rebind(serverName, server);
-			
-			System.out.println("Chat Server iniciado en :");
-			System.out.println(Naming.list(url)[0]); 
-			
-		}catch(Exception e){
-			System.out.println("Imposible iniciar el servidor");
-			if(DEBUG){
+
+			System.out.println("Chat Server iniciado en:");
+			System.out.println(Naming.list(url)[0]);
+
+		} catch (Exception e) {
+			System.out.println("Imposible iniciar el servidor!");
+			if (DEBUG) {
 				e.printStackTrace();
 			}
 		}
 
 	}
-	
-	public void CloseServer(){
+
+	public void CloseServer() {
 		try {
-			//Desregistramos el servidor
+			// Desregistramos el servidor
 			Naming.unbind(serverName);
 			server = null;
 		} catch (RemoteException e) {
