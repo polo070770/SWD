@@ -20,19 +20,26 @@ public class MainPeer {
 
 	public static void main(String[] args) {
 		int port = 1099; // puerto por defecto
-		String host = "localhost";
-
-		// puerto
-		if (args.length > 1) {
+		String host = "localhost"; // host por defecto
+		String nombre = "Hermetico"; // nombre por defecto
+		
+		//Nombre 
+		if(args.length > 2){
+			nombre = args[2];
+		}
+		
+		// puerto 
+		if(args.length > 1){
 			port = Integer.parseInt(args[1]);
 		}
-
-		// host
-		if (args.length > 0) {
+		
+		//host 
+		if(args.length > 0){
 			host = args[0];
 		}
-
-		new MainPeer(host, port, "Hermetico");
+		
+		
+		MainPeer chat = new MainPeer(host, port, nombre);
 
 	}
 
