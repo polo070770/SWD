@@ -1,0 +1,62 @@
+package server;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+import main.MainServer;
+import views.MainWindow;
+import collection.SyncPeerList;
+import interficie.peer.Peer2Server;
+import interficie.peer.Peer2Peer;
+import interficie.server.ChatDaemonInterface;
+
+public class ChatServer extends UnicastRemoteObject implements ChatDaemonInterface {
+	
+	private SyncPeerList peers;
+	private MainWindow window;
+	MainServer context;
+	
+	public ChatServer(MainServer context) throws RemoteException{
+		this.context = context;
+		peers = new SyncPeerList();
+		window = new MainWindow(this);
+	}
+	
+	public void stopServer(){
+		System.out.println("Closing server BYE!");
+		this.context.CloseServer();
+	}
+	
+	
+	@Override
+	public void registerPeer(String name, Peer2Server peer) throws RemoteException {
+		// Guardamos el peer en la lista
+		if(!(peers.contains(name))){
+			peers.addPeer(peer, name);
+			System.out.println("Registrado " + name);
+			window.addPeerNameToList(name);
+			//informamos al resto de los peers, pasamos la referencia como un peer2peer y no un peer2server
+			peers.spreadNewClient((Peer2Peer)peer, name);
+		}
+		System.out.println("Peers conectados : " + peers.numPeersConnected());
+	}
+
+	@Override
+	public void unregisterPeer(String name) throws RemoteException {
+		// Eliminamos el elemento de la lista
+		System.out.println("Solicitud de eliminacion " + name);
+		if((peers.contains(name))){
+			peers.removePeer(name);
+			window.removePeerNameFromList(name);
+			//informamos al resto de los peers que ha habido una desconexion
+			peers.spreadDisconnectClient(name);
+		}
+		System.out.println("Peers conectados : " + peers.numPeersConnected());
+	}
+
+	@Override
+	public Peer2Peer[] getConnectedPeers(String peerName) throws RemoteException {
+		return peers.getConnectedPeers(peerName);
+	}
+
+}
