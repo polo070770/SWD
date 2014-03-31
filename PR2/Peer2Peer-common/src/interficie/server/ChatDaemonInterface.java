@@ -12,7 +12,7 @@ public interface ChatDaemonInterface extends Remote {
 	 * @param peer
 	 * @throws java.rmi.RemoteException
 	 */
-	public void registerPeer(String name, Peer2Server peer) throws java.rmi.RemoteException;
+	public boolean registerPeer(String name, Peer2Server peer) throws java.rmi.RemoteException;
 	
 	/**
 	 * Funcion que elimina un peer del registro

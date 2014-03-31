@@ -151,9 +151,15 @@ public class ChatWindow {
 
 	}
 
+	private void toFrontAndFocusable() {
+		frame.toFront();
+		frame.setFocusable(true);
+	}
+
 	public void addConversation(String name) {
 		addContactNameToList(name);
 		addPanel(name);
+		toFrontAndFocusable();
 	}
 
 	public void putConversation(String name) {
@@ -161,13 +167,11 @@ public class ChatWindow {
 		int i = 0;
 		while (!trobat && i < tabPanel.getTabCount()) {
 			if (tabPanel.getTitleAt(i) == name) {
-				frame.setVisible(true);
 				tabPanel.setSelectedIndex(i);
 				trobat = true;
 			}
 			i++;
 		}
-
 	}
 
 	public void addContactNameToList(String name) {
@@ -193,6 +197,7 @@ public class ChatWindow {
 			textInput.requestFocusInWindow();
 			String name = tabPanel.getTitleAt(tabPanel.getSelectedIndex());
 			context.spreadMessage(name, text);
+			toFrontAndFocusable();
 		}
 
 	}

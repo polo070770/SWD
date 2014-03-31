@@ -71,8 +71,12 @@ public class ChatPeer extends UnicastRemoteObject implements Peer2Server,
 
 			newChat = new ChatWindow(this, contactName, this.peerName);
 			chats.put(contactName, newChat);
-			
+
 		} else {
+
+			if (!newChat.isVisible()) {
+				newChat.setVisible();
+			}
 
 			if (!chats.containsKey(contactName)) {
 				// ChatWindow newChat = new ChatWindow(this, contactName,
@@ -81,9 +85,6 @@ public class ChatPeer extends UnicastRemoteObject implements Peer2Server,
 				chats.put(contactName, newChat);
 
 			} else {
-				// if (!chats.get(contactName).isVisible()) {
-				// chats.get(contactName).setVisible();
-				// }
 				newChat.putConversation(contactName);
 			}
 		}

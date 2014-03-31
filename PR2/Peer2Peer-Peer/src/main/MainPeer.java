@@ -21,17 +21,17 @@ public class MainPeer {
 	public static void main(String[] args) {
 		int port = 1099; // puerto por defecto
 		String host = "localhost"; // host por defecto
-		
-		// puerto 
-		if(args.length > 1){
+
+		// puerto
+		if (args.length > 1) {
 			port = Integer.parseInt(args[1]);
 		}
-		
-		//host 
-		if(args.length > 0){
+
+		// host
+		if (args.length > 0) {
 			host = args[0];
 		}
-		
+
 		new MainPeer(host, port);
 
 	}
@@ -44,14 +44,17 @@ public class MainPeer {
 		String urlRegistro = "rmi://" + host + ":" + port + "/" + serverName;
 
 		userNameDialog(urlRegistro);
-		
+
 		try {
 			ChatDaemonInterface chatServer = (ChatDaemonInterface) Naming
 					.lookup(urlRegistro);
 			System.out.println("Server encontrado");
 
 			client = new ChatPeer(chatServer, this.nombre);
-			chatServer.registerPeer(nombre, client);
+			//chatServer.registerPeer(nombre, client);
+			while (!chatServer.registerPeer(nombre, client)){
+				userNameDialog(urlRegistro);
+			}
 			client.go();
 
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {

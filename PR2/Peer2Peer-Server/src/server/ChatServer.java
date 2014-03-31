@@ -29,7 +29,8 @@ public class ChatServer extends UnicastRemoteObject implements ChatDaemonInterfa
 	
 	
 	@Override
-	public void registerPeer(String name, Peer2Server peer) throws RemoteException {
+	public boolean registerPeer(String name, Peer2Server peer) throws RemoteException {
+		boolean result = false;
 		// Guardamos el peer en la lista
 		if(!(peers.contains(name))){
 			peers.addPeer(peer, name);
@@ -37,8 +38,10 @@ public class ChatServer extends UnicastRemoteObject implements ChatDaemonInterfa
 			window.addPeerNameToList(name);
 			//informamos al resto de los peers, pasamos la referencia como un peer2peer y no un peer2server
 			peers.spreadNewClient((Peer2Peer)peer, name);
+			result = true;
 		}
 		System.out.println("Peers conectados : " + peers.numPeersConnected());
+		return result;
 	}
 
 	@Override
