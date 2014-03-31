@@ -2,24 +2,10 @@ package main;
 
 import interficie.server.ChatDaemonInterface;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 
 import peer.ChatPeer;
 import views.DialogWindow;
@@ -34,18 +20,24 @@ public class MainPeer {
 
 	public static void main(String[] args) {
 		int port = 1099; // puerto por defecto
-		String host = "localhost";
-
-		// puerto
-		if (args.length > 1) {
+		String host = "localhost"; // host por defecto
+		String nombre = "Hermetico"; // nombre por defecto
+		
+		//Nombre 
+		if(args.length > 2){
+			nombre = args[2];
+		}
+		
+		// puerto 
+		if(args.length > 1){
 			port = Integer.parseInt(args[1]);
 		}
-
-		// host
-		if (args.length > 0) {
+		
+		//host 
+		if(args.length > 0){
 			host = args[0];
 		}
-
+		
 		new MainPeer(host, port);
 
 	}

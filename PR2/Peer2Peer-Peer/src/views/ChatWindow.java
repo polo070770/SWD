@@ -53,7 +53,8 @@ public class ChatWindow {
 		this.localName = localName;
 		initialize();
 		frame.setVisible(true);
-		df = new SimpleDateFormat("yyyy/MM/DD HH:mm");
+		//df = new SimpleDateFormat("yyyy/MM/DD HH:mm");
+		df = new SimpleDateFormat("HH:mm:ss");
 	}
 
 	/**
