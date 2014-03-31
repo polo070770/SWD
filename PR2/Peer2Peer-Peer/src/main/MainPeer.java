@@ -21,12 +21,6 @@ public class MainPeer {
 	public static void main(String[] args) {
 		int port = 1099; // puerto por defecto
 		String host = "localhost"; // host por defecto
-		String nombre = "Hermetico"; // nombre por defecto
-		
-		//Nombre 
-		if(args.length > 2){
-			nombre = args[2];
-		}
 		
 		// puerto 
 		if(args.length > 1){
@@ -49,7 +43,7 @@ public class MainPeer {
 
 		String urlRegistro = "rmi://" + host + ":" + port + "/" + serverName;
 
-		UserNameDialog(urlRegistro);
+		userNameDialog(urlRegistro);
 		
 		try {
 			ChatDaemonInterface chatServer = (ChatDaemonInterface) Naming
@@ -68,7 +62,7 @@ public class MainPeer {
 
 	}
 
-	private void UserNameDialog(String url) {
+	private void userNameDialog(String url) {
 		// pop-up para preguntar el username
 		DialogWindow dialog = new DialogWindow(this, url);
 
@@ -80,8 +74,8 @@ public class MainPeer {
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (DEBUG)
+						e.printStackTrace();
 				}
 			}
 		}
