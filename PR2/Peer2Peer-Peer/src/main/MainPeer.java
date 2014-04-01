@@ -43,7 +43,7 @@ public class MainPeer {
 
 		String urlRegistro = "rmi://" + host + ":" + port + "/" + serverName;
 
-		userNameDialog(urlRegistro);
+		userNameDialog(urlRegistro, false);
 
 		try {
 			ChatDaemonInterface chatServer = (ChatDaemonInterface) Naming
@@ -51,10 +51,12 @@ public class MainPeer {
 			System.out.println("Server encontrado");
 
 			client = new ChatPeer(chatServer, this.nombre);
-			//chatServer.registerPeer(nombre, client);
-			while (!chatServer.registerPeer(nombre, client)){
-				userNameDialog(urlRegistro);
+
+			while (!chatServer.registerPeer(this.nombre, client)) {
+				userNameDialog(urlRegistro, true);
+				client = new ChatPeer(chatServer, this.nombre);
 			}
+
 			client.go();
 
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
@@ -65,9 +67,11 @@ public class MainPeer {
 
 	}
 
-	private void userNameDialog(String url) {
+	private void userNameDialog(String url, boolean repeat) {
 		// pop-up para preguntar el username
 		DialogWindow dialog = new DialogWindow(this, url);
+		if (repeat)
+			dialog.setLblUserNameAlreadyIn(true);
 
 		Thread thr = new Thread(dialog);
 		thr.start();

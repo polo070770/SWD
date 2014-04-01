@@ -79,8 +79,6 @@ public class ChatPeer extends UnicastRemoteObject implements Peer2Server,
 			}
 
 			if (!chats.containsKey(contactName)) {
-				// ChatWindow newChat = new ChatWindow(this, contactName,
-				// this.peerName);
 				newChat.addConversation(contactName);
 				chats.put(contactName, newChat);
 

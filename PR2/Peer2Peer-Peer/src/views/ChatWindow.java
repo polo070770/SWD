@@ -45,7 +45,6 @@ public class ChatWindow {
 	 */
 	public ChatWindow(ChatPeer context, String name, String localName) {
 		this.context = context;
-		// this.title = name;
 		this.localName = localName;
 		this.contactsModelList = new DefaultListModel<String>();
 
@@ -73,6 +72,7 @@ public class ChatWindow {
 				System.out.println("ocultando");
 			}
 		});
+
 		frame.getContentPane().setBackground(Color.WHITE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
@@ -160,7 +160,7 @@ public class ChatWindow {
 	public void addConversation(String name) {
 		addContactNameToList(name);
 		addPanel(name);
-		toFrontAndFocusable();
+		putConversation(name);
 	}
 
 	public void putConversation(String name) {
@@ -173,6 +173,7 @@ public class ChatWindow {
 			}
 			i++;
 		}
+		toFrontAndFocusable();
 	}
 
 	public void addContactNameToList(String name) {
@@ -198,8 +199,7 @@ public class ChatWindow {
 			textInput.requestFocusInWindow();
 			String name = tabPanel.getTitleAt(tabPanel.getSelectedIndex());
 			context.spreadMessage(name, text);
-			toFrontAndFocusable();
 		}
-
+		toFrontAndFocusable();
 	}
 }

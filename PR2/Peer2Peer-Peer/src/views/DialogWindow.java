@@ -24,6 +24,7 @@ public class DialogWindow extends JDialog implements Runnable {
 	private JTextField textField;
 	private JLabel userLabel;
 	private JButton okButton;
+	private JLabel lblUsernameAlreadyIn;
 
 	private String urlRegistro;
 	private MainPeer context;
@@ -158,6 +159,13 @@ public class DialogWindow extends JDialog implements Runnable {
 			label.setFont(new Font("Tahoma", Font.BOLD, 14));
 			label.setBounds(116, 60, 247, 42);
 			infoPane.add(label);
+
+			lblUsernameAlreadyIn = new JLabel("username already in use!");
+			lblUsernameAlreadyIn.setHorizontalAlignment(SwingConstants.CENTER);
+			lblUsernameAlreadyIn.setVisible(false);
+			lblUsernameAlreadyIn.setForeground(new Color(255, 0, 0));
+			lblUsernameAlreadyIn.setBounds(10, 134, 155, 14);
+			infoPane.add(lblUsernameAlreadyIn);
 		}
 
 	}
@@ -175,5 +183,9 @@ public class DialogWindow extends JDialog implements Runnable {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public void setLblUserNameAlreadyIn(boolean b) {
+		lblUsernameAlreadyIn.setVisible(b);
 	}
 }
