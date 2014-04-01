@@ -24,6 +24,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import peer.ChatPeer;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 public class ChatWindow {
 
@@ -63,8 +65,6 @@ public class ChatWindow {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setTitle(" - Chat de " + localName);
-		frame.getContentPane().setLayout(null);
-		frame.setType(Type.UTILITY);
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -74,18 +74,23 @@ public class ChatWindow {
 			}
 		});
 		frame.getContentPane().setBackground(Color.WHITE);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		// panel principal contenedor
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 434, 261);
-		frame.getContentPane().add(panel);
-		panel.setLayout(null);
+		frame.getContentPane().add(panel, BorderLayout.SOUTH);
 
 		// entrada de texto
 		textInput = new JTextField();
-		textInput.setBounds(10, 214, 320, 36);
+		textInput.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (textInput.getText().length() > 0)
+					newMessage(textInput.getText(), localName, true);
+			}
+		});
+		panel.setLayout(new BorderLayout(0, 0));
 		textInput.setColumns(10);
-		panel.add(textInput);
+		panel.add(textInput, BorderLayout.CENTER);
 		textInput.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
@@ -115,9 +120,8 @@ public class ChatWindow {
 
 		// boton de enviar
 		btnSend = new JButton("Send");
-		btnSend.setBounds(335, 214, 89, 36);
 		btnSend.setEnabled(false);
-		panel.add(btnSend);
+		panel.add(btnSend, BorderLayout.EAST);
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				newMessage(textInput.getText(), localName, true);
@@ -130,20 +134,17 @@ public class ChatWindow {
 		// frame.getContentPane().add(contactsList, BorderLayout.EAST);
 
 		// pestanyas de conversaciones
-		tabPanel = new JTabbedPane(JTabbedPane.TOP);
-		tabPanel.setBounds(10, 5, 414, 202);
-		panel.add(tabPanel);
+		tabPanel = new JTabbedPane(JTabbedPane.LEFT);
+		frame.getContentPane().add(tabPanel, BorderLayout.CENTER);
 
 	}
 
 	private void addPanel(String text) {
-
 		JPanel panelTab = new JPanel();
-		panelTab.setLayout(null);
 		tabPanel.add(text, panelTab);
+		panelTab.setLayout(new BorderLayout(0, 0));
 
 		textArea = new JTextArea();
-		textArea.setBounds(0, 0, 409, 174);
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
