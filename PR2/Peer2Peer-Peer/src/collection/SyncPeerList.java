@@ -2,12 +2,11 @@ package collection;
 
 
 
+import interficie.peer.Peer2Peer;
+
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import interficie.peer.Peer2Peer;
 
 /**
  * Syncronized Peer2Server list
@@ -75,11 +74,16 @@ public class SyncPeerList {
 		return contacts;
 	}
 	
-	public void addContacts(Peer2Peer[] contacts) throws RemoteException{
+	public void addContacts(Remote[] contacts) throws RemoteException{
 		for(int i = 0; i < contacts.length; i++ ){
-			String key = contacts[i].getNameCallback();
+			
+			Peer2Peer peer = (Peer2Peer) contacts[i];
+			
+			String key = peer.getNameCallback();
+			
 			System.out.println("Recibo nombre " + key);
-			addPeer(contacts[i], key);
+			addPeer(peer, key);
+			
 		}
 
 	}

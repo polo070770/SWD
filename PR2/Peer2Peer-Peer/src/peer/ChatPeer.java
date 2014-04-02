@@ -4,6 +4,7 @@ import interficie.peer.Peer2Peer;
 import interficie.peer.Peer2Server;
 import interficie.server.ChatDaemonInterface;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class ChatPeer extends UnicastRemoteObject implements Peer2Server,
 
 	private void addContacts() {
 		try {
-			Peer2Peer[] newContacts = this.server.getConnectedPeers(peerName);
+			Remote[] newContacts = this.server.getConnectedPeers(peerName);
 			if (newContacts.length > 0) {
 				contacts.addContacts(newContacts);
 				window.addContactsNamesToList(contacts.getContactNames());

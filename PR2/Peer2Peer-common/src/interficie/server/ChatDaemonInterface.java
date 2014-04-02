@@ -1,9 +1,8 @@
 package interficie.server;
 
-import interficie.peer.Peer2Peer;
 import interficie.peer.Peer2Server;
 
-import java.rmi.*;
+import java.rmi.Remote;
 
 public interface ChatDaemonInterface extends Remote {
 	
@@ -21,6 +20,6 @@ public interface ChatDaemonInterface extends Remote {
 	 */
 	public void unregisterPeer(String name) throws java.rmi.RemoteException;
 	
-	public Peer2Peer[] getConnectedPeers(String peerName) throws java.rmi.RemoteException;
+	public Remote[] getConnectedPeers(String peerName) throws java.rmi.RemoteException;
 
 }
