@@ -29,7 +29,7 @@ public class SyncPeerList {
 	}
 
 	/**
-	 * funcion que inserta el peer en la lista
+	 * Funcion que inserta el peer en la lista
 	 * 
 	 * @param peer
 	 */
@@ -42,7 +42,7 @@ public class SyncPeerList {
 	}
 
 	/**
-	 * funcion que elimina el peer de la lista
+	 * Funcion que elimina el peer de la lista
 	 * 
 	 * @param peer
 	 */

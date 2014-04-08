@@ -53,14 +53,20 @@ public class MainServer {
 			Naming.unbind(serverName);
 			server = null;
 		} catch (RemoteException e) {
-
-			e.printStackTrace();
+			System.out.println("Remote Exception, cerrando el servidor!");
+			if (DEBUG) {
+				e.printStackTrace();
+			}
 		} catch (MalformedURLException e) {
-
-			e.printStackTrace();
+			System.out.println("MalformedURLException, cerrando el servidor!");
+			if (DEBUG) {
+				e.printStackTrace();
+			}
 		} catch (NotBoundException e) {
-
-			e.printStackTrace();
+			System.out.println("NotBoundException, cerrando el servidor!");
+			if (DEBUG) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

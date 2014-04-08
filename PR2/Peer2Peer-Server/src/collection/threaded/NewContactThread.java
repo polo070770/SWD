@@ -13,9 +13,14 @@ public class NewContactThread implements Runnable {
 
 	public NewContactThread(Peer2Server peer, String peerName,
 			Peer2Peer contact, String contactName) {
+		// peer al que hay que notificar
 		this.peer = peer;
+		// nombre del peer al que hay que notificar
 		this.peerName = peerName;
+		
+		// peer, nuevo contacto 
 		this.contact = contact;
+		// nombre del peer, nombre del nuevo contacto
 		this.contactName = contactName;
 
 	}

@@ -81,6 +81,8 @@ public class MainPeer {
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
+					System.out
+							.println("InterruptedException, user name dialog!");
 					if (DEBUG)
 						e.printStackTrace();
 				}

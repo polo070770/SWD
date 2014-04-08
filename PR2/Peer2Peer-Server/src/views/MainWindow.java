@@ -51,15 +51,30 @@ public class MainWindow {
 
 	}
 
+	/**
+	 * Anyade el nombre del nuevo peer conectado en la lista del servidor
+	 * 
+	 * @param name
+	 */
 	public void addPeerNameToList(String name) {
 		peersModelList.addElement(name);
 	}
 
+	/**
+	 * Quita el nombre del nuevo peer conectado en la lista del servidor
+	 * 
+	 * @param name
+	 */
 	public void removePeerNameFromList(String name) {
 		peersModelList.removeElement(name);
 
 	}
 
+	/**
+	 * Anyade varios nombres de peers en la lista del servidor
+	 * 
+	 * @param names
+	 */
 	public void addPeersNamesToList(String[] names) {
 		for (String name : names) {
 			peersModelList.addElement(name);
