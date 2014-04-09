@@ -20,7 +20,7 @@ public class MainPeer {
 
 	public static void main(String[] args) {
 		int port = 1099; // puerto por defecto
-		String host = "161.116.52.109"; // host por defecto
+		String host = "161.116.52.75"; // host por defecto
 
 		// puerto
 		if (args.length > 1) {

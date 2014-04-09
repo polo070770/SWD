@@ -32,7 +32,6 @@ public class ChatWindow {
 	private JFrame frame;
 	private JTextField textInput;
 	private JButton btnSend;
-	private JTextArea textArea;
 	private JTabbedPane tabPanel;
 	private DefaultListModel<String> contactsModelList;
 	private JList contactsList;
@@ -144,6 +143,7 @@ public class ChatWindow {
 		tabPanel.add(text, panelTab);
 		panelTab.setLayout(new BorderLayout(0, 0));
 
+		JTextArea textArea;
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
@@ -167,7 +167,7 @@ public class ChatWindow {
 		boolean trobat = false;
 		int i = 0;
 		while (!trobat && i < tabPanel.getTabCount()) {
-			if (tabPanel.getTitleAt(i) == name) {
+			if (tabPanel.getTitleAt(i).equals(name)) {
 				tabPanel.setSelectedIndex(i);
 				trobat = true;
 			}
@@ -191,15 +191,38 @@ public class ChatWindow {
 	public void newMessage(String text, String emisor, Boolean spread) {
 		Date time = Calendar.getInstance().getTime();
 		String s = "[" + emisor + " : " + df.format(time) + " ]: " + text;
-		// System.out.println(s);
-		textArea.insert(s + "\n", textArea.getText().length());
-		textArea.setCaretPosition(textArea.getText().length());
+		
+		JPanel panelTab;
+		JTextArea textArea;
+
 		if (spread) {
+
+			panelTab = (JPanel) tabPanel.getComponentAt(tabPanel
+					.getSelectedIndex());
+			textArea = (JTextArea) panelTab.getComponent(0);
+			textArea.insert(s + "\n", textArea.getText().length());
+			textArea.setCaretPosition(textArea.getText().length());
+
 			textInput.setText("");
 			textInput.requestFocusInWindow();
 			String name = tabPanel.getTitleAt(tabPanel.getSelectedIndex());
 			context.spreadMessage(name, text);
+
+		} else {
+			
+			int i = 0;
+			while (i < tabPanel.getTabCount()) {
+				if (tabPanel.getTitleAt(i).equalsIgnoreCase(emisor)) {
+					panelTab = (JPanel) tabPanel.getComponentAt(i);
+					textArea = (JTextArea) panelTab.getComponent(0);
+					textArea.insert(s + "\n", textArea.getText().length());
+					textArea.setCaretPosition(textArea.getText().length());
+					break;
+				}
+				i++;
+			}
 		}
+
 		toFrontAndFocusable();
 	}
 }
