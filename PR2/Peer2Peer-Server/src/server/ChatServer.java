@@ -39,8 +39,7 @@ public class ChatServer extends UnicastRemoteObject implements
 			throws RemoteException {
 		boolean result = false;
 		// Guardamos el peer en la lista
-		if (!(peers.contains(name))) {
-			peers.addPeer(peer, name);
+		if (peers.addPeer(peer, name)) {
 			System.out.println("Registrado " + name);
 			window.addPeerNameToList(name);
 			// informamos al resto de los peers, pasamos la referencia como un
@@ -56,8 +55,7 @@ public class ChatServer extends UnicastRemoteObject implements
 	public void unregisterPeer(String name) throws RemoteException {
 		// Eliminamos el elemento de la lista
 		System.out.println("Solicitud de eliminacion " + name);
-		if ((peers.contains(name))) {
-			peers.removePeer(name);
+		if (peers.removePeer(name)) {
 			window.removePeerNameFromList(name);
 			// informamos al resto de los peers que ha habido una desconexion
 			peers.spreadDisconnectClient(name);

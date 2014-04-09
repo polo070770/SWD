@@ -93,6 +93,13 @@ public class SyncPeerList {
 		}
 
 		executor.shutdown();
+		// ponemos esto por que inmediatamente despues añadimos los contactos a
+		// la ventana del chat y claro, como son hilos diferentes
+		// no tienen por que estar ya los nombres en la lista
+		while (!executor.isTerminated()) {
+			// ESPERA ACTIVA, MODIFICAR
+			//esperamos a que respondan todos
+        }
 
 	}
 

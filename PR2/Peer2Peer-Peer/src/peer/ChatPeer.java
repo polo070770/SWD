@@ -125,4 +125,11 @@ public class ChatPeer extends UnicastRemoteObject implements Peer2Server,
 		return this.peerName;
 
 	}
+
+	@Override
+	public void ping() throws RemoteException {
+		// Everything is fine
+		// don't delete me!
+		
+	}
 }

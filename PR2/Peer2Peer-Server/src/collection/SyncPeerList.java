@@ -33,11 +33,14 @@ public class SyncPeerList {
 	 * 
 	 * @param peer
 	 */
-	public void addPeer(Peer2Server peer, String key) {
+	public boolean addPeer(Peer2Server peer, String key) {
 		// anadimos el peer en synchro mode
 		synchronized (list) {
-			if (!list.containsKey(key))
-				list.put(key, peer);
+			if (!list.containsKey(key)){
+					list.put(key, peer);
+					return true;
+			}
+			return false;
 		}
 	}
 
@@ -46,11 +49,15 @@ public class SyncPeerList {
 	 * 
 	 * @param peer
 	 */
-	public void removePeer(String key) {
+	public boolean removePeer(String key) {
 		// anadimos el peer en synchro mode
 		synchronized (list) {
-			if (list.containsKey(key))
+			if (list.containsKey(key)){
 				list.remove(key);
+				return true;
+			}
+			return false;
+			
 		}
 	}
 

@@ -31,7 +31,7 @@ public class MainServer {
 		try {
 			LocateRegistry.createRegistry(port); // iniciamos el rmi
 			server = new ChatServer(this); // iniciamos el servidor
-			String url = "rmi://localhost:" + port + "/";
+			String url = "rmi://161.116.52.109:" + port + "/";
 			serverName = url + "ChatServer";// registramos el servidor
 			Naming.rebind(serverName, server);
 
