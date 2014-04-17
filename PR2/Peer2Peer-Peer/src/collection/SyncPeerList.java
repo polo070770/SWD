@@ -97,8 +97,14 @@ public class SyncPeerList {
 		// la ventana del chat y claro, como son hilos diferentes
 		// no tienen por que estar ya los nombres en la lista
 		while (!executor.isTerminated()) {
-			// ESPERA ACTIVA, MODIFICAR
-			//esperamos a que respondan todos
+				try {
+					//esperamos a que respondan todos
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					System.out.println("Excepcion a la hora de añadir contactos");
+					e.printStackTrace();
+				}
+			
         }
 
 	}

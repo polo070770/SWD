@@ -5,7 +5,10 @@ import interficie.peer.Peer2Server;
 
 import java.rmi.RemoteException;
 
+import main.Configuration;
+
 public class NewContactThread implements Runnable {
+	private Configuration config;
 	private Peer2Server peer;
 	private String peerName;
 	private Peer2Peer contact;
@@ -13,11 +16,12 @@ public class NewContactThread implements Runnable {
 
 	public NewContactThread(Peer2Server peer, String peerName,
 			Peer2Peer contact, String contactName) {
+		
+		this.config = Configuration.getInstance();
 		// peer al que hay que notificar
 		this.peer = peer;
 		// nombre del peer al que hay que notificar
 		this.peerName = peerName;
-		
 		// peer, nuevo contacto 
 		this.contact = contact;
 		// nombre del peer, nombre del nuevo contacto
@@ -31,7 +35,7 @@ public class NewContactThread implements Runnable {
 			this.peer.newContactCallback(contact, contactName);
 		} catch (RemoteException e) {
 			System.out.println("Unable to connect with " + peerName);
-			e.printStackTrace();
+			if(config.DEBUG) e.printStackTrace();
 		}
 
 	}

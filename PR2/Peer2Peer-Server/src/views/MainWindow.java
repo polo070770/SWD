@@ -9,6 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 
 import server.ChatServer;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainWindow {
 
@@ -16,12 +21,19 @@ public class MainWindow {
 	private ChatServer context;
 	private DefaultListModel<String> peersModelList;
 	private JList peersList;
+	private JMenuItem peerCleanerActions;
+	private final boolean PEER_CLEANER_ENABLED = true;
+	private final boolean PEER_CLEANER_DISABLED = false;
+	private boolean peerCleanerStatus;
+	private final String PEER_CLEANER_DISABLED_TEXT = "Enable peer cleaner";
+	private final String PEER_CLEANER_ENABLED_TEXT = "Stop peer cleaner";
 
 	/**
 	 * Create the application.
 	 */
 	public MainWindow(ChatServer context) {
 		this.context = context;
+		this.peerCleanerStatus = PEER_CLEANER_ENABLED;
 		initialize();
 		frmServer.setVisible(true);
 	}
@@ -41,6 +53,27 @@ public class MainWindow {
 		peersList = new JList(peersModelList);
 
 		frmServer.getContentPane().add(peersList, BorderLayout.CENTER);
+		
+		JMenuBar menuBar = new JMenuBar();
+		frmServer.setJMenuBar(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		peerCleanerActions = new JMenuItem(PEER_CLEANER_ENABLED_TEXT);
+		peerCleanerActions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				peerCleanerStatus = !peerCleanerStatus;
+				if(peerCleanerStatus == PEER_CLEANER_ENABLED){
+					peerCleanerActions.setText(PEER_CLEANER_ENABLED_TEXT);
+					
+				}else{
+					peerCleanerActions.setText(PEER_CLEANER_DISABLED_TEXT);
+				}
+				context.startStopPeerCleaner(peerCleanerStatus);
+			}
+		});
+		mnFile.add(peerCleanerActions);
 
 		frmServer.addWindowListener(new WindowAdapter() {
 			@Override
@@ -66,8 +99,9 @@ public class MainWindow {
 	 * @param name
 	 */
 	public void removePeerNameFromList(String name) {
-		peersModelList.removeElement(name);
-
+		synchronized(peersModelList){
+			peersModelList.removeElement(name);
+		}
 	}
 
 	/**
@@ -81,5 +115,7 @@ public class MainWindow {
 		}
 
 	}
+	
+
 
 }

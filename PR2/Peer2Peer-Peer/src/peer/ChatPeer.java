@@ -127,9 +127,10 @@ public class ChatPeer extends UnicastRemoteObject implements Peer2Server,
 	}
 
 	@Override
-	public void ping() throws RemoteException {
+	public boolean ping() throws RemoteException {
 		// Everything is fine
 		// don't delete me!
+		return true;
 		
 	}
 }

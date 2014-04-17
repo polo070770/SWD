@@ -7,20 +7,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import main.Configuration;
 import collection.threaded.DiconnectContactThread;
 import collection.threaded.NewContactThread;
+import collection.threaded.PeerCleaner;
 
 /**
  * Syncronized Peer2Server list
  * 
  */
 public class SyncPeerList {
-	private static final int MAX_POOLS = 10;
+	private Configuration config;
+
+	
 	ConcurrentHashMap<String, Peer2Server> list;
 
 	public SyncPeerList() {
+		config = Configuration.getInstance();
 		list = new ConcurrentHashMap<String, Peer2Server>();
-
+		
+		
 	}
 
 	public SyncPeerList(Peer2Server[] peers) {
@@ -92,7 +98,7 @@ public class SyncPeerList {
 	 */
 	public void spreadNewClient(Peer2Peer peer, String name) {
 
-		ExecutorService executor = Executors.newFixedThreadPool(MAX_POOLS);
+		ExecutorService executor = Executors.newFixedThreadPool(config.MAX_POOLS_NEW_CLIENT);
 		for (String key : list.keySet()) {
 			if (key != name) {
 				// evitamos informar al propio peer de su conexion
@@ -110,7 +116,7 @@ public class SyncPeerList {
 	 * @param name
 	 */
 	public void spreadDisconnectClient(String name) {
-		ExecutorService executor = Executors.newFixedThreadPool(MAX_POOLS);
+		ExecutorService executor = Executors.newFixedThreadPool(config.MAX_POOLS_CLIENT_DELETED);
 		for (String key : list.keySet()) {
 			// avisamos al resto de peers de la desconexion
 			Runnable worker = new DiconnectContactThread(list.get(key), key,
@@ -143,5 +149,32 @@ public class SyncPeerList {
 			}
 		}
 		return tempList;
+	}
+	
+
+	/**
+	 * Funcion que elimina un peer de la lista e informa al resto de que ese peer ya no esta conectado
+	 * @param key
+	 */
+	public void removeAndSpread(String key){
+		if(this.removePeer(key)){
+			this.spreadDisconnectClient(key);
+		}
+		
+	}
+	
+	/**
+	 * Funcion que devuelve una copia de los peers Conectados
+	 * @return
+	 */
+	public ConcurrentHashMap<String, Peer2Server> getPeersCopy(){
+		synchronized (this.list) {
+			ConcurrentHashMap<String, Peer2Server> list = new ConcurrentHashMap<String, Peer2Server>();
+			for (String key : list.keySet()) {
+				list.put(key, this.list.get(key));
+			}
+		}
+		return list;
+		
 	}
 }

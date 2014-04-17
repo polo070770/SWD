@@ -10,7 +10,7 @@ import server.ChatServer;
 
 public class MainServer {
 	private int port;
-	private final boolean DEBUG = true;
+	private Configuration config;
 	private String serverName;
 	private ChatServer server;
 
@@ -25,7 +25,7 @@ public class MainServer {
 	}
 
 	public MainServer(int port) {
-
+		config = Configuration.getInstance();
 		this.port = port;
 
 		try {
@@ -40,7 +40,7 @@ public class MainServer {
 
 		} catch (Exception e) {
 			System.out.println("Imposible iniciar el servidor!");
-			if (DEBUG) {
+			if (config.DEBUG) {
 				e.printStackTrace();
 			}
 		}
@@ -54,17 +54,17 @@ public class MainServer {
 			server = null;
 		} catch (RemoteException e) {
 			System.out.println("Remote Exception, cerrando el servidor!");
-			if (DEBUG) {
+			if (config.DEBUG) {
 				e.printStackTrace();
 			}
 		} catch (MalformedURLException e) {
 			System.out.println("MalformedURLException, cerrando el servidor!");
-			if (DEBUG) {
+			if (config.DEBUG) {
 				e.printStackTrace();
 			}
 		} catch (NotBoundException e) {
 			System.out.println("NotBoundException, cerrando el servidor!");
-			if (DEBUG) {
+			if (config.DEBUG) {
 				e.printStackTrace();
 			}
 		}
