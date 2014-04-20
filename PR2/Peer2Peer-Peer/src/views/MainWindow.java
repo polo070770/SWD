@@ -27,6 +27,8 @@ import javax.swing.text.DefaultCaret;
 
 import peer.ChatPeer;
 import javax.swing.JScrollPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
 
 public class MainWindow {
 
@@ -39,6 +41,10 @@ public class MainWindow {
 	private Panel contactPanel;
 	private Panel logPanel;
 	private JScrollPane scrollPane;
+	private JMenuBar menuBar;
+	private JMenu mnNewMenu;
+	private JMenuItem new_chat_button;
+	private JMenuItem new_groupr_chat_button;
 
 	/**
 	 * Create the application.
@@ -47,6 +53,8 @@ public class MainWindow {
 		this.context = context;
 		initialize();
 		frame.setTitle(name);
+		
+
 		frame.setVisible(true);
 	}
 
@@ -81,9 +89,38 @@ public class MainWindow {
 		contactPanel.add(contactsList, BorderLayout.CENTER);
 		contactsList.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 
+		
+		
+		
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(contactsList, popupMenu);
 
+		menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		mnNewMenu = new JMenu("Actions");
+		menuBar.add(mnNewMenu);
+		
+		new_chat_button = new JMenuItem("New Chat");
+		new_chat_button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(contactsList.getSelectedValue() != null)
+					context.newChatWindow((String) contactsList.getSelectedValue());
+			}
+		});
+		
+		mnNewMenu.add(new_chat_button);
+		
+		new_groupr_chat_button = new JMenuItem("New group chat");
+		new_groupr_chat_button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				context.newGroupChatRequest();
+			}
+		});
+		mnNewMenu.add(new_groupr_chat_button);
+		
+		
+		
 		JMenuItem mntmNewChat = new JMenuItem("New Chat");
 		mntmNewChat.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

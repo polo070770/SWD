@@ -11,7 +11,7 @@ import peer.ChatPeer;
 import views.DialogWindow;
 
 public class MainPeer {
-	private static final boolean DEBUG = true;
+	private Configuration config;
 	static final String serverName = "ChatServer";
 	private int port;
 	private String host;
@@ -37,7 +37,7 @@ public class MainPeer {
 	}
 
 	public MainPeer(String host, int port) {
-
+		config = Configuration.getInstance();
 		this.host = host;
 		this.port = port;
 
@@ -61,7 +61,7 @@ public class MainPeer {
 
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			System.out.println("Imposible conectar al servidor");
-			if (DEBUG)
+			if (config.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -83,7 +83,7 @@ public class MainPeer {
 				} catch (InterruptedException e) {
 					System.out
 							.println("InterruptedException, user name dialog!");
-					if (DEBUG)
+					if (config.DEBUG)
 						e.printStackTrace();
 				}
 			}
