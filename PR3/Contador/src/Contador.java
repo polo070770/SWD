@@ -43,12 +43,12 @@ public class Contador extends HttpServlet {
 		out.println("<html>");
 		out.println("<head>");
 
-		String title = "Hello World";
+		String title = "Contador";
 
 		out.println("<title>" + title + "</title>");
 		out.println("</head>");
 		out.println("<body>");
-		out.println("<h1> Heu entrat " + veces + " cops </a>");
+		out.println("<h1> Heu entrat " + veces + " cops </h1>");
 		out.println("<a href='" + contextPath + "'> Sumar </a>");
 
 		out.println("</body>");
