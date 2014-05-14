@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
-
-<web-app>
-   <display-name>Login</display-name>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">   <display-name>Botiga</display-name>
    	<servlet>
 	    <servlet-name>ServerDispatcher</servlet-name>
 	    <servlet-class>controller.Router</servlet-class>
@@ -11,30 +7,12 @@
 	<servlet-mapping>
 	    <servlet-name>ServerDispatcher</servlet-name>
 	    <url-pattern>/</url-pattern>
-	</servlet-mapping> 	
-	<servlet-mapping>
-	    <servlet-name>ServerDispatcher</servlet-name>
 	    <url-pattern>/login</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-	    <servlet-name>ServerDispatcher</servlet-name>
 	    <url-pattern>/carrito</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-	    <servlet-name>ServerDispatcher</servlet-name>
 	    <url-pattern>/micuenta</url-pattern>
-	</servlet-mapping>		
-	<servlet-mapping>
-	    <servlet-name>ServerDispatcher</servlet-name>
 	    <url-pattern>/catalogo</url-pattern>
-	</servlet-mapping>	
-	<servlet-mapping>
-	    <servlet-name>ServerDispatcher</servlet-name>
 	    <url-pattern>/catalogo/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-	    <servlet-name>ServerDispatcher</servlet-name>
-	    <url-pattern>/download</url-pattern>
+	    <url-pattern>/download/*</url-pattern>
 	</servlet-mapping>
 	<error-page>
     	<error-code>500</error-code>

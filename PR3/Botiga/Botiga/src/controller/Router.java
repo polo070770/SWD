@@ -1,8 +1,11 @@
 package controller;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -15,9 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class Router extends HttpServlet {
-    static final long serialVersionUID = 1L;
-    private static final int BUFSIZE = 4096;
-    String filePath = getServletContext().getRealPath("")  + File.separator;
+
+	private Downloader downloader;
+	
+
 	// private static LaVostraBD laVostraBd = new LaVostraBD();
 	// LOCATIONS ================================================
 	public void locationProxy(HttpServletRequest request,
@@ -37,7 +41,7 @@ public class Router extends HttpServlet {
 			processMiCuenta(request, response);
 		} else if (location.equals(CONTEXT + "/catalogo")) {
 			processIndex(request, response);
-		} else if (location.equals(CONTEXT + "/download")) {
+		} else if (location.contains(CONTEXT + "/download/")) {
 			processDownload(request, response);
 		} else if (location.equals(CONTEXT + "/error")) {
 			processError(request, response);
@@ -54,6 +58,11 @@ public class Router extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		if(this.downloader == null){
+			String filesPath = getServletContext().getRealPath("")  + File.separator + "WEB-INF/media/";
+			this.downloader = new Downloader(filesPath);
+		}
+		
 		locationProxy(request, response);
 
 	}
@@ -95,9 +104,22 @@ public class Router extends HttpServlet {
 
 	public void processDownload(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		if (request.getParameter("item") != null) {
+		String location = request.getRequestURI();
+
+		//Pattern regex = Pattern.compile("download/(\\w*\\.\\w*)");
+		//capturamos el nombre del archivo
+		Pattern regex = Pattern.compile("download/(\\w*\\.+\\w*)");
+		Matcher m = regex.matcher(location);
+		//capturem l'arxiu
+		String matched = null;
+		while (m.find()) {
+			   matched= m.group(1);
+		}
+		
+		if (matched != null) {
 			// and user has bougth this item
-			emitDownload(request, response, request.getParameter("item"));
+			System.out.println("Downloading: " + matched);
+			emitDownload(request, response, matched);
 		}
 
 	}
@@ -148,37 +170,7 @@ public class Router extends HttpServlet {
 	public void emitDownload(HttpServletRequest request,
 			HttpServletResponse response, String item) throws ServletException,
 			IOException {
-
-		String filePath = "WEB-INF/media/" + item;
-		File file = new File(filePath);
-	    int length   = 0;
-	    ServletOutputStream outStream = response.getOutputStream();
-	    ServletContext context  = getServletConfig().getServletContext();
-	    String mimetype = context.getMimeType(filePath);
-
-	    // sets response content type
-	    if (mimetype == null) {
-	        mimetype = "application/octet-stream";
-	    }
-	    response.setContentType(mimetype);
-	    response.setContentLength((int)file.length());
-	    String fileName = (new File(filePath)).getName();
-
-	    // sets HTTP header
-	    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-
-	    byte[] byteBuffer = new byte[BUFSIZE];
-	    DataInputStream in = new DataInputStream(new FileInputStream(file));
-
-	    // reads the file's bytes and writes them to the response stream
-	    while ((in != null) && ((length = in.read(byteBuffer)) != -1))
-	    {
-	        outStream.write(byteBuffer,0,length);
-	    }
-
-	    in.close();
-	    outStream.close();
-		
+			downloader.stream(item, request, response, getServletConfig().getServletContext());
 	}
 
 	public void showPage(HttpServletRequest request,
