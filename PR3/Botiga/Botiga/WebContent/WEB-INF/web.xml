@@ -8,10 +8,10 @@
 	    <servlet-name>ServerDispatcher</servlet-name>
 	    <servlet-class>controller.Router</servlet-class>
 	</servlet>
-<!-- 	<servlet-mapping>
+	<servlet-mapping>
 	    <servlet-name>ServerDispatcher</servlet-name>
 	    <url-pattern>/</url-pattern>
-	</servlet-mapping> -->	
+	</servlet-mapping> 	
 	<servlet-mapping>
 	    <servlet-name>ServerDispatcher</servlet-name>
 	    <url-pattern>/login</url-pattern>
@@ -34,7 +34,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
 	    <servlet-name>ServerDispatcher</servlet-name>
-	    <url-pattern>/download*</url-pattern>
+	    <url-pattern>/download</url-pattern>
 	</servlet-mapping>
 	<error-page>
     	<error-code>500</error-code>

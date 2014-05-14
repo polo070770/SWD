@@ -1,9 +1,13 @@
 package controller;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class Router extends HttpServlet {
+    static final long serialVersionUID = 1L;
+    private static final int BUFSIZE = 4096;
+    String filePath = getServletContext().getRealPath("")  + File.separator;
 	// private static LaVostraBD laVostraBd = new LaVostraBD();
 	// LOCATIONS ================================================
 	public void locationProxy(HttpServletRequest request,
@@ -30,7 +37,7 @@ public class Router extends HttpServlet {
 			processMiCuenta(request, response);
 		} else if (location.equals(CONTEXT + "/catalogo")) {
 			processIndex(request, response);
-		} else if (location.equals(CONTEXT + "/download/*")) {
+		} else if (location.equals(CONTEXT + "/download")) {
 			processDownload(request, response);
 		} else if (location.equals(CONTEXT + "/error")) {
 			processError(request, response);
@@ -141,15 +148,37 @@ public class Router extends HttpServlet {
 	public void emitDownload(HttpServletRequest request,
 			HttpServletResponse response, String item) throws ServletException,
 			IOException {
-		
-		response.setContentType("image/png");
-		
-		ServletContext sc = getServletContext();
-		RequestDispatcher rd = sc
-				.getRequestDispatcher("/WEB-INF/media/" + item);
-		
-		rd.include(request, response);
 
+		String filePath = "WEB-INF/media/" + item;
+		File file = new File(filePath);
+	    int length   = 0;
+	    ServletOutputStream outStream = response.getOutputStream();
+	    ServletContext context  = getServletConfig().getServletContext();
+	    String mimetype = context.getMimeType(filePath);
+
+	    // sets response content type
+	    if (mimetype == null) {
+	        mimetype = "application/octet-stream";
+	    }
+	    response.setContentType(mimetype);
+	    response.setContentLength((int)file.length());
+	    String fileName = (new File(filePath)).getName();
+
+	    // sets HTTP header
+	    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+	    byte[] byteBuffer = new byte[BUFSIZE];
+	    DataInputStream in = new DataInputStream(new FileInputStream(file));
+
+	    // reads the file's bytes and writes them to the response stream
+	    while ((in != null) && ((length = in.read(byteBuffer)) != -1))
+	    {
+	        outStream.write(byteBuffer,0,length);
+	    }
+
+	    in.close();
+	    outStream.close();
+		
 	}
 
 	public void showPage(HttpServletRequest request,
