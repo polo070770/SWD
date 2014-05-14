@@ -9,7 +9,7 @@ Si heu arribat a aquesta pàgina és perquè us heu identificat correctament com a
 
 Rols:<br>
 <br>
-Rol "Professor" <%= (request.isUserInRole("Professor"))?"assignat":"no assignat" %><br>
+Rol "Professor" <%= (request.isUserInRole("Client"))?"assignat":"no assignat" %><br>
 Rol "Alumne"    <%= (request.isUserInRole("Alumne"   ))?"assignat":"no assignat" %><br>
 
 <br>

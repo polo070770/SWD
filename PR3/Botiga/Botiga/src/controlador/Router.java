@@ -1,3 +1,4 @@
+package controlador;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -19,14 +20,24 @@ public class Router extends HttpServlet {
 		String CONTEXT = request.getContextPath();
 		String location = request.getRequestURI();
 		
-
-		if ( location.equals( CONTEXT + "/") ){
-			processIndex(request, response); 
+		if( location.equals( CONTEXT + "/") ){
+			response.sendRedirect(CONTEXT + "/catalogo");
+			//processIndex(request, response);
 		}else if( location.equals( CONTEXT + "/login") ){
 			processLogin(request, response); 
+		}else if( location.equals( CONTEXT + "/carrito") ){
+			processCarrito(request, response); 
+		}else if( location.equals( CONTEXT + "/catalogo") ){
+			processIndex(request, response);
+		}else if( location.equals( CONTEXT + "/download") ){
+			processIndex(request, response);
+		}else if( location.equals( CONTEXT + "/error") ){
+			processDownload(request, response);			
+		}else if( location.equals( CONTEXT + "/auth-error") ){
+			processAuthError(request, response);
 		}else{ // error
-			System.out.println("error!");
-			//processLogin(request, response); 
+			System.out.println("REDIRECT TO "+CONTEXT + "/error");
+			response.sendRedirect(CONTEXT + "/error");
 		}
 	}
 	
@@ -48,7 +59,11 @@ public class Router extends HttpServlet {
 	public void processLogin(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 			// TODO	si no esta validado se muestra el formulario, si esta validado accede a la parte privada
+		if (request.isUserInRole("Client")) {
+			response.sendRedirect(request.getContextPath() + "/catalogo");
+		} else {
 			showLogin(request, response);
+		}
 	}
 	
 	public void processIndex(HttpServletRequest request, HttpServletResponse response)
@@ -56,7 +71,30 @@ public class Router extends HttpServlet {
 			// pagina principal
 			showIndex(request, response);
 	}	
-	 
+	
+	public void processCarrito(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+			// pagina principal
+			showCarrito(request, response);
+	}
+	public void processDownload(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		if(request.getParameter("id") != null){
+			// and user has bougth this item
+			emitDownload(request, response, request.getParameter("id"));
+		}
+			
+	}
+	public void processAuthError(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+			// pagina principal
+			showAuthError(request, response);
+	}	
+	public void processError(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+			// pagina principal
+			showPageInternalError(request, response);
+	}	
 	// PAGES ====================================================
 	public void showLogin(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
@@ -65,14 +103,27 @@ public class Router extends HttpServlet {
 	
 	public void showIndex(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
-		showPage( request, response, "non-protected.jsp" );
+		showPage( request, response, "index.jsp" );
 	}
-	
+	public void showCarrito(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		showPage( request, response, "carrito.jsp" );
+	}
 	public void showPageInternalError(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
-		showPage( request, response, "internalError.jsp" );
+		showPage( request, response, "error.jsp" );
 	}
-
+	public void showAuthError(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		showPage( request, response, "auth_error.jsp" );
+	}
+	public void emitDownload(HttpServletRequest request, HttpServletResponse response, String item)
+			throws ServletException, IOException{
+		ServletContext sc = getServletContext();
+		RequestDispatcher rd = sc.getRequestDispatcher( "/WEB-INF/media/" + item);
+		rd.forward(request, response);
+		
+	}
 	public void showPage(HttpServletRequest request, HttpServletResponse response, String jspPage)
 			throws ServletException, IOException{
 		ServletContext sc = getServletContext();

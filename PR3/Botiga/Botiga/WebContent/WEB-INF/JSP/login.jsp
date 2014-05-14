@@ -1,5 +1,7 @@
 <html>
-<head><title>Autentificació</title></head>
+<head>
+	<title>Login</title>
+</head>
 <body>
 <font color = blue >
 
