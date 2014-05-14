@@ -16,7 +16,7 @@ Rol "Alumne"    <%= (request.isUserInRole("Alumne"   ))?"assignat":"no assignat"
 <br>
 
 
-<a href='../non-protected.jsp?logoff=true'>Sortir de l'usuari actual</a>.
+<a href='catalogo?logoff=true'>Sortir de l'usuari actual</a>.
 
 </body>
 </html>
