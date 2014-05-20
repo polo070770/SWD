@@ -1,0 +1,29 @@
+[
+    {
+        "id": "mastering-node-js",
+        "url": "mastering-node-js.pdf",
+        "image": "mastering-node-js.gif",
+        "name": " Mastering Nodejs",
+        "description": "Node.js es un framework en javascript para el desarrollo de aplicaciones web en el lado del servidor. A partir de todas las implementaciones mencionadas, en enero del 2009 Kevin Dangoor se creo el proyecto de CommonJS, con el fin de crear una especificacion que cada implementacion pueda cumplir y asi tener un API I/O en común.",
+        "type": "pdf",
+        "price": 2.95
+    },
+    {
+        "id": "typescript-language",
+        "url": "typescript-language.pdf",
+        "image": "typescript.png",
+        "name": "TypeScript, Mastering Language Specification",
+        "description": "TypeScript es un lenguaje de programación libre y de código abierto desarrollado por Microsoft. Es un superconjunto de JavaScript que esencialmente añade tipado estatico y objetos basados en clases dando así un mayor soporte a la POO clasica en este lenguaje. Una de las personalidades que ha intervenido en su desarrollo de forma mas activa es Anders Hejlsberg, diseñador de C#",
+        "type": "pdf",
+        "price": 1.95
+    },
+    {
+        "id": "big-buck-bunny",
+        "url": "big-buck-bunny.webm",
+        "image": "big-buck-bunny.jpg",
+        "name": "Big Buck Bunny Trailer",
+        "description": "Big Buck Bunny es un corto animado del Instituto Blender; el Instituto Blender es parte de la Fundación Blender. Como la película previa de la fundación, Elephants Dream, esta película se ha realizado usando software libre.",
+        "type": "video",
+        "price": 0.95
+    }
+]

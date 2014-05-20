@@ -1,0 +1,17 @@
+[
+    {
+        "name": "juan",
+        "credit": 150,
+        "items": [
+            "mastering-node-js"
+        ]
+    },
+    {
+        "name": "dennis",
+        "credit": 90.5,
+        "items": [
+            "mastering-node-js",
+            "typescript-language"
+        ]
+    }
+]
