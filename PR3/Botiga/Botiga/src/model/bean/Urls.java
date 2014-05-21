@@ -9,6 +9,7 @@ public class Urls {
 	private String base;
 	private String staticcontent;
 	private String download;
+	private String carrito;
 	
 	
 	
@@ -17,7 +18,7 @@ public class Urls {
 		login = context + Url.LOGIN.toString();
 		catalogo = context + Url.CATALOGO.toString();
 		micuenta = context + Url.MICUENTA.toString();
-		
+		carrito = context + Url.CARRITO.toString();
 		staticcontent = context + Url.STATIC.toString();
 		download = context + Url.DOWNLOAD.toString();
 	}
@@ -29,11 +30,18 @@ public class Urls {
 		return login;
 	}
 	/**
+	 * @return the login
+	 */
+	public String getCarrito() {
+		return carrito;
+	}
+	/**
 	 * @return the catalogo
 	 */
 	public String getCatalogo() {
 		return catalogo;
 	}
+	
 	/**
 	 * @return the micuenta
 	 */
@@ -63,6 +71,12 @@ public class Urls {
 	 */
 	public void setLogin(String login) {
 		this.login = login;
+	}
+	/**
+	 * @param login the login to set
+	 */
+	public void setCarrito(String carrito) {
+		this.login = carrito;
 	}
 	/**
 	 * @param catalogo the catalogo to set

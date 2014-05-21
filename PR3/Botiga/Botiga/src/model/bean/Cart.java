@@ -43,7 +43,7 @@ public class Cart implements Serializable {
 	 */
 	public void addItem(Item item){
 		items.add(item);
-		amount.add(item.getPrice());
+		amount = amount.add(item.getPrice());
 	}
 	
 	/**

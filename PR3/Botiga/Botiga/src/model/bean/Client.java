@@ -105,6 +105,6 @@ public class Client implements Serializable {
 	}
 	
 	public void substractCredit(BigDecimal amount){
-		this.credit.subtract(amount);
+		this.credit = this.credit.subtract(amount);
 	}
 }

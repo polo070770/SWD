@@ -76,6 +76,14 @@ public class JSONDB {
 		}
 		return null;
 	}
+	
+	public boolean clientExists(String name){
+		for(Client c: clients){
+			if(c.getName().equals(name)) return true;
+		}
+		return false;
+	}
+	
 	private void parseItems(){
 		try{
 			for (int i = 0; i < tableItems.length(); ++i) {
@@ -134,5 +142,20 @@ public class JSONDB {
 			if(i.getId().equals(id)) return true;
 		}
 		return false;
+	}
+	public void newClient(String name){
+		try{
+			JSONObject newUser = new JSONObject();
+			newUser.append("name",name);
+			newUser.append("credit", 500);
+			newUser.append("items", new JSONArray());
+			Client client = new Client();
+			client.setName(name);
+			client.setCredit(new BigDecimal(500, MathContext.DECIMAL64));
+			client.setItems(new ArrayList<Item>());
+			clients.add(client);
+		}catch(Exception e) {
+        	System.out.println("unable to create new user");
+        }
 	}
 }

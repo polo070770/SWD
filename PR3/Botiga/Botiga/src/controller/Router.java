@@ -22,6 +22,7 @@ import model.Constant.Url;
 import model.Constant.Jsp;
 import model.JSONDB;
 import model.bean.Cart;
+import model.bean.Client;
 import model.bean.Item;
 import model.bean.Urls;
 
@@ -58,19 +59,25 @@ public class Router extends HttpServlet {
 			// procesamos peticiones de descarga
 		} else if (location.contains(CONTEXT + Url.DOWNLOAD)) {
 			processDownload(request, response);
+			
 		} else if (location.equals(CONTEXT + Url.LOGIN)) {
 			processLogin(request, response);
+			
 		} else if (location.equals(CONTEXT + Url.CARRITO)) {
 			processCarrito(request, response);
+			
 		} else if (location.equals(CONTEXT + Url.MICUENTA)) {
 			processMiCuenta(request, response);
+			
 		} else if (location.equals(CONTEXT + Url.CATALOGO)) {
 			processCatalog(request, response);
 
 		} else if (location.equals(CONTEXT + Url.ERROR)) {
 			processError(request, response);
+			
 		} else if (location.equals(CONTEXT + Url.AUTHERROR)) {
 			processAuthError(request, response);
+			
 		} else { // error
 
 			System.out.println("REDIRECT TO " + CONTEXT + Url.ERROR);
@@ -96,7 +103,24 @@ public class Router extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		locationProxy(request, response);
+		HttpSession session = request.getSession();
+		Cart carrito = (Cart)session.getAttribute("carrito");
+		Client user = db.getClient(request.getUserPrincipal().getName());
+		String CONTEXT = request.getContextPath();
+		if(user.hasEnoughCredit(carrito.getAmount())){
+			user.substractCredit(carrito.getAmount());
+			for(Item item :carrito.getItems()){
+				if(!user.hasItem(item)){user.addItem(item);}
+				
+			}
+			carrito.emptyCart();
+			session.setAttribute("carrito", carrito);	
+			session.setAttribute("response","Carro comprado");
+			response.sendRedirect(CONTEXT + Url.MICUENTA);
+		}else{
+			session.setAttribute("response","No tienes dinero suficiente");
+			response.sendRedirect(CONTEXT + Url.CARRITO);
+		}
 	}
 
 	// PROCESS ==================================================
@@ -110,11 +134,13 @@ public class Router extends HttpServlet {
 			showLogin(request, response);
 		}
 	}
+	
 	public void processIndex(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// pagina principal
 		showIndex(request, response);
 	}
+	
 	public void processCatalog(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
@@ -147,16 +173,57 @@ public class Router extends HttpServlet {
 		request.setAttribute("catalog",db.getItems());
 		showCatalog(request, response);
 	}
+	
 	public void processCarrito(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// pagina carrito
+		HttpSession session = request.getSession();
+		Cart carrito;
+		//sino tenemos carro lo creamos
+		if(session.getAttribute("carrito") == null){
+			carrito = new Cart();
+			session.setAttribute("carrito", carrito);	
+		
+		}else{carrito = (Cart)session.getAttribute("carrito");}
+		
+		
+		if(request.isUserInRole("Client")){
+			// si es user nuevo lo creamos
+			if(	!db.clientExists(request.getUserPrincipal().getName())){
+				db.newClient(request.getUserPrincipal().getName());
+			}
+			Client client= db.getClient(request.getUserPrincipal().getName());
+			request.setAttribute("user", client);
+			request.setAttribute("carrito", carrito);
+
+		}
+		if(session.getAttribute("response") != null){
+			request.setAttribute("response", session.getAttribute("response"));
+			session.removeAttribute("response");
+		}
 		showCarrito(request, response);
 	}
 
 	public void processMiCuenta(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		if(request.isUserInRole("Client")){
+			// si es user nuevo lo creamos
+			if(	!db.clientExists(request.getUserPrincipal().getName())){
+				db.newClient(request.getUserPrincipal().getName());
+			}
+			Client client= db.getClient(request.getUserPrincipal().getName());
+			request.setAttribute("user", client);
+			request.setAttribute("compras", client.getItems());
+
+		}
+		if(session.getAttribute("response") != null){
+			request.setAttribute("response", session.getAttribute("response"));
+			session.removeAttribute("response");
+		}
 		// pagina micuenta
 		showMiCuenta(request, response);
+		
 	}
 
 	public void processDownload(HttpServletRequest request,
