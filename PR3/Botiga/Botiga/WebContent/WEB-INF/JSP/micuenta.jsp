@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!doctype html>
 <html>
 <head>
@@ -9,11 +10,11 @@
 <body bgcolor="white">
 	
 <h1>Mi cuenta</h1>
-<c:if test="${response != null}">
-	${response}
-</c:if>
-		${user.name}<br>
-		${user.credit} €<br>
+	<c:forEach var="message" items="${messages.getAll()}">
+		<h2>${message.text}</h2>
+	</c:forEach>
+		${client.name}<br>
+		${client.getCreditRounded()} €<br>
 		<a href="${URLS.micuenta}">Mi cuenta</a>
 		<br>
 	  	<a href="${URLS.carrito}">Carrito</a>
@@ -21,11 +22,11 @@
 		<a href="${URLS.catalogo}">Catalogo</a>
 		<br>
 		<table>
-		<c:forEach var="item" items="${compras}">
+		<c:forEach var="item" items="${client.getItems()}">
 			<tr>
 				<td><img src="${URLS.staticcontent}img/thumb/${item.image}" ></td>
 				<td>${item.name}</td>
-				<td><a a href="${URLS.download}${item.url}">Download</a></td>
+				<td><a a href="${URLS.download}${item.id}">Download</a></td>
 			</tr>
 		</c:forEach>
 	</table>

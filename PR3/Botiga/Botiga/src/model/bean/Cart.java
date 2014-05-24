@@ -60,7 +60,7 @@ public class Cart implements Serializable {
 	 */
 	public void removeItem(Item item){
 		items.remove(item);
-		amount.subtract(item.getPrice());
+		amount = amount.subtract(item.getPrice());
 	}
 	
 	public boolean isEmpty(){
@@ -73,5 +73,8 @@ public class Cart implements Serializable {
 	}
 	public int getNumItems(){
 		return items.size();
+	}
+	public String getAmountRounded(){
+		 return  new BigDecimal(this.amount.toString()).setScale(2, BigDecimal.ROUND_FLOOR).toString();
 	}
 }

@@ -130,13 +130,13 @@ public class JSONDB {
 	}
 	
 	public List<Item>getItems(){
-		//List<Item> copy = new ArrayList<Item>();
-		//for(Item i : items){copy.add()}
 		return items;
 	}
+	
 	public List<Client>getClients(){
 		return clients;
 	}
+	
 	public boolean containsItem(String id){
 		for(Item i: items){
 			if(i.getId().equals(id)) return true;

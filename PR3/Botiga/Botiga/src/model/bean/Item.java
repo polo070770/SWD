@@ -130,4 +130,8 @@ public class Item implements Serializable {
     public boolean isType(String type){
     	return this.type == type;
     }
+    
+	public String getPriceRounded(){
+		 return  new BigDecimal(this.price.toString()).setScale(2, BigDecimal.ROUND_FLOOR).toString();
+	}
 }

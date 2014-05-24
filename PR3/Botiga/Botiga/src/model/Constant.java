@@ -19,8 +19,10 @@ public final class Constant {
     public static Constant getInstance() {
         return INSTANCE;
     }
+    
     public enum Url{
     	LOGIN("/login"),
+    	LOGOUT("/logout"),
     	INDEX("/"),
     	CARRITO("/carrito"),
     	MICUENTA("/mi-cuenta"),
@@ -30,7 +32,11 @@ public final class Constant {
     	JSON("/WEB-INF/JSON/"),
     	ERROR("/error"),
     	AUTHERROR("/auth-error"),
-    	CATALOGO("/catalogo");
+    	CATALOGO("/catalogo"),
+    	ADDITEM("/catalogo/add/"),
+    	REMOVEITEM("/catalogo/remove/"),
+    	EMPTYCART("/catalogo/empty-cart")
+    	;
         private String url; 
         private Url(String url) { 
             this.url = url; 

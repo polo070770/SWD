@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!doctype html>
 <html>
 <head>
@@ -8,7 +9,9 @@
 <meta charset="UTF-8">
 </head>
 <body >
-
+	<c:forEach var="message" items="${messages.getAll()}">
+		<h2>${message.text}</h2>
+	</c:forEach>
 <c:choose>
 	<c:when test="${request.isUserInRole('Client')}">
 		Hello ${user.name}! <br>
@@ -40,7 +43,8 @@
 		<tr>
 			<td><img src="${URLS.staticcontent}img/thumb/${item.image}" ></td>
 			<td>${item.name}</td>
-			<td><a href="${URLS.catalogo}?add=${item.id}">Añadir al carrito</a></td>
+			<td>${item.getPriceRounded()} €</td>
+			<td><a href="${URLS.addItem}${item.id}">Añadir al carrito</a></td>
 		</tr>
 	</c:forEach>
 </table>

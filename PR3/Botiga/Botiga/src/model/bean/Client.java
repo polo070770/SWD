@@ -97,6 +97,14 @@ public class Client implements Serializable {
 		return items.contains(item);
 	}
 	
+	
+	public boolean hasItem(String id){
+		for(Item i: items){
+			if(i.getId().equals(id)) return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * elimina un item del carro
 	 */
@@ -106,5 +114,8 @@ public class Client implements Serializable {
 	
 	public void substractCredit(BigDecimal amount){
 		this.credit = this.credit.subtract(amount);
+	}
+	public String getCreditRounded(){
+		 return  new BigDecimal(this.credit.toString()).setScale(2, BigDecimal.ROUND_FLOOR).toString();
 	}
 }
