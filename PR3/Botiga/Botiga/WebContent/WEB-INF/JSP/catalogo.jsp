@@ -1,52 +1,44 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!doctype html>
-<html>
-<head>
-<title>Catalogo</title>
-<link rel="stylesheet" type="text/css" href="${URLS.staticcontent}css/styles.css">
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="UTF-8">
-</head>
-<body >
-	<c:forEach var="message" items="${messages.getAll()}">
-		<h2>${message.text}</h2>
-	</c:forEach>
-<c:choose>
-	<c:when test="${request.isUserInRole('Client')}">
-		Hello ${user.name}! <br>
-		${user.credit} €
-	</c:when>
-	<c:otherwise>
-		<a href="${URLS.micuenta}">Mi cuenta</a>
-		<br>
-	  	<a href="${URLS.carrito}">Carrito</a>
-	</c:otherwise>	
-</c:choose>
 
-<h1>Catalogo</h1>
 
-<h2>
-	<c:choose>
-		<c:when test="${carrito != null}">
-			${carrito.getNumItems()} 
-		</c:when>
-		<c:otherwise>
-		  0 
-		</c:otherwise>	
-	</c:choose>
-	items en el carro
-</h2>
-<table>
-	<!--  for each en jstl mode -->
-	<c:forEach var="item" items="${catalog}">
-		<tr>
-			<td><img src="${URLS.staticcontent}img/thumb/${item.image}" ></td>
-			<td>${item.name}</td>
-			<td>${item.getPriceRounded()} €</td>
-			<td><a href="${URLS.addItem}${item.id}">Añadir al carrito</a></td>
-		</tr>
-	</c:forEach>
-</table>
-</body>
-</html>
+<t:wrapper>
+	<div class="row">
+		<h3 class="pull-right">
+			<a href="${URLS.carrito}" class="btn btn-default btn-lg" role="button">
+				<span class="glyphicon glyphicon-shopping-cart"></span>
+				<c:choose>
+					<c:when test="${carrito != null}">
+						${carrito.getNumItems()} 
+					</c:when>
+					<c:otherwise>
+					  0 
+					</c:otherwise>	
+				</c:choose>
+				
+			</a>		
+		</h3>
+	</div>
+	<div class="row">
+		<c:forEach var="item" items="${catalog}">
+			<div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 catalog-item">
+		    	<div class="thumbnail">
+		        	<a data-toggle="lightbox" href="${URLS.staticcontent}img/${item.image}" title="Ampliar imagen">
+						<img src="${URLS.staticcontent}img/thumb/${item.image}" 
+							alt="Ampliar imagen" data-type="image" class="img-responsive" >
+					</a>
+		            <div class="caption">
+		            	<h4 class="pull-right">${item.getPriceRounded()} €</h4>
+						<h4><a href="#">${item.name}</a></h4>
+						<p title="${item.description}">${item.description}</p>
+					</div>
+					<a href="${URLS.addItem}${item.id}" >
+		        		<span class="glyphicon glyphicon-ok"></span>
+		        		Añadir al carrito
+		        	</a>
+		    	</div>
+			</div>
+		</c:forEach>
+	</div>
+</t:wrapper>

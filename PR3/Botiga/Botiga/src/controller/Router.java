@@ -180,6 +180,10 @@ public class Router extends HttpServlet {
 		if (request.isUserInRole("Client")) {
 			response.sendRedirect(request.getContextPath() + Url.CATALOGO);
 		} else {
+			HttpSession session = request.getSession();
+			String token = getFormToken("login");
+			request.setAttribute("token_login", token);
+			session.setAttribute("token_login",token);
 			showLogin(request, response);
 		}
 	}
@@ -199,10 +203,8 @@ public class Router extends HttpServlet {
 	 */
 	public void processLogout(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		if(session!=null){
-			session.invalidate();
-		}
+		HttpSession session = request.getSession();
+		session.invalidate();
 		response.sendRedirect(request.getContextPath() + Url.CATALOGO);
 	}
 	
@@ -427,6 +429,7 @@ public class Router extends HttpServlet {
 
 	public void showLogin(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("page_title","Login");
 		showPage(request, response,Jsp.LOGIN.toString());
 	}
 	
@@ -437,17 +440,20 @@ public class Router extends HttpServlet {
 	
 	public void showCatalog(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("page_title","Catalogo");
 		showPage(request, response, Jsp.CATALOGO.toString());
 	}
 	
 	
 	public void showCarrito(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("page_title","Carrito");
 		showPage(request, response, Jsp.CARRITO.toString());
 	}
 
 	public void showMiCuenta(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("page_title","Mi cuenta");
 		showPage(request, response, Jsp.MICUENTA.toString());
 	}
 

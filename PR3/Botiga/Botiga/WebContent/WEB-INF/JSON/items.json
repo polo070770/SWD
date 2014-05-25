@@ -9,6 +9,15 @@
         "price": 2.95
     },
     {
+        "id": "mongo-db-cases",
+        "url": "mongo-db-cases.pdf",
+        "image": "mongo-db-cases.jpg",
+        "name": "Mongo DB Use Cases",
+        "description": "MongoDB forma parte de la nueva familia de sistemas de base de datos NoSQL. En vez de guardar los datos en tablas como se hace en las base de datos relacionales, MongoDB guarda estructuras de datos en documentos tipo JSON con un esquema dinámico (MongoDB llama ese formato BSON), haciendo que la integración de los datos en ciertas aplicaciones sea más fácil y rápida.",
+        "type": "pdf",
+        "price": 1.95
+    },
+    {
         "id": "typescript-language",
         "url": "typescript-language.pdf",
         "image": "typescript.png",
@@ -16,6 +25,15 @@
         "description": "TypeScript es un lenguaje de programación libre y de código abierto desarrollado por Microsoft. Es un superconjunto de JavaScript que esencialmente añade tipado estatico y objetos basados en clases dando así un mayor soporte a la POO clasica en este lenguaje. Una de las personalidades que ha intervenido en su desarrollo de forma mas activa es Anders Hejlsberg, diseñador de C#",
         "type": "pdf",
         "price": 1.95
+    },
+    {
+        "id": "administracion-postgre-sql",
+        "url": "administracion-postgre-sql.pdf",
+        "image": "administracion-postgre-sql.gif",
+        "name": "Manual Curso Básico de PostgreSQL",
+        "description": "PostgreSQL, Manual básico de administración del gestor de Bases de Datos. El objetivo general de esta guía es brindar al estudiante los conocimientos necesarios para que sea capaz de gestionar bases de datos utilizando el SGBD Postgresql.",
+        "type": "pdf",
+        "price": 0.95
     },
     {
         "id": "big-buck-bunny",
