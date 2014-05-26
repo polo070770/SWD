@@ -15,7 +15,7 @@
 			<!--  for each en jstl mode -->
 			<div class="row">
 				<c:forEach var="item" items="${carrito.getItems()}">
-					<div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 catalog-item">
+					<div class="col-xs-12 col-sm-6 col-lg-4 col-md-4 catalog-item">
                         <div class="thumbnail">
                         <a data-toggle="lightbox" href="${URLS.staticcontent}img/${item.image}" title="Ampliar imagen">
 								<img src="${URLS.staticcontent}img/thumb/${item.image}" alt="Ampliar imagen" data-type="image" class="img-responsive" >

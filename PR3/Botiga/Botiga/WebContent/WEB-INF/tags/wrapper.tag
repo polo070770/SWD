@@ -14,7 +14,7 @@
 	<title>
 		<c:choose>
 			<c:when test="${page_title!=null }">
-			${page_title}
+			Botiga - ${page_title}
 			</c:when>
 			<c:otherwise>
 			Botiga
