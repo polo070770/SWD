@@ -7,6 +7,20 @@
         ]
     },
     {
+        "name": "poor",
+        "credit": 1.5,
+        "items": [
+            "typescript-language"
+        ]
+    },
+    {
+        "name": "probe",
+        "credit": 1,
+        "items": [
+            "typescript-language"
+        ]
+    },
+    {
         "name": "dennis",
         "credit": 90.5,
         "items": [

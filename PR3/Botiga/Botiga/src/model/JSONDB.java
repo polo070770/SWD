@@ -47,6 +47,9 @@ public class JSONDB {
             }
             
             jsonString = stringBuilder.toString();
+            if(constantes.DEBUG){
+            	System.out.println(jsonString);
+            }
             if(fileName.equals(CLIENTS)){
             	this.tableClients = new JSONArray(jsonString);
             }else if(fileName.equals(ITEMS)){
@@ -102,7 +105,8 @@ public class JSONDB {
 	            items.add(item);
 			}
 		}catch(Exception e) {
-			if(constantes.DEBUG)e.printStackTrace();
+			if(constantes.DEBUG)
+				System.out.println(e.getMessage());
         	System.out.println("unable to parse tableItems");
         }
 	}
@@ -110,6 +114,7 @@ public class JSONDB {
 	
 	private void parseClients(){
 		try{
+
 			for (int i = 0; i < tableClients.length(); ++i) {
 				JSONObject row = tableClients.getJSONObject(i);
 				Client client = new Client();
@@ -117,7 +122,7 @@ public class JSONDB {
 				client.setCredit(new BigDecimal(row.getDouble("credit"), MathContext.DECIMAL64));
 				JSONArray item_rows = row.getJSONArray("items");
 				for(int j = 0; j < item_rows.length(); ++j){
-					client.addItem(getItem(item_rows.getString(i)));
+					client.addItem(getItem(item_rows.getString(j)));
 				}
 				
 				clients.add(client);
