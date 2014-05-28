@@ -134,33 +134,37 @@ public class Router extends HttpServlet {
 			// recuperamos el usuario
 			Client user = db.getClient(request.getUserPrincipal().getName());
 			boolean almenos_uno = false;
-			if(user.hasEnoughCredit(carrito.getAmount())){
-				
-				
-				for(Item item :carrito.getItems()){
-					if(!user.hasItem(item)){
-						user.addItem(item);
-						user.substractCredit(item.getPrice());
-						almenos_uno = true;
-					}else{
-						String respuesta = "El item " + item.getName() + " ya se encuentra en tu cuenta, no se incluye "
-								+ "la compra final (tampoco se te descontara el precio)";
-						
-						messages.addMessage(respuesta, Message.WARNING);
+			
+			//Evitem que un usuari pugui fer dues compres simultanies desde distintes sesions
+			synchronized(user){
+				// en aquesta part es podria reduir considerablement el codi si no tinguem el sistema
+				// de compra inteligent, i directament indiquesim a l'usuari que ha de de eliminar els elements
+				// del carro que ja te o, directament cobrar-li
+				if(user.hasEnoughCredit(carrito.getAmount())){
+					for(Item item :carrito.getItems()){
+						if(!user.hasItem(item)){
+							user.addItem(item);
+							user.substractCredit(item.getPrice());
+							almenos_uno = true;
+						}else{
+							String respuesta = "El item " + item.getName() + " ya se encuentra en tu cuenta, no se incluye "
+									+ "la compra final (tampoco se te descontara el precio)";
+							
+							messages.addMessage(respuesta, Message.WARNING);
+						}
 					}
-
+					if(almenos_uno){ // si almenos ha comprado un elemento
+						messages.addMessage("Compra realizada con exito", Message.SUCCESS);
+					}else{
+						messages.addMessage("No has comprado ningun item, es posible que ya los hubieras comprado con "
+								+ "anterioridad", Message.DANGER);
+					}
+					carrito.emptyCart();
+					response.sendRedirect(CONTEXT + Url.MICUENTA);
+				}else{ // no hay pasta pa comprar todo
+					messages.addMessage("No se ha podido realizar la compra, no tienes suficiente dinero", Message.DANGER);
+					response.sendRedirect(CONTEXT + Url.CARRITO);
 				}
-				if(almenos_uno){ // si almenos ha comprado un elemento
-					messages.addMessage("Compra realizada con exito", Message.SUCCESS);
-				}else{
-					messages.addMessage("No has comprado ningun item, es posible que ya los hubieras comprado con "
-							+ "anterioridad", Message.DANGER);
-				}
-				carrito.emptyCart();
-				response.sendRedirect(CONTEXT + Url.MICUENTA);
-			}else{ // no hay pasta pa comprar todo
-				messages.addMessage("No se ha podido realizar la compra, no tienes suficiente dinero", Message.DANGER);
-				response.sendRedirect(CONTEXT + Url.CARRITO);
 			}
 		}else{
 			if(!request.isUserInRole("Client")){
@@ -239,9 +243,20 @@ public class Router extends HttpServlet {
 			// recuperamos el item
 			if(this.db.containsItem(itemName)){
 				Item item = this.db.getItem(itemName);
+				
+				boolean done = false;
+				
 				//comprobamos que no esta en el carrito
-				if(!carrito.inCart(item)){
-					carrito.addItem(item);
+				
+				//synchronized(carrito){ // no es necessari
+					if(!carrito.inCart(item)){
+						carrito.addItem(item);
+						done = true;
+					}
+				//}
+					
+				// comprobem si hem ficat l'element
+				if(done){
 					messages.addMessage(item.getName() + " añadido del carrito", Message.SUCCESS);
 				}else{
 					messages.addMessage(item.getName() + " ya esta en el carrito", Message.WARNING);
@@ -284,10 +299,23 @@ public class Router extends HttpServlet {
 			// recuperamos el item
 			if(this.db.containsItem(itemName)){
 				Item item = this.db.getItem(itemName);
+				
+				boolean done = false;
+				
 				//comprobamos que no esta en el carrito
-				if(carrito.inCart(item)){
-					carrito.removeItem(item);
+				//synchronized(carrito){ // no es necessari
+				
+					if(carrito.inCart(item)){
+						carrito.removeItem(item);
+						done = true;
+					}
+					
+				//}
+
+				if(done){
 					messages.addMessage(item.getName() + " eliminado del carrito", Message.SUCCESS);
+				}else{
+					messages.addMessage(item.getName() + " no estaba en el carrito", Message.WARNING);
 				}
 				
 			}
